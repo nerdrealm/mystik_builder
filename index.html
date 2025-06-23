@@ -45,29 +45,26 @@
             box-shadow: 0 0 25px rgba(255, 215, 0, 0.25);
         }
 
-        /* --- HEADER CHANGES START --- */
         header {
-            display: flex; /* Use Flexbox for alignment */
-            align-items: center; /* Vertically center items */
-            justify-content: center; /* Horizontally center the group */
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
             margin-bottom: 25px;
             border-bottom: 2px solid var(--border-color);
             padding-bottom: 20px;
         }
 
         header img {
-            max-width: 200px; /* Made the logo bigger */
-            margin-right: 25px; /* Added space between logo and text */
+            max-width: 200px; 
+            margin-right: 25px; 
         }
 
         header h1 {
             color: var(--text-color);
             margin: 0;
-            font-size: 2.5em; /* Adjusted size to look good next to logo */
+            font-size: 2.5em; 
             text-shadow: 0 0 5px var(--text-color);
         }
-        /* --- HEADER CHANGES END --- */
-
 
         #status {
             text-align: center;
@@ -102,12 +99,11 @@
         }
         
         .control-group label {
-            margin-bottom: 5px; /* Reduced margin */
+            margin-bottom: 5px; 
             font-weight: bold;
             color: var(--text-color);
         }
 
-        /* --- NEW HINT TEXT STYLE START --- */
         .theme-hint {
             font-size: 0.85em;
             color: #bbbbbb;
@@ -115,7 +111,6 @@
             margin-bottom: 10px;
             font-style: italic;
         }
-        /* --- NEW HINT TEXT STYLE END --- */
 
         .control-group input[type="text"] {
             padding: 12px;
@@ -178,7 +173,7 @@
         }
 
         #output {
-            display: none; /* Hidden by default */
+            display: none; 
             padding-bottom: 20px;
         }
         
@@ -247,7 +242,6 @@
         <div class="controls">
             <div class="control-group">
                 <label for="deckTheme">Deck Type Theme</label>
-                <!-- NEW HINT TEXT ELEMENT ADDED -->
                 <p class="theme-hint">Types: Fire, Water, Dark, Thunder, Earth, Wind, Forest, Light, or Blank. <br>Combine two with a slash (e.g., Fire/Dark).</p>
                 <input type="text" id="deckTheme" placeholder="Enter a theme here...">
             </div>
@@ -517,7 +511,9 @@ function buildStrategicDeck(selectedTypes, archetype_name) {
     
     let scored_low = scored_creatures.filter(([c, s]) => (c.level || 0) >= 1 && (c.level || 0) <= 3);
     let scored_mid = scored_creatures.filter(([c, s]) => (c.level || 0) >= 4 && (c.level || 0) <= 6);
-    let scored_high = scored_creatures.filter(([c, s]) => (c.level || 0) >= 7 && (c.level || 0) <= 9);
+    // --- BUG FIX FOR LEVEL 10 CARDS ---
+    // This now correctly includes level 7, 8, 9, AND 10 cards in the high-level pool.
+    let scored_high = scored_creatures.filter(([c, s]) => (c.level || 0) >= 7);
 
     const creatureCounts = defaultdict(() => 0);
     let level_10_count = 0;
