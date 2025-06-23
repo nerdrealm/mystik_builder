@@ -1,4 +1,5 @@
 Mystik Creatures Deck Builder
+
 A web-based deck builder for Mystik Creatures TCG that generates 60-card decks based on themes and archetypes.
 How to Use
 
