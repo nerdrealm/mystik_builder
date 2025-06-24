@@ -147,32 +147,30 @@
             box-shadow: 0 0 10px var(--btn-color);
         }
 
-        /* --- NEW RULES FOR ARCHETYPE COLORS --- */
         #archetype-Balanced:checked + label {
             background-color: var(--color-green-status);
             box-shadow: 0 0 10px var(--color-green-status);
-            color: var(--btn-text-color); /* Dark text on green */
+            color: var(--btn-text-color);
             border-color: var(--color-green-status);
         }
         #archetype-Aggro:checked + label {
             background-color: var(--color-red-status);
             box-shadow: 0 0 10px var(--color-red-status);
-            color: var(--text-light); /* Light text on red for contrast */
+            color: var(--text-light);
             border-color: var(--color-red-status);
         }
         #archetype-Control:checked + label {
             background-color: var(--color-yellow-status);
             box-shadow: 0 0 10px var(--color-yellow-status);
-            color: var(--btn-text-color); /* Dark text on yellow */
+            color: var(--btn-text-color);
             border-color: var(--color-yellow-status);
         }
         #archetype-Energy:checked + label {
             background-color: var(--color-cyan-status);
             box-shadow: 0 0 10px var(--color-cyan-status);
-            color: var(--btn-text-color); /* Dark text on cyan */
+            color: var(--btn-text-color);
             border-color: var(--color-cyan-status);
         }
-        /* --- END OF NEW RULES --- */
 
 
         .action-button {
@@ -279,7 +277,6 @@
             border-bottom: none;
         }
 
-        /* Styles for dynamic Creature sort buttons */
         .sort-controls {
             display: inline-flex;
             gap: 8px;
@@ -300,25 +297,23 @@
             color: var(--btn-text-color);
         }
 
-        /* Styles for new JSON Generator Section */
         #json-generator-section {
             margin-top: 20px;
             padding-top: 20px;
             border-top: 2px solid var(--border-color);
             display: flex;
             flex-direction: column;
-            align-items: center; /* Center the button */
-            gap: 20px; /* Space between button and code block */
+            align-items: center; 
+            gap: 20px; 
         }
         
-        /* New AI-style code block */
         .code-block-wrapper {
             width: 100%;
             max-width: 800px;
             border: 1px solid var(--input-bg);
             border-radius: 8px;
             background-color: #111;
-            overflow: hidden; /* Ensures children conform to border-radius */
+            overflow: hidden; 
         }
 
         .code-header {
@@ -366,7 +361,7 @@
         
         #json-warning {
             padding: 12px 15px;
-            background-color: rgba(241, 196, 15, 0.1); /* Yellow transparent bg */
+            background-color: rgba(241, 196, 15, 0.1); 
             border-top: 1px solid var(--color-yellow-status);
             color: #f3dca1;
             font-size: 0.9em;
@@ -474,178 +469,53 @@ const TERRAIN_TYPE_COMPATIBILITY = {
 };
 
 const BOSS_COMPANION_MAP = {
-    "Arcana Temptress": ["Arcana Apprentice"],
-    "Dracoleón": ["Nemean Lion"],
-    "Hydra": ["Nereus"],
-    "Infinity Mage": ["Infinity Apprentice"],
-    "Phoenix, the Rising": ["Phoenic"],
-    "Serpopard": ["Anuket"],
-    "Werelephant": ["Pebblephant", "Moonlight Awakening"],
-    "Zombified Dragon": ["Dragon Tamer"],
-    "Divine Beast Panterus": ["Winged Beast U'ru", "Winged Beast Wai'ku", "Winged Beast Ra'zu"],
-    "Astraea": [],
-    "Aurora, the Paladin": [],
-    "Avani": [],
-    "Bristleback": [],
-    "Cloudpiercer": [],
-    "Eamonn": [],
-    "Ephemeral Empress": [],
-    "Hikaru, Thunderflame": [],
-    "Ignimia": ["Flames of Bahtu"],
-    "Iškugriff": ["Storm of Reckoning"],
-    "Isxóhe": ["Spirit Guide"],
-    "Kaia": [],
-    "Kuroen": [],
-    "Laviathron": [],
-    "Lilith, Forest Pixie": ["Lilith's Garden"],
-    "Malum, the Damned": ["Ritual of the Damned"],
-    "Raitei": [],
-    "Rann, the Wretched": ["Abandoned Ship"],
-    "Strix Arenaeus": [],
-    "Tempestas": [],
-    "Tetsu Yami": [],
-    "Wilderfang": [],
-    "Wolfdrake": []
+    "Arcana Temptress": ["Arcana Apprentice"], "Dracoleón": ["Nemean Lion"], "Hydra": ["Nereus"], "Infinity Mage": ["Infinity Apprentice"], "Phoenix, the Rising": ["Phoenic"], "Serpopard": ["Anuket"], "Werelephant": ["Pebblephant", "Moonlight Awakening"], "Zombified Dragon": ["Dragon Tamer"], "Divine Beast Panterus": ["Winged Beast U'ru", "Winged Beast Wai'ku", "Winged Beast Ra'zu"], "Astraea": [], "Aurora, the Paladin": [], "Avani": [], "Bristleback": [], "Cloudpiercer": [], "Eamonn": [], "Ephemeral Empress": [], "Hikaru, Thunderflame": [], "Ignimia": ["Flames of Bahtu"], "Iškugriff": ["Storm of Reckoning"], "Isxóhe": ["Spirit Guide"], "Kaia": [], "Kuroen": [], "Laviathron": [], "Lilith, Forest Pixie": ["Lilith's Garden"], "Malum, the Damned": ["Ritual of the Damned"], "Raitei": [], "Rann, the Wretched": ["Abandoned Ship"], "Strix Arenaeus": [], "Tempestas": [], "Tetsu Yami": [], "Wilderfang": [], "Wolfdrake": []
 };
 
-const BANNED_SECRET_CARDS = [
-    "Aquatic Conversion", "Celestial Storm", "Corrupt Evolution", "Divine Transformation",
-    "Elemental Infusion", "Infernal Transmutation", "Mystik Forestry", "Primeval Mutation",
-    "Windy Metamorphosis", "Elemental Break"
-];
+const BANNED_SECRET_CARDS = ["Aquatic Conversion", "Celestial Storm", "Corrupt Evolution", "Divine Transformation", "Elemental Infusion", "Infernal Transmutation", "Mystik Forestry", "Primeval Mutation", "Windy Metamorphosis", "Elemental Break"];
 
+let all_cards = []; let companion_map = {}; let currentDeck = null; let currentDeckTheme = '';
+const statusDiv = document.getElementById('status'); const generateBtn = document.getElementById('generate-btn'); const themeInput = document.getElementById('deckTheme'); const archetypeOptionsDiv = document.getElementById('archetype-options'); const outputDiv = document.getElementById('output'); const deckTitleH2 = document.getElementById('deck-title'); const deckStatsP = document.getElementById('deck-stats'); const creaturesListUl = document.getElementById('creatures-list'); const powerListUl = document.getElementById('power-list'); const secretsListUl = document.getElementById('secrets-list'); const creaturesTitleH3 = document.getElementById('creatures-title'); const powerTitleH3 = document.getElementById('power-title'); const secretsTitleH3 = document.getElementById('secrets-title'); const cautionDiv = document.getElementById('caution-message');
+const defaultdict = (defaultValueFactory) => new Proxy({}, { get: (target, name) => name in target ? target[name] : (target[name] = defaultValueFactory()) });
+const shuffle = (array) => { for (let i = array.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[array[i], array[j]] = [array[j], array[i]]; } return array; };
 
-// --- GLOBAL VARIABLES & DOM ELEMENTS ---
-let all_cards = [];
-let companion_map = {};
-let currentDeck = null;
-let currentDeckTheme = '';
+async function loadCardsFromJson(url) { try { const response = await fetch(url); if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`); const data = await response.json(); const unique_cards = []; const seen = new Set(); for (const card of data) { if (!card.id) { console.warn(`Card "${card.name}" is missing an 'id' field, which is required for JSON export.`); } card.script_uuid = crypto.randomUUID(); const identifier = `${card.name}|${card.collectionNumber}`; if (!seen.has(identifier)) { unique_cards.push(card); seen.add(identifier); } } return unique_cards; } catch (e) { statusDiv.innerHTML = `<strong>ERROR:</strong> Failed to fetch card data.`; statusDiv.style.color = 'var(--color-red-status)'; console.error("Error loading card data:", e); return null; } }
+function getCompanionMap(cards) { const newCompanionMap = defaultdict(() => ({ creatures: [], secrets: [] })); for (const card of cards) { if (card.supertype !== 'Creature') continue; for (const ability of card.abilities || []) { for (const prereq of ability.prerequisites || []) { if (prereq.type === 'SacrificeSpecificCreature') newCompanionMap[card.name].creatures.push(prereq.creatureName); else if (prereq.type === 'PlaySpecificCard') newCompanionMap[card.name].secrets.push(prereq.cardName); else if (prereq.type === 'HasCreatureInPlay') newCompanionMap[card.name].creatures.push(prereq.creatureName); } } } return newCompanionMap; }
+function analyzePowerRequirements(creatures) { const powerNeeds = defaultdict(() => 0); for (const creature of creatures) { for (const attack of creature.attacks || []) { for (const cost of attack.cost || []) { powerNeeds[cost.PowerType] += cost.count; } } } return powerNeeds; }
+function scoreCreatureSynergy(card, deckTheme) { let score = Math.random() * 20; const cardTypes = card.types || []; const themeTypes = deckTheme.split('/'); if (!themeTypes.some(t => cardTypes.includes(t))) return -1; score += 50; if (themeTypes.length > 1 && themeTypes.every(t => cardTypes.includes(t))) score += 40; if (Object.values(companion_map).some(v => v.creatures.includes(card.name))) score += 30; if (card.name in companion_map) score += 30; if (card.rarity === 'Rare') score += 15; if (card.rarity === 'UltraRare') score += 25; if ((card.level || 0) >= 7) score += 10; return score; }
+function scoreSecretSynergy(card, deckTheme, creaturesInDeck) { const cardName = card.name || ''; if (BANNED_SECRET_CARDS.includes(cardName)) return -1; for (const bossName in companion_map) { if ((companion_map[bossName].secrets || []).includes(cardName)) { return creaturesInDeck.some(c => c.name === bossName) ? 1000 : -1; } } let score = Math.random() * 10; const themeTypes = deckTheme.split('/'); if ((card.subtypes || [null])[0] === 'Terrain') { if (deckTheme === 'Blank') return -1; const validTypes = TERRAIN_TYPE_COMPATIBILITY[cardName] || []; if (validTypes.includes("All") || themeTypes.some(theme => validTypes.includes(theme))) { score += 80; } else { return -1; } } else { const effectText = (card.effectText || '').toLowerCase(); for (const theme of themeTypes) { if (effectText.includes(theme.toLowerCase())) score += 25; } } return score; }
 
-const statusDiv = document.getElementById('status');
-const generateBtn = document.getElementById('generate-btn');
-const themeInput = document.getElementById('deckTheme');
-const archetypeOptionsDiv = document.getElementById('archetype-options');
-const outputDiv = document.getElementById('output');
-const deckTitleH2 = document.getElementById('deck-title');
-const deckStatsP = document.getElementById('deck-stats');
-const creaturesListUl = document.getElementById('creatures-list');
-const powerListUl = document.getElementById('power-list');
-const secretsListUl = document.getElementById('secrets-list');
-const creaturesTitleH3 = document.getElementById('creatures-title');
-const powerTitleH3 = document.getElementById('power-title');
-const secretsTitleH3 = document.getElementById('secrets-title');
-const cautionDiv = document.getElementById('caution-message');
+// =================================================================================
+// === START: NEW WEIGHTED PROBABILITY LOGIC FOR BOSS COUNT ===
+// =================================================================================
+/**
+ * Decides how many Level 10 bosses to add using a weighted random distribution.
+ * This makes the deck building feel more natural and less predictable.
+ * @returns {number} The number of bosses to attempt to add (0-4).
+ */
+function getWeightedRandomBossCount() {
+    const weights = {
+        0: 10,  // 10% chance for a 'no-boss' deck
+        1: 30,  // 30% chance for a single-boss focus
+        2: 40,  // 40% chance for a standard two-boss deck (most common)
+        3: 15,  // 15% chance for a powerful three-boss deck
+        4: 5    // 5% chance for a rare "max-boss" deck
+    };
+    const totalWeight = Object.values(weights).reduce((sum, weight) => sum + weight, 0);
+    let random = Math.random() * totalWeight;
 
-const defaultdict = (defaultValueFactory) => new Proxy({}, {
-    get: (target, name) => name in target ? target[name] : (target[name] = defaultValueFactory())
-});
-
-// --- UTILITY FUNCTIONS ---
-const shuffle = (array) => {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-};
-
-// --- DATA LOADING & INITIALIZATION ---
-async function loadCardsFromJson(url) {
-    try {
-        const response = await fetch(url);
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-        const data = await response.json();
-        const unique_cards = [];
-        const seen = new Set();
-        for (const card of data) {
-            if (!card.id) {
-                console.warn(`Card "${card.name}" is missing an 'id' field, which is required for JSON export.`);
-            }
-            card.script_uuid = crypto.randomUUID();
-            const identifier = `${card.name}|${card.collectionNumber}`;
-            if (!seen.has(identifier)) {
-                unique_cards.push(card);
-                seen.add(identifier);
-            }
+    for (const [count, weight] of Object.entries(weights)) {
+        random -= weight;
+        if (random <= 0) {
+            return parseInt(count, 10);
         }
-        return unique_cards;
-    } catch (e) {
-        statusDiv.innerHTML = `<strong>ERROR:</strong> Failed to fetch card data.`;
-        statusDiv.style.color = 'var(--color-red-status)';
-        console.error("Error loading card data:", e);
-        return null;
     }
+    return 2; // Fallback, should not be reached
 }
+// =================================================================================
+// === END: NEW WEIGHTED PROBABILITY LOGIC ===
+// =================================================================================
 
-// --- SYNERGY & HELPER FUNCTIONS ---
-function getCompanionMap(cards) {
-    const newCompanionMap = defaultdict(() => ({ creatures: [], secrets: [] }));
-    for (const card of cards) {
-        if (card.supertype !== 'Creature') continue;
-        for (const ability of card.abilities || []) {
-            for (const prereq of ability.prerequisites || []) {
-                if (prereq.type === 'SacrificeSpecificCreature') newCompanionMap[card.name].creatures.push(prereq.creatureName);
-                else if (prereq.type === 'PlaySpecificCard') newCompanionMap[card.name].secrets.push(prereq.cardName);
-                else if (prereq.type === 'HasCreatureInPlay') newCompanionMap[card.name].creatures.push(prereq.creatureName);
-            }
-        }
-    }
-    return newCompanionMap;
-}
-
-function analyzePowerRequirements(creatures) {
-    const powerNeeds = defaultdict(() => 0);
-    for (const creature of creatures) {
-        for (const attack of creature.attacks || []) {
-            for (const cost of attack.cost || []) {
-                powerNeeds[cost.PowerType] += cost.count;
-            }
-        }
-    }
-    return powerNeeds;
-}
-
-function scoreCreatureSynergy(card, deckTheme) {
-    let score = Math.random() * 20; // Use float for more granularity
-    const cardTypes = card.types || [];
-    const themeTypes = deckTheme.split('/');
-    if (!themeTypes.some(t => cardTypes.includes(t))) return -1;
-    score += 50;
-    if (themeTypes.length > 1 && themeTypes.every(t => cardTypes.includes(t))) score += 40;
-    if (Object.values(companion_map).some(v => v.creatures.includes(card.name))) score += 30;
-    if (card.name in companion_map) score += 30;
-    if (card.rarity === 'Rare') score += 15;
-    if (card.rarity === 'UltraRare') score += 25;
-    if ((card.level || 0) >= 7) score += 10;
-    return score;
-}
-
-function scoreSecretSynergy(card, deckTheme, creaturesInDeck) {
-    const cardName = card.name || '';
-    if (BANNED_SECRET_CARDS.includes(cardName)) return -1;
-    for (const bossName in companion_map) {
-        if ((companion_map[bossName].secrets || []).includes(cardName)) {
-            return creaturesInDeck.some(c => c.name === bossName) ? 1000 : -1;
-        }
-    }
-    let score = Math.random() * 10;
-    const themeTypes = deckTheme.split('/');
-    if ((card.subtypes || [null])[0] === 'Terrain') {
-        if (deckTheme === 'Blank') return -1;
-        const validTypes = TERRAIN_TYPE_COMPATIBILITY[cardName] || [];
-        if (validTypes.includes("All") || themeTypes.some(theme => validTypes.includes(theme))) {
-            score += 80;
-        } else {
-            return -1;
-        }
-    } else {
-        const effectText = (card.effectText || '').toLowerCase();
-        for (const theme of themeTypes) {
-            if (effectText.includes(theme.toLowerCase())) score += 25;
-        }
-    }
-    return score;
-}
 
 function buildStrategicDeck(selectedTypes, archetype_name) {
     const deck = { "Creatures": [], "Power": [], "Secrets": [] };
@@ -654,379 +524,92 @@ function buildStrategicDeck(selectedTypes, archetype_name) {
 
     let targetCreatures = Math.floor(DECK_RULES.deck_size * archetype.creatures);
     let targetSecrets = Math.floor(DECK_RULES.deck_size * archetype.secrets);
-    let targetPower = DECK_RULES.deck_size - targetCreatures - targetSecrets; // Ensure it adds up to 60
+    let targetPower = DECK_RULES.deck_size - targetCreatures - targetSecrets;
     
     const all_creatures = all_cards.filter(c => c.supertype === 'Creature');
-    const creatureSelectionFn = is_blank_deck ? scoreCreatureSynergy : (c) => scoreCreatureSynergy(c, selectedTypes);
-    
-    // --- **FIX #2**: Aggressive Shuffling for Creature Variety ---
-    let available_creatures = shuffle(all_creatures.filter(c => is_blank_deck || (c.types || []).some(t => selectedTypes.split('/').includes(t))));
-    
-    const creature_pool = available_creatures.map(c => [c, creatureSelectionFn(c)]).filter(([c, s]) => s >= 0).sort((a,b) => b[1] - a[1]);
-    
     const creatureCounts = defaultdict(() => 0);
     let level_10_count = 0;
 
-    // --- STEP 1: FINALIZE CREATURE LIST ---
-    while (deck.Creatures.length < targetCreatures && creature_pool.length > 0) {
-        const [card_to_add, _] = creature_pool.shift(); // Take the current best
-        const { name: card_name, rarity: card_rarity, level: card_level = 0 } = card_to_add;
+    // --- STEP 1: SELECT "BOSS" CREATURES USING WEIGHTED RANDOMNESS ---
+    const themeTypes = selectedTypes.split('/');
+    let potential_bosses = all_creatures.filter(c => 
+        c.level === 10 && 
+        c.rarity === 'UltraRare' &&
+        (is_blank_deck || (c.types || []).some(t => themeTypes.includes(t)))
+    );
+    
+    const num_bosses_to_add = getWeightedRandomBossCount();
+    let bosses_added_this_run = [];
+    let attempts = 0;
 
-        if ((card_level === 10 && level_10_count >= DECK_RULES.level_10_limits.total) || (creatureCounts[card_name] >= (DECK_RULES.creature_card_limits[card_rarity] || 1))) {
-            continue; // Skip if limit is reached
-        }
-
-        deck.Creatures.push(card_to_add);
-        creatureCounts[card_name]++;
-        if (card_level === 10) level_10_count++;
+    // This loop adds the desired number of bosses, respecting the "2 of each" rule.
+    while (level_10_count < num_bosses_to_add && potential_bosses.length > 0 && attempts < 50) {
+        const chosen_boss = potential_bosses[Math.floor(Math.random() * potential_bosses.length)];
         
-        if (card_name in BOSS_COMPANION_MAP) {
-            for (const comp_name of BOSS_COMPANION_MAP[card_name]) {
+        if (creatureCounts[chosen_boss.name] < DECK_RULES.creature_card_limits.UltraRare && level_10_count < DECK_RULES.level_10_limits.total) {
+            deck.Creatures.push(chosen_boss);
+            creatureCounts[chosen_boss.name]++;
+            level_10_count++;
+            // Keep track of the unique bosses added to fetch companions later
+            if (!bosses_added_this_run.find(b => b.name === chosen_boss.name)) {
+                bosses_added_this_run.push(chosen_boss);
+            }
+        }
+        attempts++;
+    }
+    
+    // --- STEP 2: ADD COMPANIONS FOR THE CHOSEN BOSSES ---
+    for (const boss of bosses_added_this_run) {
+         if (boss.name in BOSS_COMPANION_MAP) {
+            for (const comp_name of BOSS_COMPANION_MAP[boss.name]) {
                 if (deck.Creatures.length >= targetCreatures) break;
                 const comp_card = all_creatures.find(c => c.name === comp_name);
                 if (comp_card) {
-                    const { rarity: cc_rarity, level: cc_level = 0 } = comp_card;
-                    if (creatureCounts[comp_name] < (DECK_RULES.creature_card_limits[cc_rarity] || 1) && !(cc_level === 10 && level_10_count >= DECK_RULES.level_10_limits.total)) {
+                    const { rarity: cc_rarity } = comp_card;
+                    if (creatureCounts[comp_name] < (DECK_RULES.creature_card_limits[cc_rarity] || 1)) {
                         deck.Creatures.push(comp_card);
                         creatureCounts[comp_name]++;
-                        if (cc_level === 10) level_10_count++;
                     }
                 }
             }
         }
     }
 
-    // --- **FIX #3**: Power Card Logic Overhaul ---
-    const power_needs = analyzePowerRequirements(deck.Creatures);
-    let power_tasks = [];
-    for (const type in power_needs) {
-        for (let i = 0; i < power_needs[type]; i++) {
-            power_tasks.push(type);
-        }
+    // --- STEP 3: FILL REMAINING SLOTS WITH OTHER SYNERGISTIC CREATURES ---
+    const added_creature_names = new Set(deck.Creatures.map(c => c.script_uuid));
+    let remaining_creatures = all_creatures.filter(c => !added_creature_names.has(c.script_uuid) && (is_blank_deck || (c.types || []).some(t => themeTypes.includes(t))));
+    let creature_pool = remaining_creatures.map(c => [c, scoreCreatureSynergy(c, selectedTypes)]).filter(([c, s]) => s >= 0).sort((a,b) => b[1] - a[1]);
+
+    while (deck.Creatures.length < targetCreatures && creature_pool.length > 0) {
+        const candidatePoolSize = Math.min(10, creature_pool.length);
+        if (candidatePoolSize === 0) break;
+        const randomIndex = Math.floor(Math.random() * candidatePoolSize);
+        const [card_to_add, _] = creature_pool.splice(randomIndex, 1)[0]; 
+        const { name: card_name, rarity: card_rarity, level: card_level = 0 } = card_to_add;
+        if ((card_level === 10 && level_10_count >= DECK_RULES.level_10_limits.total) || (creatureCounts[card_name] >= (DECK_RULES.creature_card_limits[card_rarity] || 1))) { continue; }
+        deck.Creatures.push(card_to_add);
+        creatureCounts[card_name]++;
+        if (card_level === 10) level_10_count++;
     }
+    
+    // --- POWER CARD SELECTION ---
+    const power_needs = analyzePowerRequirements(deck.Creatures); let power_tasks = []; for (const type in power_needs) { for (let i = 0; i < power_needs[type]; i++) power_tasks.push(type); } const allCreatureTypesInDeck = [...new Set(deck.Creatures.flatMap(c => c.types || []))]; allCreatureTypesInDeck.forEach(type => { if (!power_needs[type]) { for(let i = 0; i < 2; i++) power_tasks.push(type); } }); shuffle(power_tasks); const powerCardsByType = defaultdict(() => []); all_cards.filter(c => c.supertype === 'Power').forEach(c => powerCardsByType[c.powerType].push(c)); let double_power_count = 0; while (deck.Power.length < targetPower) { if (power_tasks.length === 0) { let fill_type = is_blank_deck ? 'Blank' : selectedTypes.split('/')[0]; const card = powerCardsByType[fill_type].find(c => (c.powerValue || 1) === 1) || powerCardsByType['Blank'].find(c => (c.powerValue || 1) === 1); if (card) deck.Power.push(card); else break; continue; } const next_power_type = power_tasks.shift(); const use_double = (double_power_count < DECK_RULES.power_card_limits.powerValue_2 && power_tasks.filter(t => t === next_power_type).length > 0 && powerCardsByType[next_power_type].some(c => (c.powerValue || 1) === 2)); if (use_double) { const card_to_add = powerCardsByType[next_power_type].find(c => (c.powerValue || 1) === 2); deck.Power.push(card_to_add); double_power_count++; const second_task_index = power_tasks.findIndex(t => t === next_power_type); if(second_task_index > -1) power_tasks.splice(second_task_index, 1); } else { const card_to_add = powerCardsByType[next_power_type].find(c => (c.powerValue || 1) === 1) || powerCardsByType['Blank'].find(c => (c.powerValue || 1) === 1); if(card_to_add) deck.Power.push(card_to_add); } }
 
-    // Add a minimum base for any type present in the deck, even if they have no attack costs
-    const allCreatureTypesInDeck = [...new Set(deck.Creatures.flatMap(c => c.types || []))];
-    allCreatureTypesInDeck.forEach(type => {
-        if (!power_needs[type]) { // If a type has 0 attack costs, it still needs some power
-            for(let i = 0; i < 2; i++) power_tasks.push(type);
-        }
-    });
-
-    shuffle(power_tasks);
-
-    const powerCardsByType = defaultdict(() => []);
-    all_cards.filter(c => c.supertype === 'Power').forEach(c => powerCardsByType[c.powerType].push(c));
-
-    let double_power_count = 0;
-    while (deck.Power.length < targetPower) {
-        if (power_tasks.length === 0) { // If no specific needs left, fill with Blank or main theme
-            let fill_type = is_blank_deck ? 'Blank' : selectedTypes.split('/')[0];
-            const card = powerCardsByType[fill_type].find(c => (c.powerValue || 1) === 1) || powerCardsByType['Blank'].find(c => (c.powerValue || 1) === 1);
-            if (card) deck.Power.push(card); else break;
-            continue;
-        }
-
-        const next_power_type = power_tasks.shift();
+    // --- SECRET CARD SELECTION ---
+    let scored_secrets = all_cards.filter(c => c.supertype === 'Secret').map(secret => [secret, scoreSecretSynergy(secret, selectedTypes, deck.Creatures)]).filter(([_, score]) => score >= 0).sort((a, b) => b[1] - a[1]); const secret_counts = defaultdict(() => 0); while (deck.Secrets.length < targetSecrets && scored_secrets.length > 0) { const [card_to_add, _] = scored_secrets.shift(); const { name: card_name, rarity: card_rarity, subtypes: card_subtypes = [] } = card_to_add; const current_terrain_count = deck.Secrets.filter(c => (c.subtypes || []).includes('Terrain')).length; const terrain_names = new Set(deck.Secrets.filter(c => (c.subtypes || []).includes('Terrain')).map(c => c.name)); if (secret_counts[card_name] >= (DECK_RULES.secret_card_limits[card_rarity] || 1)) continue; if (card_subtypes.includes('Terrain') && (current_terrain_count >= 4 || (!terrain_names.has(card_name) && terrain_names.size >= 3))) continue; deck.Secrets.push(card_to_add); secret_counts[card_name]++; }
         
-        // Prioritize double power cards to fulfill needs faster
-        const use_double = (double_power_count < DECK_RULES.power_card_limits.powerValue_2 && 
-                            power_tasks.filter(t => t === next_power_type).length > 0 && // Check if there's at least one more task of this type
-                            powerCardsByType[next_power_type].some(c => (c.powerValue || 1) === 2));
-
-        if (use_double) {
-            const card_to_add = powerCardsByType[next_power_type].find(c => (c.powerValue || 1) === 2);
-            deck.Power.push(card_to_add);
-            double_power_count++;
-            // Remove a second task of the same type
-            const second_task_index = power_tasks.findIndex(t => t === next_power_type);
-            if(second_task_index > -1) power_tasks.splice(second_task_index, 1);
-        } else {
-            const card_to_add = powerCardsByType[next_power_type].find(c => (c.powerValue || 1) === 1) || powerCardsByType['Blank'].find(c => (c.powerValue || 1) === 1);
-            if(card_to_add) deck.Power.push(card_to_add);
-        }
-    }
-
-    // --- STEP 4: SECRET CARD SELECTION ---
-    const available_secrets = all_cards.filter(c => c.supertype === 'Secret');
-    let scored_secrets = [];
-    for (const secret of available_secrets) {
-        const synergy_score = scoreSecretSynergy(secret, selectedTypes, deck.Creatures);
-        if (synergy_score >= 0) scored_secrets.push([secret, synergy_score]);
-    }
-    scored_secrets.sort((a, b) => b[1] - a[1]);
-
-    const secret_counts = defaultdict(() => 0);
-    while (deck.Secrets.length < targetSecrets && scored_secrets.length > 0) {
-        const [card_to_add, _] = scored_secrets.shift();
-        const { name: card_name, rarity: card_rarity, subtypes: card_subtypes = [] } = card_to_add;
-        const current_terrain_count = deck.Secrets.filter(c => (c.subtypes || []).includes('Terrain')).length;
-        const terrain_names = new Set(deck.Secrets.filter(c => (c.subtypes || []).includes('Terrain')).map(c => c.name));
-
-        if (secret_counts[card_name] >= (DECK_RULES.secret_card_limits[card_rarity] || 1)) continue;
-        if (card_subtypes.includes('Terrain') && (current_terrain_count >= 4 || (!terrain_names.has(card_name) && terrain_names.size >= 3))) continue;
-        
-        deck.Secrets.push(card_to_add);
-        secret_counts[card_name]++;
-    }
-        
-    // --- STEP 5: FINAL ADJUSTMENT ---
-    while (deck.Creatures.length + deck.Power.length + deck.Secrets.length < 60) {
-         const card = powerCardsByType['Blank'].find(c => (c.powerValue || 1) === 1);
-         if(card) deck.Power.push(card); else break;
-    }
-     while (deck.Creatures.length + deck.Power.length + deck.Secrets.length > 60) {
-        if(deck.Power.length > targetPower) deck.Power.pop();
-        else if (deck.Secrets.length > targetSecrets) deck.Secrets.pop();
-        else deck.Creatures.pop();
-    }
-        
+    // --- FINAL DECK SIZE ADJUSTMENT ---
+    while (deck.Creatures.length + deck.Power.length + deck.Secrets.length < DECK_RULES.deck_size) { const card = powerCardsByType['Blank'].find(c => (c.powerValue || 1) === 1); if(card) deck.Power.push(card); else break; }
+    while (deck.Creatures.length + deck.Power.length + deck.Secrets.length > DECK_RULES.deck_size) { if(deck.Power.length > targetPower) deck.Power.pop(); else if (deck.Secrets.length > targetSecrets) deck.Secrets.pop(); else if (deck.Creatures.length > targetCreatures) deck.Creatures.pop(); else { deck.Power.length > 0 ? deck.Power.pop() : deck.Secrets.pop(); } }
     return deck;
 }
 
-
-// --- DECK DISPLAY & EVENT LISTENERS ---
-
-const populateList = (listElement, cards, displayFormatter) => {
-    listElement.innerHTML = '';
-    if (cards.length === 0) { listElement.innerHTML = '<li>None</li>'; return; }
-    const counts = new Map();
-    cards.forEach(card => {
-        const key = displayFormatter(card);
-        counts.set(key, (counts.get(key) || 0) + 1);
-    });
-    const uniqueKeys = [];
-    const seen = new Set();
-    cards.forEach(card => {
-        const key = displayFormatter(card);
-        if (!seen.has(key)) {
-            uniqueKeys.push(key);
-            seen.add(key);
-        }
-    });
-
-    uniqueKeys.forEach(key => {
-        const li = document.createElement('li');
-        li.textContent = `${key} x${counts.get(key)}`;
-        listElement.appendChild(li);
-    });
-};
-
-function renderCreatureList(sortOrder = 'asc') {
-    if (!currentDeck) return;
-    const sortedCreatures = [...currentDeck.Creatures]; 
-    
-    if (sortOrder === 'asc') {
-        sortedCreatures.sort((a, b) => (a.level || 0) - (b.level || 0) || a.name.localeCompare(b.name));
-    } else { // desc
-        sortedCreatures.sort((a, b) => (b.level || 0) - (a.level || 0) || a.name.localeCompare(b.name));
-    }
-    
-    populateList(creaturesListUl, sortedCreatures, c => `${c.name} (Lvl ${c.level || '?'}, ${(c.types || ['?'])[0]}, ${c.rarity})`);
-}
-
-function displayDeck(deck, deckTheme, archetype) {
-    outputDiv.style.display = 'block';
-    const color = ARCHETYPE_COLORS[archetype] || 'var(--text-color)';
-    deckTitleH2.textContent = `${deckTheme} ${archetype} Deck`;
-    [deckTitleH2, creaturesTitleH3, powerTitleH3, secretsTitleH3].forEach(el => el.style.color = color);
-    const total = deck.Creatures.length + deck.Power.length + deck.Secrets.length;
-    deckStatsP.textContent = `Total Cards: ${total} | Creatures: ${deck.Creatures.length}, Power: ${deck.Power.length}, Secrets: ${deck.Secrets.length}`;
-    
-    let oldSortControls = document.getElementById('creature-sort-controls');
-    if (oldSortControls) oldSortControls.remove();
-
-    const sortControlsDiv = document.createElement('div');
-    sortControlsDiv.id = 'creature-sort-controls';
-    sortControlsDiv.className = 'sort-controls';
-    
-    const sortAscBtn = document.createElement('button');
-    sortAscBtn.textContent = 'Sort 1-10';
-    sortAscBtn.className = 'sort-btn';
-    sortAscBtn.onclick = () => renderCreatureList('asc');
-    
-    const sortDescBtn = document.createElement('button');
-    sortDescBtn.textContent = 'Sort 10-1';
-    sortDescBtn.className = 'sort-btn';
-    sortDescBtn.onclick = () => renderCreatureList('desc');
-    
-    sortControlsDiv.appendChild(sortAscBtn);
-    sortControlsDiv.appendChild(sortDescBtn);
-    creaturesTitleH3.appendChild(sortControlsDiv);
-    
-    renderCreatureList('asc');
-    populateList(powerListUl, deck.Power, p => `${p.powerType} Power ${(p.powerValue || 1) === 2 ? '(x2)' : ''} (${p.rarity})`);
-    populateList(secretsListUl, deck.Secrets, s => `${s.name} (${(s.subtypes || ['?'])[0]}, ${s.rarity})`);
-}
-
-// --- JSON GENERATION FUNCTIONS ---
-
-function generateDeckName() {
-    const prefixes = ["Crimson", "Azure", "Verdant", "Shadow", "Gilded", "Ironclad", "Howling", "Silent", "Arcane", "Solar"];
-    const suffixes = ["Fury", "Guard", "Storm", "Whisper", "Legacy", "Dawn", "Vengeance", "Heart", "Rage", "Dominion"];
-    const prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
-    const suffix = suffixes[Math.floor(Math.random() * suffixes.length)];
-    return `${prefix} ${suffix}`;
-}
-
-function formatDeckAsJson(deck, deckTheme) {
-    try {
-        const allDeckCards = [...deck.Creatures, ...deck.Power, ...deck.Secrets];
-        const cardCounts = new Map();
-        for (const card of allDeckCards) {
-            if (card.id === undefined) throw new Error(`Card "${card.name}" is missing a required 'id' field.`);
-            const cardId = parseInt(card.id, 10);
-            cardCounts.set(cardId, (cardCounts.get(cardId) || 0) + 1);
-        }
-        const formattedCards = Array.from(cardCounts.entries());
-        const outputDeck = {
-            id: String(Math.floor(Math.random() * (9999 - 2000 + 1) + 2000)),
-            name: generateDeckName(),
-            types: deckTheme.split('/'),
-            cards: formattedCards,
-            setCode: "MC01"
-        };
-        const baseJsonString = JSON.stringify(outputDeck, null, 2);
-        const indentedLines = baseJsonString.split('\n').map(line => '  ' + line);
-        return indentedLines.join('\n') + ',';
-    } catch (e) {
-        console.error("Error formatting deck as JSON:", e);
-        statusDiv.textContent = `Error: ${e.message} Cannot generate JSON.`;
-        statusDiv.style.color = 'var(--color-red-status)';
-        return null;
-    }
-}
-
-async function initialize() {
-    Object.entries(DECK_ARCHETYPES).forEach(([name, data], index) => {
-        const input = document.createElement('input');
-        input.type = 'radio'; input.id = `archetype-${name}`; input.name = 'archetype'; input.value = name;
-        if (index === 0) input.checked = true;
-        const label = document.createElement('label');
-        label.htmlFor = `archetype-${name}`; label.textContent = name; label.title = data.description;
-        archetypeOptionsDiv.appendChild(input);
-        archetypeOptionsDiv.appendChild(label);
-    });
-
-    const mainContainer = document.querySelector('.main-container');
-    const jsonSection = document.createElement('div');
-    jsonSection.id = 'json-generator-section';
-    jsonSection.style.display = 'none';
-    
-    const jsonButton = document.createElement('button');
-    jsonButton.id = 'generate-json-btn';
-    jsonButton.className = 'action-button';
-    jsonButton.textContent = 'Generate Deck JSON';
-    
-    const codeBlock = document.createElement('div');
-    codeBlock.className = 'code-block-wrapper';
-    codeBlock.style.display = 'none';
-    
-    const header = document.createElement('div');
-    header.className = 'code-header';
-    const title = document.createElement('span');
-    title.textContent = 'Deck JSON Output';
-    const copyBtn = document.createElement('button');
-    copyBtn.id = 'copy-json-btn';
-    copyBtn.textContent = 'Copy code';
-    header.appendChild(title);
-    header.appendChild(copyBtn);
-    
-    const body = document.createElement('div');
-    body.className = 'code-body';
-    const jsonPre = document.createElement('pre');
-    jsonPre.id = 'json-output';
-    body.appendChild(jsonPre);
-
-    const warningDiv = document.createElement('div');
-    warningDiv.id = 'json-warning';
-    warningDiv.innerHTML = `⚠️ <strong>WARNING</strong> ⚠️ This JSON format is exclusively valid for the deckProfiles.json file and is intended solely for coding purposes. Do not use this format for other applications or files, as it may not be compatible with other systems or use cases.`;
-
-    codeBlock.appendChild(header);
-    codeBlock.appendChild(body);
-    codeBlock.appendChild(warningDiv);
-    
-    jsonSection.appendChild(jsonButton);
-    jsonSection.appendChild(codeBlock);
-    mainContainer.appendChild(jsonSection);
-
-    jsonButton.addEventListener('click', () => {
-        if (!currentDeck) {
-            alert('Please generate a deck first before creating JSON.');
-            return;
-        }
-        const jsonString = formatDeckAsJson(currentDeck, currentDeckTheme);
-        if (jsonString) {
-            jsonPre.textContent = jsonString;
-            codeBlock.style.display = 'block';
-            copyBtn.textContent = 'Copy code';
-        }
-    });
-
-    copyBtn.addEventListener('click', () => {
-        navigator.clipboard.writeText(jsonPre.textContent).then(() => {
-            copyBtn.textContent = 'Copied!';
-            setTimeout(() => { copyBtn.textContent = 'Copy code'; }, 2000);
-        }, (err) => {
-            console.error('Failed to copy text: ', err);
-            alert('Failed to copy text.');
-        });
-    });
-
-    const cardDataUrl = 'https://raw.githubusercontent.com/nerdrealm/mystik_builder/main/cardProfiles.json';
-    all_cards = await loadCardsFromJson(cardDataUrl);
-    if (all_cards) {
-        companion_map = getCompanionMap(all_cards);
-        statusDiv.textContent = `Ready to build. Please select a theme and archetype.`;
-        statusDiv.style.color = 'var(--color-green-status)';
-        generateBtn.disabled = false;
-    } else {
-        generateBtn.disabled = true;
-    }
-
-    generateBtn.addEventListener('click', () => {
-        const rawThemeInput = themeInput.value.trim();
-        if (!rawThemeInput) { alert("Please enter a Deck Type Theme."); return; }
-        
-        const deckTheme = rawThemeInput.replace(/[,\s]+/g, '/').split('/').map(p => p.trim()).filter(p => p).map(p => p.charAt(0).toUpperCase() + p.slice(1).toLowerCase()).join('/');
-        const archetype = document.querySelector('input[name="archetype"]:checked').value;
-        
-        statusDiv.textContent = `Building a(n) ${archetype} deck with the ${deckTheme} theme...`;
-        statusDiv.style.color = 'var(--color-cyan-status)';
-        cautionDiv.style.display = 'none';
-        
-        jsonSection.style.display = 'none';
-        codeBlock.style.display = 'none';
-        
-        setTimeout(() => {
-            try {
-                const deck = buildStrategicDeck(deckTheme, archetype);
-                currentDeck = deck;
-                currentDeckTheme = deckTheme;
-                displayDeck(deck, deckTheme, archetype);
-                statusDiv.textContent = "Deck generated successfully!";
-                statusDiv.style.color = 'var(--color-green-status)';
-                cautionDiv.style.display = 'block';
-                jsonSection.style.display = 'flex';
-            } catch (e) {
-                statusDiv.textContent = "An error occurred during deck generation. See console for details.";
-                statusDiv.style.color = 'var(--color-red-status)';
-                console.error(e);
-            }
-        }, 50);
-    });
-
-    // --- NEW: Event listener for the Enter key on the theme input ---
-    themeInput.addEventListener('keydown', (event) => {
-        // Check if the key pressed was 'Enter' and the button is not disabled
-        if (event.key === 'Enter' && !generateBtn.disabled) {
-            event.preventDefault(); // Prevents default behavior (like form submission)
-            generateBtn.click();    // Programmatically click the generate button
-        }
-    });
-}
-
-initialize();
+const populateList = (listElement, cards, displayFormatter) => { listElement.innerHTML = ''; if (cards.length === 0) { listElement.innerHTML = '<li>None</li>'; return; } const counts = new Map(); cards.forEach(card => { const key = displayFormatter(card); counts.set(key, (counts.get(key) || 0) + 1); }); const uniqueKeys = []; const seen = new Set(); cards.forEach(card => { const key = displayFormatter(card); if (!seen.has(key)) { uniqueKeys.push(key); seen.add(key); } }); uniqueKeys.forEach(key => { const li = document.createElement('li'); li.textContent = `${key} x${counts.get(key)}`; listElement.appendChild(li); }); };
+function renderCreatureList(sortOrder = 'asc') { if (!currentDeck) return; const sortedCreatures = [...currentDeck.Creatures]; if (sortOrder === 'asc') { sortedCreatures.sort((a, b) => (a.level || 0) - (b.level || 0) || a.name.localeCompare(b.name)); } else { sortedCreatures.sort((a, b) => (b.level || 0) - (a.level || 0) || a.name.localeCompare(b.name)); } populateList(creaturesListUl, sortedCreatures, c => `${c.name} (Lvl ${c.level || '?'}, ${(c.types || ['?'])[0]}, ${c.rarity})`); }
+function displayDeck(deck, deckTheme, archetype) { outputDiv.style.display = 'block'; const color = ARCHETYPE_COLORS[archetype] || 'var(--text-color)'; deckTitleH2.textContent = `${deckTheme} ${archetype} Deck`;[deckTitleH2, creaturesTitleH3, powerTitleH3, secretsTitleH3].forEach(el => el.style.color = color); const total = deck.Creatures.length + deck.Power.length + deck.Secrets.length; deckStatsP.textContent = `Total Cards: ${total} | Creatures: ${deck.Creatures.length}, Power: ${deck.Power.length}, Secrets: ${deck.Secrets.length}`; let oldSortControls = document.getElementById('creature-sort-controls'); if (oldSortControls) oldSortControls.remove(); const sortControlsDiv = document.createElement('div'); sortControlsDiv.id = 'creature-sort-controls'; sortControlsDiv.className = 'sort-controls'; const sortAscBtn = document.createElement('button'); sortAscBtn.textContent = 'Sort 1-10'; sortAscBtn.className = 'sort-btn'; sortAscBtn.onclick = () => renderCreatureList('asc'); const sortDescBtn = document.createElement('button'); sortDescBtn.textContent = 'Sort 10-1'; sortDescBtn.className = 'sort-btn'; sortDescBtn.onclick = () => renderCreatureList('desc'); sortControlsDiv.appendChild(sortAscBtn); sortControlsDiv.appendChild(sortDescBtn); creaturesTitleH3.appendChild(sortControlsDiv); renderCreatureList('asc'); populateList(powerListUl, deck.Power, p => `${p.powerType} Power ${(p.powerValue || 1) === 2 ? '(x2)' : ''} (${p.rarity})`); populateList(secretsListUl, deck.Secrets, s => `${s.name} (${(s.subtypes || ['?'])[0]}, ${s.rarity})`); }
+function generateDeckName() { const prefixes = ["Crimson", "Azure", "Verdant", "Shadow", "Gilded", "Ironclad", "Howling", "Silent", "Arcane", "Solar"]; const suffixes = ["Fury", "Guard", "Storm", "Whisper", "Legacy", "Dawn", "Vengeance", "Heart", "Rage", "Dominion"]; const prefix = prefixes[Math.floor(Math.random() * prefixes.length)]; const suffix = suffixes[Math.floor(Math.random() * suffixes.length)]; return `${prefix} ${suffix}`; }
+function formatDeckAsJson(deck, deckTheme) { try { const allDeckCards = [...deck.Creatures, ...deck.Power, ...deck.Secrets]; const cardCounts = new Map(); for (const card of allDeckCards) { if (card.id === undefined) throw new Error(`Card "${card.name}" is missing a required 'id' field.`); const cardId = parseInt(card.id, 10); cardCounts.set(cardId, (cardCounts.get(cardId) || 0) + 1); } const formattedCards = Array.from(cardCounts.entries()); const outputDeck = { id: String(Math.floor(Math.random() * (9999 - 2000 + 1) + 2000)), name: generateDeckName(), types: deckTheme.split('/'), cards: formattedCards, setCode: "MC01" }; const baseJsonString = JSON.stringify(outputDeck, null, 2); const indentedLines = baseJsonString.split('\n').map(line => '  ' + line); return indentedLines.join('\n') + ','; } catch (e) { console.error("Error formatting deck as JSON:", e); statusDiv.textContent = `Error: ${e.message} Cannot generate JSON.`; statusDiv.style.color = 'var(--color-red-status)'; return null; } }
+async function initialize() { Object.entries(DECK_ARCHETYPES).forEach(([name, data], index) => { const input = document.createElement('input'); input.type = 'radio'; input.id = `archetype-${name}`; input.name = 'archetype'; input.value = name; if (index === 0) input.checked = true; const label = document.createElement('label'); label.htmlFor = `archetype-${name}`; label.textContent = name; label.title = data.description; archetypeOptionsDiv.appendChild(input); archetypeOptionsDiv.appendChild(label); }); const mainContainer = document.querySelector('.main-container'); const jsonSection = document.createElement('div'); jsonSection.id = 'json-generator-section'; jsonSection.style.display = 'none'; const jsonButton = document.createElement('button'); jsonButton.id = 'generate-json-btn'; jsonButton.className = 'action-button'; jsonButton.textContent = 'Generate Deck JSON'; const codeBlock = document.createElement('div'); codeBlock.className = 'code-block-wrapper'; codeBlock.style.display = 'none'; const header = document.createElement('div'); header.className = 'code-header'; const title = document.createElement('span'); title.textContent = 'Deck JSON Output'; const copyBtn = document.createElement('button'); copyBtn.id = 'copy-json-btn'; copyBtn.textContent = 'Copy code'; header.appendChild(title); header.appendChild(copyBtn); const body = document.createElement('div'); body.className = 'code-body'; const jsonPre = document.createElement('pre'); jsonPre.id = 'json-output'; body.appendChild(jsonPre); const warningDiv = document.createElement('div'); warningDiv.id = 'json-warning'; warningDiv.innerHTML = `⚠️ <strong>WARNING</strong> ⚠️ This JSON format is exclusively valid for the deckProfiles.json file and is intended solely for coding purposes. Do not use this format for other applications or files, as it may not be compatible with other systems or use cases.`; codeBlock.appendChild(header); codeBlock.appendChild(body); codeBlock.appendChild(warningDiv); jsonSection.appendChild(jsonButton); jsonSection.appendChild(codeBlock); mainContainer.appendChild(jsonSection); jsonButton.addEventListener('click', () => { if (!currentDeck) { alert('Please generate a deck first before creating JSON.'); return; } const jsonString = formatDeckAsJson(currentDeck, currentDeckTheme); if (jsonString) { jsonPre.textContent = jsonString; codeBlock.style.display = 'block'; copyBtn.textContent = 'Copy code'; } }); copyBtn.addEventListener('click', () => { navigator.clipboard.writeText(jsonPre.textContent).then(() => { copyBtn.textContent = 'Copied!'; setTimeout(() => { copyBtn.textContent = 'Copy code'; }, 2000); }, (err) => { console.error('Failed to copy text: ', err); alert('Failed to copy text.'); }); }); const cardDataUrl = 'https://raw.githubusercontent.com/nerdrealm/mystik_builder/main/cardProfiles.json'; all_cards = await loadCardsFromJson(cardDataUrl); if (all_cards) { companion_map = getCompanionMap(all_cards); statusDiv.textContent = `Ready to build. Please select a theme and archetype.`; statusDiv.style.color = 'var(--color-green-status)'; generateBtn.disabled = false; } else { generateBtn.disabled = true; } generateBtn.addEventListener('click', () => { const rawThemeInput = themeInput.value.trim(); if (!rawThemeInput) { alert("Please enter a Deck Type Theme."); return; } const deckTheme = rawThemeInput.replace(/[,\s]+/g, '/').split('/').map(p => p.trim()).filter(p => p).map(p => p.charAt(0).toUpperCase() + p.slice(1).toLowerCase()).join('/'); const archetype = document.querySelector('input[name="archetype"]:checked').value; statusDiv.textContent = `Building a(n) ${archetype} deck with the ${deckTheme} theme...`; statusDiv.style.color = 'var(--color-cyan-status)'; cautionDiv.style.display = 'none'; jsonSection.style.display = 'none'; codeBlock.style.display = 'none'; setTimeout(() => { try { const deck = buildStrategicDeck(deckTheme, archetype); currentDeck = deck; currentDeckTheme = deckTheme; displayDeck(deck, deckTheme, archetype); statusDiv.textContent = "Deck generated successfully!"; statusDiv.style.color = 'var(--color-green-status)'; cautionDiv.style.display = 'block'; jsonSection.style.display = 'flex'; } catch (e) { statusDiv.textContent = "An error occurred during deck generation. See console for details."; statusDiv.style.color = 'var(--color-red-status)'; console.error(e); } }, 50); }); themeInput.addEventListener('keydown', (event) => { if (event.key === 'Enter' && !generateBtn.disabled) { event.preventDefault(); generateBtn.click(); } }); } initialize();
 
 });
 </script>
