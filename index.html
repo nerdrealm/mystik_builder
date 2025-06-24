@@ -651,6 +651,12 @@ function buildStrategicDeck(selectedTypes, archetype_name) {
     let scored_low = scored_creatures.filter(([c, s]) => (c.level || 0) >= 1 && (c.level || 0) <= 3);
     let scored_mid = scored_creatures.filter(([c, s]) => (c.level || 0) >= 4 && (c.level || 0) <= 6);
     let scored_high = scored_creatures.filter(([c, s]) => (c.level || 0) >= 7);
+
+    // --- NEW: Tiered lists for high-level creatures to increase variety ---
+    const elite_high = scored_high.slice(0, 3);
+    const good_high = scored_high.slice(3, 8);
+    const viable_high = scored_high.slice(8);
+
     const creatureCounts = defaultdict(() => 0);
     let level_10_count = 0;
     let panterus_priority_set = false;
@@ -661,7 +667,14 @@ function buildStrategicDeck(selectedTypes, archetype_name) {
         let selectionPool = [];
         if (num_low < Math.floor(targetCreatures * 0.45) && scored_low.length > 0) selectionPool.push(...scored_low.slice(0, 10));
         if (num_mid < Math.floor(targetCreatures * 0.35) && scored_mid.length > 0) selectionPool.push(...scored_mid.slice(0, 7));
-        if (scored_high.length > 0) selectionPool.push(...scored_high.slice(0, 5));
+        
+        // --- NEW: Use tiered selection for high-level creatures ---
+        if (scored_high.length > 0) {
+            selectionPool.push(...elite_high.slice(0, 2));   // Prioritize the very best
+            selectionPool.push(...good_high.slice(0, 2));    // Add other strong options
+            selectionPool.push(...viable_high.slice(0, 1));  // Give a chance to a less common one
+        }
+
         if (selectionPool.length === 0) {
             selectionPool.push(...scored_low.slice(0, 10), ...scored_mid.slice(0, 7), ...scored_high.slice(0, 5));
             if (selectionPool.length === 0) break;
@@ -673,16 +686,17 @@ function buildStrategicDeck(selectedTypes, archetype_name) {
         const { name: card_name, rarity: card_rarity, level: card_level = 0 } = card_to_add;
         
         if ((card_level === 10 && level_10_count >= DECK_RULES.level_10_limits.total) || (creatureCounts[card_name] >= (DECK_RULES.creature_card_limits[card_rarity] || 1))) {
-            scored_low = scored_low.filter(([c,s]) => c.script_uuid !== card_to_add.script_uuid);
-            scored_mid = scored_mid.filter(([c,s]) => c.script_uuid !== card_to_add.script_uuid);
-            scored_high = scored_high.filter(([c,s]) => c.script_uuid !== card_to_add.script_uuid);
+            // Remove the invalid card from all potential source lists to prevent re-selection
+            const uuid_to_remove = card_to_add.script_uuid;
+            scored_low = scored_low.filter(([c,s]) => c.script_uuid !== uuid_to_remove);
+            scored_mid = scored_mid.filter(([c,s]) => c.script_uuid !== uuid_to_remove);
+            scored_high = scored_high.filter(([c,s]) => c.script_uuid !== uuid_to_remove);
             continue;
         }
         deck.Creatures.push(card_to_add);
         creatureCounts[card_name]++;
         if (card_level === 10) level_10_count++;
         
-        // --- UPDATED COMPANION AND SPECIAL CASE LOGIC ---
         const required_companion_names = new Set();
         if (card_name === "Hydra") {
             required_companion_names.add("Nereus").add("Nereia").add("Nerion");
@@ -690,18 +704,20 @@ function buildStrategicDeck(selectedTypes, archetype_name) {
         if (card_name in companion_map) {
             (companion_map[card_name].creatures || []).forEach(name => required_companion_names.add(name));
         }
+
         if (required_companion_names.size > 0) {
             const companions_to_add = all_cards.filter(c => required_companion_names.has(c.name));
             for (const comp_card of companions_to_add) {
-                if (deck.Creatures.length >= targetCreatures) break;
                 const { name: cc_name, rarity: cc_rarity, level: cc_level = 0 } = comp_card;
-                if (creatureCounts[cc_name] < (DECK_RULES.creature_card_limits[cc_rarity] || 1) && !(cc_level === 10 && level_10_count >= DECK_RULES.level_10_limits.total)) {
+                if (creatureCounts[cc_name] < (DECK_RULES.creature_card_limits[cc_rarity] || 1) && 
+                   !(cc_level === 10 && level_10_count >= DECK_RULES.level_10_limits.total)) {
                     deck.Creatures.push(comp_card);
                     creatureCounts[cc_name]++;
                     if (cc_level === 10) level_10_count++;
                 }
             }
         }
+        
         if (card_name === "Divine Beast Panterus" && !panterus_priority_set) {
             const winged_beast_names = ["Winged Beast U'ru", "Winged Beast Wai'ku", "Winged Beast Ra'zu"];
             const all_winged_beasts = all_cards.filter(c => winged_beast_names.includes(c.name));
@@ -726,7 +742,6 @@ function buildStrategicDeck(selectedTypes, archetype_name) {
         const creature_ratio = archetype.creatures / (archetype.creatures + archetype.secrets) || 0.5;
         targetCreatures = Math.max(15, targetCreatures - Math.round(power_deficit * creature_ratio));
         targetSecrets = Math.max(8, targetSecrets - (power_deficit - Math.round(power_deficit * creature_ratio)));
-        while (deck.Creatures.length > targetCreatures) deck.Creatures.pop();
     }
     
     const powerCardsByType = defaultdict(() => []);
@@ -736,19 +751,12 @@ function buildStrategicDeck(selectedTypes, archetype_name) {
     if (is_blank_deck) {
         const creature_type_counts = defaultdict(() => 0);
         deck.Creatures.forEach(c => (c.types || []).forEach(type => creature_type_counts[type]++));
-        const min_blank_power = Math.max(Math.floor(targetPower / 2), 3);
-        for (const type in creature_type_counts) {
+        Object.keys(creature_type_counts).forEach(type => {
             powerDistribution[type] = Math.max(1, Math.min(creature_type_counts[type], 2));
-        }
+        });
         const used_power = Object.values(powerDistribution).reduce((a, b) => a + b, 0);
         const remaining_slots = targetPower - used_power;
-        const blank_allocation = Math.max(min_blank_power, remaining_slots);
-        powerDistribution['Blank'] = Math.min(blank_allocation, 12);
-        let total_allocated = Object.values(powerDistribution).reduce((a, b) => a + b, 0);
-        if (total_allocated > targetPower) {
-            const excess = total_allocated - targetPower;
-            powerDistribution['Blank'] = Math.max(min_blank_power, powerDistribution['Blank'] - excess);
-        }
+        powerDistribution['Blank'] = Math.max(Math.max(Math.floor(targetPower / 2), 3), remaining_slots);
     } else {
         Object.assign(powerDistribution, power_needs);
         themeTypes.forEach(themeType => {
@@ -799,11 +807,6 @@ function buildStrategicDeck(selectedTypes, archetype_name) {
             const card_to_add = available_single[0];
             deck.Power.push(card_to_add);
             powerDistribution[fallback_type] = Math.max(0, powerDistribution[fallback_type] - 1);
-
-            if (is_blank_deck && fallback_type === 'Blank') {
-                const blank_value_count = deck.Power.filter(p => p.powerType === 'Blank').reduce((sum, p) => sum + (p.powerValue || 1), 0);
-                if (blank_value_count >= 12) powerDistribution['Blank'] = 0;
-            }
         }
     }
     
@@ -858,12 +861,44 @@ function buildStrategicDeck(selectedTypes, archetype_name) {
         }
     }
         
-    // --- 5. FINAL ADJUSTMENT ---
-    while (deck.Creatures.length + deck.Power.length + deck.Secrets.length > 60) {
-        if (deck.Power.length > targetPower) deck.Power.pop();
-        else if (deck.Secrets.length > targetSecrets) deck.Secrets.pop();
-        else deck.Creatures.pop();
+    // --- 5. FINAL ADJUSTMENT (SMARTER VERSION) ---
+    const required_companions_in_deck = new Set();
+    for (const creature of deck.Creatures) {
+        if (creature.name in companion_map) {
+            (companion_map[creature.name].creatures || []).forEach(comp_name => required_companions_in_deck.add(comp_name));
+        }
+        if (creature.name === 'Hydra') {
+            required_companions_in_deck.add('Nereus').add('Nereia').add('Nerion');
+        }
     }
+
+    while (deck.Creatures.length + deck.Power.length + deck.Secrets.length > 60) {
+        if (deck.Power.length > targetPower && deck.Power.length > 0) {
+            deck.Power.pop();
+        } else if (deck.Secrets.length > targetSecrets && deck.Secrets.length > 0) {
+            deck.Secrets.pop();
+        } else if (deck.Creatures.length > targetCreatures && deck.Creatures.length > 0) {
+            let creature_to_pop_index = -1;
+            // Find a creature to remove that is NOT a required companion or a boss itself
+            for (let i = deck.Creatures.length - 1; i >= 0; i--) {
+                const creature_name = deck.Creatures[i].name;
+                if (!required_companions_in_deck.has(creature_name) && !(creature_name in companion_map)) {
+                    creature_to_pop_index = i;
+                    break;
+                }
+            }
+            
+            if (creature_to_pop_index !== -1) {
+                deck.Creatures.splice(creature_to_pop_index, 1);
+            } else {
+                deck.Creatures.pop();
+            }
+        } else {
+             // Failsafe if we're still over 60 but can't remove from target counts
+             deck.Power.length > 0 ? deck.Power.pop() : (deck.Secrets.length > 0 ? deck.Secrets.pop() : deck.Creatures.pop());
+        }
+    }
+
     while (deck.Creatures.length + deck.Power.length + deck.Secrets.length < 60) {
         let power_card_to_add = (powerCardsByType['Blank'] || [null])[0];
         if (!is_blank_deck) {
@@ -915,7 +950,7 @@ function renderCreatureList(sortOrder = 'asc') {
         sortedCreatures.sort((a, b) => (b.level || 0) - (a.level || 0) || a.name.localeCompare(b.name));
     }
     
-    populateList(creaturesListUl, sortedCreatures, c => `${c.name} (Lvl ${c.level || '?'}, ${(c.types || ['?'])[0]}, ${c.rarity})`);
+    populateList(creaturesListUl, sortedCreatures, c => `${c.name} (Lvl ${c.level || '?'}, ${(c.types || ['?']).join('/')}, ${c.rarity})`);
 }
 
 function displayDeck(deck, deckTheme, archetype) {
