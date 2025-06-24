@@ -566,19 +566,49 @@ function scoreCreatureSynergy(card, deckTheme) {
 
 function scoreSecretSynergy(card, deckTheme, creaturesInDeck) {
     const cardName = card.name || '';
-    const themeTypes = deckTheme.split('/');
-    if (deckTheme === 'Blank' && (card.subtypes || [null])[0] === 'Terrain') return -1;
+
     for (const bossName in companion_map) {
-        if (companion_map[bossName].secrets.includes(cardName)) {
+        if ((companion_map[bossName].secrets || []).includes(cardName)) {
             const isBossPresent = creaturesInDeck.some(c => c.name === bossName);
             return isBossPresent ? 1000 : -1;
         }
     }
+
     let score = randInt(0, 10);
+    const themeTypes = deckTheme.split('/');
+    let isInvalidTypeMod = false;
+
+    for (const ability of card.abilities || []) {
+        for (const effect of ability.structuredEffects || []) {
+            if (effect.category === 'TypeModification') {
+                const addedType = effect.addType;
+                if (!addedType) continue;
+
+                if (themeTypes.length === 1 && deckTheme !== 'Blank') {
+                    if (addedType !== themeTypes[0]) isInvalidTypeMod = true;
+                } else if (themeTypes.length > 1) {
+                    if (themeTypes.includes(addedType)) score += 150;
+                    else isInvalidTypeMod = true;
+                } else if (deckTheme === 'Blank') {
+                    const creatureTypesInDeck = new Set(creaturesInDeck.flatMap(c => c.types || []));
+                    if (creatureTypesInDeck.has(addedType)) score += 75;
+                    else isInvalidTypeMod = true;
+                }
+            }
+            if (isInvalidTypeMod) break;
+        }
+        if (isInvalidTypeMod) break;
+    }
+
+    if (isInvalidTypeMod) return -1;
+
     if ((card.subtypes || [null])[0] === 'Terrain') {
+        if (deckTheme === 'Blank') return -1;
+
         const validTypes = TERRAIN_TYPE_COMPATIBILITY[cardName] || [];
         let terrainMatchesTheme = false;
-        if (validTypes.includes("All") && deckTheme !== 'Blank') {
+        
+        if (validTypes.includes("All")) {
             terrainMatchesTheme = true;
             score += 60;
         } else {
@@ -597,8 +627,10 @@ function scoreSecretSynergy(card, deckTheme, creaturesInDeck) {
             if (effectText.includes(theme.toLowerCase())) score += 25;
         }
     }
+
     return score;
 }
+
 
 // --- CORE DECK BUILDING FUNCTION ---
 function buildStrategicDeck(selectedTypes, archetype_name) {
@@ -611,15 +643,17 @@ function buildStrategicDeck(selectedTypes, archetype_name) {
     let targetPower = Math.floor(DECK_RULES.deck_size * archetype.power);
 
     // --- 2. CREATURE SELECTION ---
+    const themeTypes = selectedTypes.split('/');
+    const available_creatures = all_cards.filter(c => c.supertype === 'Creature' && (is_blank_deck || (c.types || []).some(t => themeTypes.includes(t))));
     const creatureSelectionFn = is_blank_deck ? scoreCreatureSynergyBlank : (c) => scoreCreatureSynergy(c, selectedTypes);
-    const available_creatures = all_cards.filter(c => c.supertype === 'Creature' && (is_blank_deck || (c.types || []).some(t => selectedTypes.split('/').includes(t))));
-    const scored_creatures = available_creatures.map(c => [c, creatureSelectionFn(c)]).sort((a, b) => b[1] - a[1]);
+    const scored_creatures = available_creatures.map(c => [c, creatureSelectionFn(c)]).filter(([c,s]) => s >= 0).sort((a, b) => b[1] - a[1]);
     
     let scored_low = scored_creatures.filter(([c, s]) => (c.level || 0) >= 1 && (c.level || 0) <= 3);
     let scored_mid = scored_creatures.filter(([c, s]) => (c.level || 0) >= 4 && (c.level || 0) <= 6);
     let scored_high = scored_creatures.filter(([c, s]) => (c.level || 0) >= 7);
     const creatureCounts = defaultdict(() => 0);
     let level_10_count = 0;
+    let panterus_priority_set = false;
 
     while (deck.Creatures.length < targetCreatures) {
         const num_low = deck.Creatures.filter(c => (c.level || 0) >= 1 && (c.level || 0) <= 3).length;
@@ -634,8 +668,10 @@ function buildStrategicDeck(selectedTypes, archetype_name) {
         }
         const uniquePool = [...new Map(selectionPool.map(item => [item[0].script_uuid, item])).values()];
         if (uniquePool.length === 0) break;
+        
         const [card_to_add, _] = uniquePool[Math.floor(Math.random() * uniquePool.length)];
         const { name: card_name, rarity: card_rarity, level: card_level = 0 } = card_to_add;
+        
         if ((card_level === 10 && level_10_count >= DECK_RULES.level_10_limits.total) || (creatureCounts[card_name] >= (DECK_RULES.creature_card_limits[card_rarity] || 1))) {
             scored_low = scored_low.filter(([c,s]) => c.script_uuid !== card_to_add.script_uuid);
             scored_mid = scored_mid.filter(([c,s]) => c.script_uuid !== card_to_add.script_uuid);
@@ -645,14 +681,40 @@ function buildStrategicDeck(selectedTypes, archetype_name) {
         deck.Creatures.push(card_to_add);
         creatureCounts[card_name]++;
         if (card_level === 10) level_10_count++;
+        
+        // --- UPDATED COMPANION AND SPECIAL CASE LOGIC ---
+        const required_companion_names = new Set();
+        if (card_name === "Hydra") {
+            required_companion_names.add("Nereus").add("Nereia").add("Nerion");
+        }
         if (card_name in companion_map) {
-            for (const comp_name of companion_map[card_name].creatures) {
-                const comp_card = available_creatures.find(c => c.name === comp_name);
-                if (comp_card && creatureCounts[comp_name] < (DECK_RULES.creature_card_limits[comp_card.rarity] || 2) && deck.Creatures.length < targetCreatures) {
+            (companion_map[card_name].creatures || []).forEach(name => required_companion_names.add(name));
+        }
+        if (required_companion_names.size > 0) {
+            const companions_to_add = all_cards.filter(c => required_companion_names.has(c.name));
+            for (const comp_card of companions_to_add) {
+                if (deck.Creatures.length >= targetCreatures) break;
+                const { name: cc_name, rarity: cc_rarity, level: cc_level = 0 } = comp_card;
+                if (creatureCounts[cc_name] < (DECK_RULES.creature_card_limits[cc_rarity] || 1) && !(cc_level === 10 && level_10_count >= DECK_RULES.level_10_limits.total)) {
                     deck.Creatures.push(comp_card);
-                    creatureCounts[comp_name]++;
+                    creatureCounts[cc_name]++;
+                    if (cc_level === 10) level_10_count++;
                 }
             }
+        }
+        if (card_name === "Divine Beast Panterus" && !panterus_priority_set) {
+            const winged_beast_names = ["Winged Beast U'ru", "Winged Beast Wai'ku", "Winged Beast Ra'zu"];
+            const all_winged_beasts = all_cards.filter(c => winged_beast_names.includes(c.name));
+            const priority_uuids = new Set(all_winged_beasts.map(p => p.script_uuid));
+            const prioritizeInPool = (pool) => {
+                const priority_items = pool.filter(([card, score]) => priority_uuids.has(card.script_uuid));
+                const other_items = pool.filter(([card, score]) => !priority_uuids.has(card.script_uuid));
+                return [...priority_items, ...other_items];
+            };
+            scored_low = prioritizeInPool(scored_low);
+            scored_mid = prioritizeInPool(scored_mid);
+            scored_high = prioritizeInPool(scored_high);
+            panterus_priority_set = true;
         }
     }
 
@@ -689,7 +751,6 @@ function buildStrategicDeck(selectedTypes, archetype_name) {
         }
     } else {
         Object.assign(powerDistribution, power_needs);
-        const themeTypes = selectedTypes.split('/');
         themeTypes.forEach(themeType => {
             if (!(themeType in powerDistribution)) powerDistribution[themeType] = 0;
             const min_for_theme = Math.max(2, Math.floor(targetPower / (themeTypes.length * 3) || 1));
@@ -865,9 +926,8 @@ function displayDeck(deck, deckTheme, archetype) {
     const total = deck.Creatures.length + deck.Power.length + deck.Secrets.length;
     deckStatsP.textContent = `Total Cards: ${total} | Creatures: ${deck.Creatures.length}, Power: ${deck.Power.length}, Secrets: ${deck.Secrets.length}`;
     
-    // --- **FIXED** Create and add sorting controls for creatures ---
     let oldSortControls = document.getElementById('creature-sort-controls');
-    if (oldSortControls) oldSortControls.remove(); // Remove old controls to prevent bugs
+    if (oldSortControls) oldSortControls.remove();
 
     const sortControlsDiv = document.createElement('div');
     sortControlsDiv.id = 'creature-sort-controls';
@@ -887,7 +947,7 @@ function displayDeck(deck, deckTheme, archetype) {
     sortControlsDiv.appendChild(sortDescBtn);
     creaturesTitleH3.appendChild(sortControlsDiv);
     
-    renderCreatureList('asc'); // Default sort
+    renderCreatureList('asc');
     populateList(powerListUl, deck.Power, p => `${p.powerType} Power ${(p.powerValue || 1) === 2 ? '(x2)' : ''} (${p.rarity})`);
     populateList(secretsListUl, deck.Secrets, s => `${s.name} (${(s.subtypes || ['?'])[0]}, ${s.rarity})`);
 }
@@ -941,7 +1001,6 @@ async function initialize() {
         archetypeOptionsDiv.appendChild(label);
     });
 
-    // --- Create and append JSON generator section with new structure ---
     const mainContainer = document.querySelector('.main-container');
     const jsonSection = document.createElement('div');
     jsonSection.id = 'json-generator-section';
@@ -984,7 +1043,6 @@ async function initialize() {
     jsonSection.appendChild(codeBlock);
     mainContainer.appendChild(jsonSection);
 
-    // --- Add event listeners ---
     jsonButton.addEventListener('click', () => {
         if (!currentDeck) {
             alert('Please generate a deck first before creating JSON.');
@@ -1059,5 +1117,3 @@ initialize();
 
 </body>
 </html>
-
-
