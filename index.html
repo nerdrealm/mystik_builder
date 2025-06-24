@@ -580,7 +580,7 @@ function scoreCreatureSynergy(card, deckTheme) {
     return score;
 }
 
-// --- NEW: REVISED scoreSecretSynergy to match Python logic ---
+// --- **FIXED** REVISED scoreSecretSynergy with corrected logic ---
 function scoreSecretSynergy(card, deckTheme, creaturesInDeck) {
     const cardName = card.name || '';
     
@@ -599,24 +599,24 @@ function scoreSecretSynergy(card, deckTheme, creaturesInDeck) {
             
     let score = randInt(0, 10);
     const themeTypes = deckTheme.split('/');
+    let hasTypeModification = false;
 
     // Part 1: Handle Type Modification as a primary filter
-    let isInvalidTypeMod = false;
     for (const ability of card.abilities || []) {
         for (const effect of ability.structuredEffects || []) {
             if (effect.category === 'TypeModification') {
+                hasTypeModification = true; // Mark that this card has this effect
                 const addedType = effect.addType;
                 
-                // NEW RULE: Type modification cards are invalid for single-type decks.
+                // Rule: Type modification cards are invalid for single-type decks.
                 if (themeTypes.length === 1 && deckTheme !== 'Blank') {
-                    isInvalidTypeMod = true;
-                    break;
+                    return -1; // IMMEDIATELY REJECT
                 }
 
                 // For cards like Elemental Infusion where addType is not specified.
                 if (!addedType) {
                     score += 100; // Valid for multi-type or blank decks.
-                    continue; // Check other effects on the card.
+                    continue; 
                 }
                 
                 // Rule for multi-type decks
@@ -624,8 +624,7 @@ function scoreSecretSynergy(card, deckTheme, creaturesInDeck) {
                     if (themeTypes.includes(addedType)) {
                         score += 150; // Highly synergistic
                     } else {
-                        isInvalidTypeMod = true; // Adds an unwanted 3rd type
-                        break;
+                        return -1; // Adds an unwanted 3rd type, IMMEDIATELY REJECT
                     }
                 } 
                 // Rule for Blank decks
@@ -634,17 +633,17 @@ function scoreSecretSynergy(card, deckTheme, creaturesInDeck) {
                     if (creatureTypesInDeck.has(addedType)) {
                         score += 75; // Good internal synergy
                     } else {
-                        isInvalidTypeMod = true; // Introduces an unsupported type
-                        break;
+                        return -1; // Introduces an unsupported type, IMMEDIATELY REJECT
                     }
                 }
             }
         }
-        if (isInvalidTypeMod) break;
     }
     
-    if (isInvalidTypeMod) {
-        return -1; // This card is not suitable for the deck's theme
+    // If the card was a TypeModification card, we've already scored it or rejected it.
+    // No need to continue and score it based on text, which was the source of the bug.
+    if (hasTypeModification) {
+        return score;
     }
 
     // Part 2: Handle Terrain Cards
@@ -671,7 +670,7 @@ function scoreSecretSynergy(card, deckTheme, creaturesInDeck) {
             return -1;
         }
             
-    // Part 3: Handle other effects
+    // Part 3: Handle other effects (for non-TypeMod, non-Terrain cards)
     } else {
         const effectText = (card.effectText || '').toLowerCase();
         for (const theme of themeTypes) {
