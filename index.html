@@ -458,11 +458,11 @@ const BOSS_COMPANION_MAP = {
     "Divine Beast Panterus": ["Winged Beast U'ru", "Winged Beast Wai'ku", "Winged Beast Ra'zu"]
 };
 
-// --- **FIX #1**: "SCORCHED EARTH" BAN LIST FOR TYPE-CHANGING SECRETS ---
-const BANNED_TYPE_CHANGING_CARDS = [
+// --- **FIX #1**: "SCORCHED EARTH" BAN LIST FOR BROKEN SECRET CARDS ---
+const BANNED_SECRET_CARDS = [
     "Aquatic Conversion", "Celestial Storm", "Corrupt Evolution", "Divine Transformation",
     "Elemental Infusion", "Infernal Transmutation", "Mystik Forestry", "Primeval Mutation",
-    "Windy Metamorphosis"
+    "Windy Metamorphosis", "Elemental Break"
 ];
 
 
@@ -591,7 +591,7 @@ function scoreSecretSynergy(card, deckTheme, creaturesInDeck) {
     const cardName = card.name || '';
     
     // RULE 0: Hard-ban specific cards.
-    if (cardName === "Elemental Break" || BANNED_TYPE_CHANGING_CARDS.includes(cardName)) {
+    if (BANNED_SECRET_CARDS.includes(cardName)) {
         return -1;
     }
 
@@ -725,7 +725,7 @@ function buildStrategicDeck(selectedTypes, archetype_name) {
         const creature_ratio = archetype.creatures / (archetype.creatures + archetype.secrets) || 0.5;
         targetCreatures = Math.max(15, targetCreatures - Math.round(power_deficit * creature_ratio));
         targetSecrets = Math.max(8, targetSecrets - (power_deficit - Math.round(power_deficit * creature_ratio)));
-        // Adjust creature count if needed
+        
         while (deck.Creatures.length > targetCreatures) {
              const removed_card = deck.Creatures.pop();
              creatureCounts[removed_card.name]--;
@@ -737,32 +737,31 @@ function buildStrategicDeck(selectedTypes, archetype_name) {
     all_cards.filter(c => c.supertype === 'Power').forEach(c => powerCardsByType[c.powerType].push(c));
     
     const powerDistribution = defaultdict(() => 0);
+    // Start with the power needs from creature attacks
+    Object.assign(powerDistribution, power_needs);
+
     if (is_blank_deck) {
         const creature_type_counts = defaultdict(() => 0);
         deck.Creatures.forEach(c => (c.types || []).forEach(type => creature_type_counts[type]++));
-        const min_blank_power = Math.max(Math.floor(targetPower / 2), 3);
-        
-        Object.assign(powerDistribution, power_needs); // Start with attack needs
-
         for (const type in creature_type_counts) {
             powerDistribution[type] = Math.max(powerDistribution[type], Math.max(1, Math.min(creature_type_counts[type], 2)));
         }
         const used_power = Object.values(powerDistribution).reduce((a, b) => a + b, 0);
         const remaining_slots = targetPower - used_power;
+        const min_blank_power = Math.max(Math.floor(targetPower / 2), 3);
         const blank_allocation = Math.max(min_blank_power, remaining_slots);
         powerDistribution['Blank'] = Math.min(blank_allocation, 12);
-        let total_allocated = Object.values(powerDistribution).reduce((a, b) => a + b, 0);
-        if (total_allocated > targetPower) {
-            const excess = total_allocated - targetPower;
-            powerDistribution['Blank'] = Math.max(min_blank_power, powerDistribution['Blank'] - excess);
-        }
+
     } else {
-        Object.assign(powerDistribution, power_needs);
-        const themeTypes = selectedTypes.split('/');
-        themeTypes.forEach(themeType => {
-            if (!(themeType in powerDistribution)) powerDistribution[themeType] = 0;
-            const min_for_theme = Math.max(2, Math.floor(targetPower / (themeTypes.length * 2.5) || 1));
-            powerDistribution[themeType] = Math.max(powerDistribution[themeType], min_for_theme);
+        // Get ALL unique types from the creatures ACTUALLY in the deck.
+        const allCreatureTypesInDeck = [...new Set(deck.Creatures.flatMap(c => c.types || []))];
+
+        // Ensure a minimum power allocation for every type represented in the creature list.
+        allCreatureTypesInDeck.forEach(type => {
+            if (!(type in powerDistribution)) powerDistribution[type] = 0;
+            // Ensure at least a few power cards for ANY type present
+            const min_for_type = Math.max(2, Math.floor(targetPower / (allCreatureTypesInDeck.length * 3) || 1));
+            powerDistribution[type] = Math.max(powerDistribution[type], min_for_type);
         });
     }
 
@@ -807,11 +806,6 @@ function buildStrategicDeck(selectedTypes, archetype_name) {
             const card_to_add = available_single[0];
             deck.Power.push(card_to_add);
             powerDistribution[fallback_type] = Math.max(0, powerDistribution[fallback_type] - 1);
-
-            if (is_blank_deck && fallback_type === 'Blank') {
-                const blank_value_count = deck.Power.filter(p => p.powerType === 'Blank').reduce((sum, p) => sum + (p.powerValue || 1), 0);
-                if (blank_value_count >= 12) powerDistribution['Blank'] = 0;
-            }
         }
     }
     
@@ -828,7 +822,7 @@ function buildStrategicDeck(selectedTypes, archetype_name) {
 
     const companionSecrets = scored_secrets.filter(([card, score]) => score >= 1000);
     const terrainSecrets = scored_secrets.filter(([card, score]) => (card.subtypes || [null])[0] === 'Terrain' && score < 1000);
-    const generalSecrets = scored_secrets.filter(([card, score]) => !BANNED_TYPE_CHANGING_CARDS.includes(card.name) && (card.subtypes || [null])[0] !== 'Terrain' && score < 1000);
+    const generalSecrets = scored_secrets.filter(([card, score]) => !BANNED_SECRET_CARDS.includes(card.name) && (card.subtypes || [null])[0] !== 'Terrain' && score < 1000);
 
     const secret_counts = defaultdict(() => 0);
     const terrain_counts = defaultdict(() => 0);
