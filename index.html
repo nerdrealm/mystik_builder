@@ -147,6 +147,34 @@
             box-shadow: 0 0 10px var(--btn-color);
         }
 
+        /* --- NEW RULES FOR ARCHETYPE COLORS --- */
+        #archetype-Balanced:checked + label {
+            background-color: var(--color-green-status);
+            box-shadow: 0 0 10px var(--color-green-status);
+            color: var(--btn-text-color); /* Dark text on green */
+            border-color: var(--color-green-status);
+        }
+        #archetype-Aggro:checked + label {
+            background-color: var(--color-red-status);
+            box-shadow: 0 0 10px var(--color-red-status);
+            color: var(--text-light); /* Light text on red for contrast */
+            border-color: var(--color-red-status);
+        }
+        #archetype-Control:checked + label {
+            background-color: var(--color-yellow-status);
+            box-shadow: 0 0 10px var(--color-yellow-status);
+            color: var(--btn-text-color); /* Dark text on yellow */
+            border-color: var(--color-yellow-status);
+        }
+        #archetype-Energy:checked + label {
+            background-color: var(--color-cyan-status);
+            box-shadow: 0 0 10px var(--color-cyan-status);
+            color: var(--btn-text-color); /* Dark text on cyan */
+            border-color: var(--color-cyan-status);
+        }
+        /* --- END OF NEW RULES --- */
+
+
         .action-button {
             grid-column: 1 / -1;
             padding: 15px;
@@ -963,6 +991,15 @@ async function initialize() {
                 console.error(e);
             }
         }, 50);
+    });
+
+    // --- NEW: Event listener for the Enter key on the theme input ---
+    themeInput.addEventListener('keydown', (event) => {
+        // Check if the key pressed was 'Enter' and the button is not disabled
+        if (event.key === 'Enter' && !generateBtn.disabled) {
+            event.preventDefault(); // Prevents default behavior (like form submission)
+            generateBtn.click();    // Programmatically click the generate button
+        }
     });
 }
 
