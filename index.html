@@ -445,7 +445,6 @@ const TERRAIN_TYPE_COMPATIBILITY = {
     "Torn Wastelands": ["All"], "Volcanoes of Westu'ra": ["Fire"], "Winds off the Coast": ["Wind"]
 };
 
-// --- BOSS & COMPANION ENFORCEMENT MAP ---
 const BOSS_COMPANION_MAP = {
     "Arcana Temptress": ["Arcana Apprentice"],
     "Dracoleón": ["Nemean Lion"],
@@ -458,7 +457,6 @@ const BOSS_COMPANION_MAP = {
     "Divine Beast Panterus": ["Winged Beast U'ru", "Winged Beast Wai'ku", "Winged Beast Ra'zu"]
 };
 
-// --- **FIX #1**: "SCORCHED EARTH" BAN LIST FOR BROKEN SECRET CARDS ---
 const BANNED_SECRET_CARDS = [
     "Aquatic Conversion", "Celestial Storm", "Corrupt Evolution", "Divine Transformation",
     "Elemental Infusion", "Infernal Transmutation", "Mystik Forestry", "Primeval Mutation",
@@ -468,7 +466,7 @@ const BANNED_SECRET_CARDS = [
 
 // --- GLOBAL VARIABLES & DOM ELEMENTS ---
 let all_cards = [];
-let companion_map = {}; // For synergy scoring
+let companion_map = {};
 let currentDeck = null;
 let currentDeckTheme = '';
 
@@ -490,6 +488,15 @@ const cautionDiv = document.getElementById('caution-message');
 const defaultdict = (defaultValueFactory) => new Proxy({}, {
     get: (target, name) => name in target ? target[name] : (target[name] = defaultValueFactory())
 });
+
+// --- UTILITY FUNCTIONS ---
+const shuffle = (array) => {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+};
 
 // --- DATA LOADING & INITIALIZATION ---
 async function loadCardsFromJson(url) {
@@ -537,47 +544,23 @@ function getCompanionMap(cards) {
 
 function analyzePowerRequirements(creatures) {
     const powerNeeds = defaultdict(() => 0);
-    let totalPowerCost = 0;
     for (const creature of creatures) {
         for (const attack of creature.attacks || []) {
             for (const cost of attack.cost || []) {
                 powerNeeds[cost.PowerType] += cost.count;
-                totalPowerCost += cost.count;
             }
         }
     }
-    const avgPowerPerCreature = creatures.length > 0 ? totalPowerCost / creatures.length : 2;
-    const minPowerCards = Math.max(12, Math.floor(avgPowerPerCreature * creatures.length * 0.3));
-    return [powerNeeds, minPowerCards];
-}
-
-const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-
-function scoreCreatureSynergyBlank(card) {
-    let score = randInt(0, 20);
-    if (Object.values(companion_map).some(v => v.creatures.includes(card.name))) score += 50;
-    if (card.name in companion_map) score += 50;
-    if (card.rarity === 'Rare') score += 20;
-    if (card.rarity === 'UltraRare') score += 40;
-    if ((card.level || 0) >= 7) score += 15;
-    return score;
+    return powerNeeds;
 }
 
 function scoreCreatureSynergy(card, deckTheme) {
-    let score = randInt(0, 20);
+    let score = Math.random() * 20; // Use float for more granularity
     const cardTypes = card.types || [];
     const themeTypes = deckTheme.split('/');
     if (!themeTypes.some(t => cardTypes.includes(t))) return -1;
     score += 50;
     if (themeTypes.length > 1 && themeTypes.every(t => cardTypes.includes(t))) score += 40;
-    const themeMechanics = { "Dark": ["Disruption", "Control"], "Fire": ["Damage", "StatBoost"], "Water": ["Healing", "Control", "CardManipulation"], "Earth": ["Defense", "StatBoost", "Healing"], "Wind": ["Control", "Utility", "CardManipulation"], "Thunder": ["Debuff", "Damage"], "Forest": ["Healing", "StatBoost", "Debuff"], "Light": ["Healing", "Utility", "CardManipulation", "Buff"] };
-    const allEffects = [...(card.abilities || []).flatMap(a => a.structuredEffects || []), ...(card.attacks || []).flatMap(a => a.structuredEffects || [])];
-    for (const effect of allEffects) {
-        const category = effect.category;
-        for (const theme of themeTypes) {
-            if ((themeMechanics[theme] || []).includes(category)) score += 25;
-        }
-    }
     if (Object.values(companion_map).some(v => v.creatures.includes(card.name))) score += 30;
     if (card.name in companion_map) score += 30;
     if (card.rarity === 'Rare') score += 15;
@@ -586,63 +569,33 @@ function scoreCreatureSynergy(card, deckTheme) {
     return score;
 }
 
-// --- **FIXED** `scoreSecretSynergy` with hardcoded ban list ---
 function scoreSecretSynergy(card, deckTheme, creaturesInDeck) {
     const cardName = card.name || '';
-    
-    // RULE 0: Hard-ban specific cards.
-    if (BANNED_SECRET_CARDS.includes(cardName)) {
-        return -1;
-    }
-
-    // RULE 1: Highest priority for boss-companion synergy
+    if (BANNED_SECRET_CARDS.includes(cardName)) return -1;
     for (const bossName in companion_map) {
         if ((companion_map[bossName].secrets || []).includes(cardName)) {
-            const isBossPresent = creaturesInDeck.some(c => c.name === bossName);
-            return isBossPresent ? 1000 : -1;
+            return creaturesInDeck.some(c => c.name === bossName) ? 1000 : -1;
         }
     }
-            
-    let score = randInt(0, 10);
+    let score = Math.random() * 10;
     const themeTypes = deckTheme.split('/');
-
-    // RULE 2: Handle Terrain Cards
     if ((card.subtypes || [null])[0] === 'Terrain') {
-        if (deckTheme === 'Blank') return -1; // No terrains in Blank decks
-
+        if (deckTheme === 'Blank') return -1;
         const validTypes = TERRAIN_TYPE_COMPATIBILITY[cardName] || [];
-        let terrainMatchesTheme = false;
-        
-        if (validTypes.includes("All")) {
-            terrainMatchesTheme = true;
-            score += 60;
+        if (validTypes.includes("All") || themeTypes.some(theme => validTypes.includes(theme))) {
+            score += 80;
         } else {
-            for (const themeType of themeTypes) {
-                if (validTypes.includes(themeType)) {
-                    terrainMatchesTheme = true;
-                    score += 80;
-                    break;
-                }
-            }
-        }
-        
-        if (!terrainMatchesTheme) {
             return -1;
         }
-    // RULE 3: Handle all other general Secret cards
     } else {
         const effectText = (card.effectText || '').toLowerCase();
         for (const theme of themeTypes) {
-            if (effectText.includes(theme.toLowerCase())) {
-                score += 25;
-            }
+            if (effectText.includes(theme.toLowerCase())) score += 25;
         }
     }
-    
     return score;
 }
 
-// --- **FIX #2**: RESTRUCTURED `buildStrategicDeck` for correct power calculation ---
 function buildStrategicDeck(selectedTypes, archetype_name) {
     const deck = { "Creatures": [], "Power": [], "Secrets": [] };
     const archetype = DECK_ARCHETYPES[archetype_name];
@@ -650,47 +603,26 @@ function buildStrategicDeck(selectedTypes, archetype_name) {
 
     let targetCreatures = Math.floor(DECK_RULES.deck_size * archetype.creatures);
     let targetSecrets = Math.floor(DECK_RULES.deck_size * archetype.secrets);
-    let targetPower = Math.floor(DECK_RULES.deck_size * archetype.power);
+    let targetPower = DECK_RULES.deck_size - targetCreatures - targetSecrets; // Ensure it adds up to 60
     
     const all_creatures = all_cards.filter(c => c.supertype === 'Creature');
-
-    // --- STEP 1: FINALIZE CREATURE LIST (including companions) ---
-    const creatureSelectionFn = is_blank_deck ? scoreCreatureSynergyBlank : (c) => scoreCreatureSynergy(c, selectedTypes);
-    const available_creatures = all_creatures.filter(c => is_blank_deck || (c.types || []).some(t => selectedTypes.split('/').includes(t)));
-    const scored_creatures = available_creatures.map(c => [c, creatureSelectionFn(c)]).sort((a, b) => b[1] - a[1]);
+    const creatureSelectionFn = is_blank_deck ? scoreCreatureSynergy : (c) => scoreCreatureSynergy(c, selectedTypes);
     
-    let scored_low = scored_creatures.filter(([c, s]) => (c.level || 0) >= 1 && (c.level || 0) <= 3);
-    let scored_mid = scored_creatures.filter(([c, s]) => (c.level || 0) >= 4 && (c.level || 0) <= 6);
-    let scored_high = scored_creatures.filter(([c, s]) => (c.level || 0) >= 7);
+    // --- **FIX #2**: Aggressive Shuffling for Creature Variety ---
+    let available_creatures = shuffle(all_creatures.filter(c => is_blank_deck || (c.types || []).some(t => selectedTypes.split('/').includes(t))));
+    
+    const creature_pool = available_creatures.map(c => [c, creatureSelectionFn(c)]).filter(([c, s]) => s >= 0).sort((a,b) => b[1] - a[1]);
     
     const creatureCounts = defaultdict(() => 0);
     let level_10_count = 0;
 
-    while (deck.Creatures.length < targetCreatures) {
-        const num_low = deck.Creatures.filter(c => (c.level || 0) >= 1 && (c.level || 0) <= 3).length;
-        const num_mid = deck.Creatures.filter(c => (c.level || 0) >= 4 && (c.level || 0) <= 6).length;
-        
-        let selectionPool = [];
-        if (num_low < Math.floor(targetCreatures * 0.45) && scored_low.length > 0) selectionPool.push(...scored_low.slice(0, 10));
-        if (num_mid < Math.floor(targetCreatures * 0.35) && scored_mid.length > 0) selectionPool.push(...scored_mid.slice(0, 7));
-        if (scored_high.length > 0) selectionPool.push(...scored_high.slice(0, 5));
-        
-        if (selectionPool.length === 0) {
-            selectionPool.push(...scored_low.slice(0, 10), ...scored_mid.slice(0, 7), ...scored_high.slice(0, 5));
-            if (selectionPool.length === 0) break;
-        }
-
-        const uniquePool = [...new Map(selectionPool.map(item => [item[0].script_uuid, item])).values()];
-        if (uniquePool.length === 0) break;
-        
-        const [card_to_add, _] = uniquePool[Math.floor(Math.random() * uniquePool.length)];
+    // --- STEP 1: FINALIZE CREATURE LIST ---
+    while (deck.Creatures.length < targetCreatures && creature_pool.length > 0) {
+        const [card_to_add, _] = creature_pool.shift(); // Take the current best
         const { name: card_name, rarity: card_rarity, level: card_level = 0 } = card_to_add;
-        
+
         if ((card_level === 10 && level_10_count >= DECK_RULES.level_10_limits.total) || (creatureCounts[card_name] >= (DECK_RULES.creature_card_limits[card_rarity] || 1))) {
-            scored_low = scored_low.filter(([c,s]) => c.script_uuid !== card_to_add.script_uuid);
-            scored_mid = scored_mid.filter(([c,s]) => c.script_uuid !== card_to_add.script_uuid);
-            scored_high = scored_high.filter(([c,s]) => c.script_uuid !== card_to_add.script_uuid);
-            continue;
+            continue; // Skip if limit is reached
         }
 
         deck.Creatures.push(card_to_add);
@@ -700,14 +632,10 @@ function buildStrategicDeck(selectedTypes, archetype_name) {
         if (card_name in BOSS_COMPANION_MAP) {
             for (const comp_name of BOSS_COMPANION_MAP[card_name]) {
                 if (deck.Creatures.length >= targetCreatures) break;
-
                 const comp_card = all_creatures.find(c => c.name === comp_name);
                 if (comp_card) {
                     const { rarity: cc_rarity, level: cc_level = 0 } = comp_card;
-                    const canAdd = creatureCounts[comp_name] < (DECK_RULES.creature_card_limits[cc_rarity] || 1) &&
-                                   !(cc_level === 10 && level_10_count >= DECK_RULES.level_10_limits.total);
-                    
-                    if (canAdd) {
+                    if (creatureCounts[comp_name] < (DECK_RULES.creature_card_limits[cc_rarity] || 1) && !(cc_level === 10 && level_10_count >= DECK_RULES.level_10_limits.total)) {
                         deck.Creatures.push(comp_card);
                         creatureCounts[comp_name]++;
                         if (cc_level === 10) level_10_count++;
@@ -717,168 +645,94 @@ function buildStrategicDeck(selectedTypes, archetype_name) {
         }
     }
 
-    // --- STEP 2: CALCULATE POWER NEEDS *AFTER* CREATURE LIST IS FINAL ---
-    const [power_needs, min_power_needed] = analyzePowerRequirements(deck.Creatures);
-    if (targetPower < min_power_needed) {
-        const power_deficit = min_power_needed - targetPower;
-        targetPower = min_power_needed;
-        const creature_ratio = archetype.creatures / (archetype.creatures + archetype.secrets) || 0.5;
-        targetCreatures = Math.max(15, targetCreatures - Math.round(power_deficit * creature_ratio));
-        targetSecrets = Math.max(8, targetSecrets - (power_deficit - Math.round(power_deficit * creature_ratio)));
-        
-        while (deck.Creatures.length > targetCreatures) {
-             const removed_card = deck.Creatures.pop();
-             creatureCounts[removed_card.name]--;
+    // --- **FIX #3**: Power Card Logic Overhaul ---
+    const power_needs = analyzePowerRequirements(deck.Creatures);
+    let power_tasks = [];
+    for (const type in power_needs) {
+        for (let i = 0; i < power_needs[type]; i++) {
+            power_tasks.push(type);
         }
     }
-    
-    // --- STEP 3: SELECT POWER CARDS BASED ON FINALIZED REQUIREMENTS ---
+
+    // Add a minimum base for any type present in the deck, even if they have no attack costs
+    const allCreatureTypesInDeck = [...new Set(deck.Creatures.flatMap(c => c.types || []))];
+    allCreatureTypesInDeck.forEach(type => {
+        if (!power_needs[type]) { // If a type has 0 attack costs, it still needs some power
+            for(let i = 0; i < 2; i++) power_tasks.push(type);
+        }
+    });
+
+    shuffle(power_tasks);
+
     const powerCardsByType = defaultdict(() => []);
     all_cards.filter(c => c.supertype === 'Power').forEach(c => powerCardsByType[c.powerType].push(c));
-    
-    const powerDistribution = defaultdict(() => 0);
-    // Start with the power needs from creature attacks
-    Object.assign(powerDistribution, power_needs);
-
-    if (is_blank_deck) {
-        const creature_type_counts = defaultdict(() => 0);
-        deck.Creatures.forEach(c => (c.types || []).forEach(type => creature_type_counts[type]++));
-        for (const type in creature_type_counts) {
-            powerDistribution[type] = Math.max(powerDistribution[type], Math.max(1, Math.min(creature_type_counts[type], 2)));
-        }
-        const used_power = Object.values(powerDistribution).reduce((a, b) => a + b, 0);
-        const remaining_slots = targetPower - used_power;
-        const min_blank_power = Math.max(Math.floor(targetPower / 2), 3);
-        const blank_allocation = Math.max(min_blank_power, remaining_slots);
-        powerDistribution['Blank'] = Math.min(blank_allocation, 12);
-
-    } else {
-        // Get ALL unique types from the creatures ACTUALLY in the deck.
-        const allCreatureTypesInDeck = [...new Set(deck.Creatures.flatMap(c => c.types || []))];
-
-        // Ensure a minimum power allocation for every type represented in the creature list.
-        allCreatureTypesInDeck.forEach(type => {
-            if (!(type in powerDistribution)) powerDistribution[type] = 0;
-            // Ensure at least a few power cards for ANY type present
-            const min_for_type = Math.max(2, Math.floor(targetPower / (allCreatureTypesInDeck.length * 3) || 1));
-            powerDistribution[type] = Math.max(powerDistribution[type], min_for_type);
-        });
-    }
 
     let double_power_count = 0;
-    const power_efficiency_threshold = 2.5;
-
     while (deck.Power.length < targetPower) {
-        let most_needed_type;
-        const needed_types = Object.entries(powerDistribution).filter(([k, v]) => v > 0);
-        
-        if (needed_types.length === 0) {
-            most_needed_type = is_blank_deck ? 'Blank' : selectedTypes.split('/')[0];
-        } else {
-            const population = needed_types.flatMap(([type, weight]) => Array(Math.ceil(weight)).fill(type));
-            most_needed_type = population.length > 0 ? population[Math.floor(Math.random() * population.length)] : 'Blank';
+        if (power_tasks.length === 0) { // If no specific needs left, fill with Blank or main theme
+            let fill_type = is_blank_deck ? 'Blank' : selectedTypes.split('/')[0];
+            const card = powerCardsByType[fill_type].find(c => (c.powerValue || 1) === 1) || powerCardsByType['Blank'].find(c => (c.powerValue || 1) === 1);
+            if (card) deck.Power.push(card); else break;
+            continue;
         }
 
-        const current_need = powerDistribution[most_needed_type] || 0;
-        const remaining_slots = targetPower - deck.Power.length;
-        const should_use_double = (
-            double_power_count < DECK_RULES.power_card_limits.powerValue_2 &&
-            current_need >= power_efficiency_threshold &&
-            remaining_slots >= 2 &&
-            current_need >= remaining_slots * 0.4 &&
-            powerCardsByType[most_needed_type].some(c => (c.powerValue || 1) === 2)
-        );
+        const next_power_type = power_tasks.shift();
+        
+        // Prioritize double power cards to fulfill needs faster
+        const use_double = (double_power_count < DECK_RULES.power_card_limits.powerValue_2 && 
+                            power_tasks.filter(t => t === next_power_type).length > 0 && // Check if there's at least one more task of this type
+                            powerCardsByType[next_power_type].some(c => (c.powerValue || 1) === 2));
 
-        if (should_use_double) {
-            const card_to_add = powerCardsByType[most_needed_type].find(c => (c.powerValue || 1) === 2);
+        if (use_double) {
+            const card_to_add = powerCardsByType[next_power_type].find(c => (c.powerValue || 1) === 2);
             deck.Power.push(card_to_add);
-            powerDistribution[most_needed_type] = Math.max(0, powerDistribution[most_needed_type] - 2);
             double_power_count++;
+            // Remove a second task of the same type
+            const second_task_index = power_tasks.findIndex(t => t === next_power_type);
+            if(second_task_index > -1) power_tasks.splice(second_task_index, 1);
         } else {
-            let available_single = powerCardsByType[most_needed_type].filter(c => (c.powerValue || 1) === 1);
-            let fallback_type = most_needed_type;
-            if (available_single.length === 0) {
-                available_single = powerCardsByType['Blank'].filter(c => (c.powerValue || 1) === 1);
-                fallback_type = 'Blank';
-            }
-            if (available_single.length === 0) break;
-            
-            const card_to_add = available_single[0];
-            deck.Power.push(card_to_add);
-            powerDistribution[fallback_type] = Math.max(0, powerDistribution[fallback_type] - 1);
+            const card_to_add = powerCardsByType[next_power_type].find(c => (c.powerValue || 1) === 1) || powerCardsByType['Blank'].find(c => (c.powerValue || 1) === 1);
+            if(card_to_add) deck.Power.push(card_to_add);
         }
     }
-    
+
     // --- STEP 4: SECRET CARD SELECTION ---
     const available_secrets = all_cards.filter(c => c.supertype === 'Secret');
     let scored_secrets = [];
     for (const secret of available_secrets) {
         const synergy_score = scoreSecretSynergy(secret, selectedTypes, deck.Creatures);
-        if (synergy_score >= 0) {
-            scored_secrets.push([secret, synergy_score]);
-        }
+        if (synergy_score >= 0) scored_secrets.push([secret, synergy_score]);
     }
     scored_secrets.sort((a, b) => b[1] - a[1]);
 
-    const companionSecrets = scored_secrets.filter(([card, score]) => score >= 1000);
-    const terrainSecrets = scored_secrets.filter(([card, score]) => (card.subtypes || [null])[0] === 'Terrain' && score < 1000);
-    const generalSecrets = scored_secrets.filter(([card, score]) => !BANNED_SECRET_CARDS.includes(card.name) && (card.subtypes || [null])[0] !== 'Terrain' && score < 1000);
-
     const secret_counts = defaultdict(() => 0);
-    const terrain_counts = defaultdict(() => 0);
+    while (deck.Secrets.length < targetSecrets && scored_secrets.length > 0) {
+        const [card_to_add, _] = scored_secrets.shift();
+        const { name: card_name, rarity: card_rarity, subtypes: card_subtypes = [] } = card_to_add;
+        const current_terrain_count = deck.Secrets.filter(c => (c.subtypes || []).includes('Terrain')).length;
+        const terrain_names = new Set(deck.Secrets.filter(c => (c.subtypes || []).includes('Terrain')).map(c => c.name));
 
-    while (deck.Secrets.length < targetSecrets) {
-        const currentTerrainCount = deck.Secrets.filter(c => (c.subtypes || [null])[0] === 'Terrain').length;
+        if (secret_counts[card_name] >= (DECK_RULES.secret_card_limits[card_rarity] || 1)) continue;
+        if (card_subtypes.includes('Terrain') && (current_terrain_count >= 4 || (!terrain_names.has(card_name) && terrain_names.size >= 3))) continue;
         
-        let selectionPool = [];
-        selectionPool.push(...companionSecrets);
-        if (currentTerrainCount < 3) {
-            selectionPool.push(...terrainSecrets.slice(0, 5));
-        }
-        selectionPool.push(...generalSecrets.slice(0, 10));
-
-        let validCandidates = [];
-        for (const [card, score] of selectionPool) {
-            const card_name = card.name;
-            const card_rarity = card.rarity;
-            const is_terrain = (card.subtypes || [null])[0] === 'Terrain';
-
-            if (secret_counts[card_name] >= (DECK_RULES.secret_card_limits[card_rarity] || 1)) continue;
-            if (is_terrain && (currentTerrainCount >= 4 || (!(card_name in terrain_counts) && Object.keys(terrain_counts).length >= 3))) continue;
-            
-            validCandidates.push([card, score]);
-        }
-
-        if (validCandidates.length === 0) break; 
-
-        const [card_to_add, _] = validCandidates[Math.floor(Math.random() * validCandidates.length)];
-
         deck.Secrets.push(card_to_add);
-        secret_counts[card_to_add.name]++;
-        if ((card_to_add.subtypes || [null])[0] === 'Terrain') {
-            terrain_counts[card_to_add.name]++;
-        }
+        secret_counts[card_name]++;
     }
         
     // --- STEP 5: FINAL ADJUSTMENT ---
-    while (deck.Creatures.length + deck.Power.length + deck.Secrets.length > 60) {
-        if (deck.Power.length > targetPower) deck.Power.pop();
+    while (deck.Creatures.length + deck.Power.length + deck.Secrets.length < 60) {
+         const card = powerCardsByType['Blank'].find(c => (c.powerValue || 1) === 1);
+         if(card) deck.Power.push(card); else break;
+    }
+     while (deck.Creatures.length + deck.Power.length + deck.Secrets.length > 60) {
+        if(deck.Power.length > targetPower) deck.Power.pop();
         else if (deck.Secrets.length > targetSecrets) deck.Secrets.pop();
         else deck.Creatures.pop();
-    }
-    while (deck.Creatures.length + deck.Power.length + deck.Secrets.length < 60) {
-        let power_card_to_add = (powerCardsByType['Blank'] || [null])[0];
-        if (!is_blank_deck) {
-            const main_theme = selectedTypes.split('/')[0];
-            const themed_power_card = (powerCardsByType[main_theme] || []).find(c => (c.powerValue || 1) === 1);
-            power_card_to_add = themed_power_card || power_card_to_add;
-        }
-        if (power_card_to_add) deck.Power.push(power_card_to_add);
-        else break;
     }
         
     return deck;
 }
+
 
 // --- DECK DISPLAY & EVENT LISTENERS ---
 
@@ -975,7 +829,7 @@ function formatDeckAsJson(deck, deckTheme) {
         }
         const formattedCards = Array.from(cardCounts.entries());
         const outputDeck = {
-            id: String(randInt(2000, 9999)),
+            id: String(Math.floor(Math.random() * (9999 - 2000 + 1) + 2000)),
             name: generateDeckName(),
             types: deckTheme.split('/'),
             cards: formattedCards,
