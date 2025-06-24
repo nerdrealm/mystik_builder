@@ -445,7 +445,7 @@ const TERRAIN_TYPE_COMPATIBILITY = {
     "Torn Wastelands": ["All"], "Volcanoes of Westu'ra": ["Fire"], "Winds off the Coast": ["Wind"]
 };
 
-// --- NEW: BOSS & COMPANION ENFORCEMENT MAP ---
+// --- BOSS & COMPANION ENFORCEMENT MAP ---
 const BOSS_COMPANION_MAP = {
     "Arcana Temptress": ["Arcana Apprentice"],
     "Dracoleón": ["Nemean Lion"],
@@ -457,6 +457,13 @@ const BOSS_COMPANION_MAP = {
     "Zombified Dragon": ["Dragon Tamer"],
     "Divine Beast Panterus": ["Winged Beast U'ru", "Winged Beast Wai'ku", "Winged Beast Ra'zu"]
 };
+
+// --- **FIX #1**: "SCORCHED EARTH" BAN LIST FOR TYPE-CHANGING SECRETS ---
+const BANNED_TYPE_CHANGING_CARDS = [
+    "Aquatic Conversion", "Celestial Storm", "Corrupt Evolution", "Divine Transformation",
+    "Elemental Infusion", "Infernal Transmutation", "Mystik Forestry", "Primeval Mutation",
+    "Windy Metamorphosis"
+];
 
 
 // --- GLOBAL VARIABLES & DOM ELEMENTS ---
@@ -521,7 +528,6 @@ function getCompanionMap(cards) {
             for (const prereq of ability.prerequisites || []) {
                 if (prereq.type === 'SacrificeSpecificCreature') newCompanionMap[card.name].creatures.push(prereq.creatureName);
                 else if (prereq.type === 'PlaySpecificCard') newCompanionMap[card.name].secrets.push(prereq.cardName);
-                // --- NEW: Add HasCreatureInPlay for synergy scoring ---
                 else if (prereq.type === 'HasCreatureInPlay') newCompanionMap[card.name].creatures.push(prereq.creatureName);
             }
         }
@@ -580,16 +586,16 @@ function scoreCreatureSynergy(card, deckTheme) {
     return score;
 }
 
-// --- **FIXED** REVISED scoreSecretSynergy with corrected logic ---
+// --- **FIXED** `scoreSecretSynergy` with hardcoded ban list ---
 function scoreSecretSynergy(card, deckTheme, creaturesInDeck) {
     const cardName = card.name || '';
     
-    // Rule: Never choose "Elemental Break"
-    if (cardName === "Elemental Break") {
+    // RULE 0: Hard-ban specific cards.
+    if (cardName === "Elemental Break" || BANNED_TYPE_CHANGING_CARDS.includes(cardName)) {
         return -1;
     }
 
-    // Highest priority: check for boss-companion synergy
+    // RULE 1: Highest priority for boss-companion synergy
     for (const bossName in companion_map) {
         if ((companion_map[bossName].secrets || []).includes(cardName)) {
             const isBossPresent = creaturesInDeck.some(c => c.name === bossName);
@@ -599,54 +605,8 @@ function scoreSecretSynergy(card, deckTheme, creaturesInDeck) {
             
     let score = randInt(0, 10);
     const themeTypes = deckTheme.split('/');
-    let hasTypeModification = false;
 
-    // Part 1: Handle Type Modification as a primary filter
-    for (const ability of card.abilities || []) {
-        for (const effect of ability.structuredEffects || []) {
-            if (effect.category === 'TypeModification') {
-                hasTypeModification = true; // Mark that this card has this effect
-                const addedType = effect.addType;
-                
-                // Rule: Type modification cards are invalid for single-type decks.
-                if (themeTypes.length === 1 && deckTheme !== 'Blank') {
-                    return -1; // IMMEDIATELY REJECT
-                }
-
-                // For cards like Elemental Infusion where addType is not specified.
-                if (!addedType) {
-                    score += 100; // Valid for multi-type or blank decks.
-                    continue; 
-                }
-                
-                // Rule for multi-type decks
-                if (themeTypes.length > 1) {
-                    if (themeTypes.includes(addedType)) {
-                        score += 150; // Highly synergistic
-                    } else {
-                        return -1; // Adds an unwanted 3rd type, IMMEDIATELY REJECT
-                    }
-                } 
-                // Rule for Blank decks
-                else if (deckTheme === 'Blank') {
-                    const creatureTypesInDeck = new Set(creaturesInDeck.flatMap(c => c.types || []));
-                    if (creatureTypesInDeck.has(addedType)) {
-                        score += 75; // Good internal synergy
-                    } else {
-                        return -1; // Introduces an unsupported type, IMMEDIATELY REJECT
-                    }
-                }
-            }
-        }
-    }
-    
-    // If the card was a TypeModification card, we've already scored it or rejected it.
-    // No need to continue and score it based on text, which was the source of the bug.
-    if (hasTypeModification) {
-        return score;
-    }
-
-    // Part 2: Handle Terrain Cards
+    // RULE 2: Handle Terrain Cards
     if ((card.subtypes || [null])[0] === 'Terrain') {
         if (deckTheme === 'Blank') return -1; // No terrains in Blank decks
 
@@ -669,8 +629,7 @@ function scoreSecretSynergy(card, deckTheme, creaturesInDeck) {
         if (!terrainMatchesTheme) {
             return -1;
         }
-            
-    // Part 3: Handle other effects (for non-TypeMod, non-Terrain cards)
+    // RULE 3: Handle all other general Secret cards
     } else {
         const effectText = (card.effectText || '').toLowerCase();
         for (const theme of themeTypes) {
@@ -683,7 +642,7 @@ function scoreSecretSynergy(card, deckTheme, creaturesInDeck) {
     return score;
 }
 
-// --- CORE DECK BUILDING FUNCTION (WITH NEW LOGIC) ---
+// --- **FIX #2**: RESTRUCTURED `buildStrategicDeck` for correct power calculation ---
 function buildStrategicDeck(selectedTypes, archetype_name) {
     const deck = { "Creatures": [], "Power": [], "Secrets": [] };
     const archetype = DECK_ARCHETYPES[archetype_name];
@@ -695,7 +654,7 @@ function buildStrategicDeck(selectedTypes, archetype_name) {
     
     const all_creatures = all_cards.filter(c => c.supertype === 'Creature');
 
-    // --- 2. CREATURE SELECTION (REVISED) ---
+    // --- STEP 1: FINALIZE CREATURE LIST (including companions) ---
     const creatureSelectionFn = is_blank_deck ? scoreCreatureSynergyBlank : (c) => scoreCreatureSynergy(c, selectedTypes);
     const available_creatures = all_creatures.filter(c => is_blank_deck || (c.types || []).some(t => selectedTypes.split('/').includes(t)));
     const scored_creatures = available_creatures.map(c => [c, creatureSelectionFn(c)]).sort((a, b) => b[1] - a[1]);
@@ -706,13 +665,6 @@ function buildStrategicDeck(selectedTypes, archetype_name) {
     
     const creatureCounts = defaultdict(() => 0);
     let level_10_count = 0;
-    let panterus_priority_set = false; // Flag for Panterus logic
-
-    const prioritizeInPool = (pool, priorityNames) => {
-        const priorityItems = pool.filter(([card, score]) => priorityNames.includes(card.name));
-        const otherItems = pool.filter(([card, score]) => !priorityNames.includes(card.name));
-        return [...priorityItems, ...otherItems];
-    };
 
     while (deck.Creatures.length < targetCreatures) {
         const num_low = deck.Creatures.filter(c => (c.level || 0) >= 1 && (c.level || 0) <= 3).length;
@@ -745,15 +697,6 @@ function buildStrategicDeck(selectedTypes, archetype_name) {
         creatureCounts[card_name]++;
         if (card_level === 10) level_10_count++;
         
-        // --- NEW: COMPANION ENFORCEMENT & SPECIAL CASE LOGIC ---
-        if (card_name === "Divine Beast Panterus" && !panterus_priority_set) {
-            const wingedBeastNames = BOSS_COMPANION_MAP["Divine Beast Panterus"];
-            scored_low = prioritizeInPool(scored_low, wingedBeastNames);
-            scored_mid = prioritizeInPool(scored_mid, wingedBeastNames);
-            scored_high = prioritizeInPool(scored_high, wingedBeastNames);
-            panterus_priority_set = true;
-        }
-        
         if (card_name in BOSS_COMPANION_MAP) {
             for (const comp_name of BOSS_COMPANION_MAP[card_name]) {
                 if (deck.Creatures.length >= targetCreatures) break;
@@ -774,7 +717,7 @@ function buildStrategicDeck(selectedTypes, archetype_name) {
         }
     }
 
-    // --- 3. POWER CARD SELECTION & ADJUSTMENT (No changes needed here) ---
+    // --- STEP 2: CALCULATE POWER NEEDS *AFTER* CREATURE LIST IS FINAL ---
     const [power_needs, min_power_needed] = analyzePowerRequirements(deck.Creatures);
     if (targetPower < min_power_needed) {
         const power_deficit = min_power_needed - targetPower;
@@ -782,9 +725,14 @@ function buildStrategicDeck(selectedTypes, archetype_name) {
         const creature_ratio = archetype.creatures / (archetype.creatures + archetype.secrets) || 0.5;
         targetCreatures = Math.max(15, targetCreatures - Math.round(power_deficit * creature_ratio));
         targetSecrets = Math.max(8, targetSecrets - (power_deficit - Math.round(power_deficit * creature_ratio)));
-        while (deck.Creatures.length > targetCreatures) deck.Creatures.pop();
+        // Adjust creature count if needed
+        while (deck.Creatures.length > targetCreatures) {
+             const removed_card = deck.Creatures.pop();
+             creatureCounts[removed_card.name]--;
+        }
     }
     
+    // --- STEP 3: SELECT POWER CARDS BASED ON FINALIZED REQUIREMENTS ---
     const powerCardsByType = defaultdict(() => []);
     all_cards.filter(c => c.supertype === 'Power').forEach(c => powerCardsByType[c.powerType].push(c));
     
@@ -793,10 +741,9 @@ function buildStrategicDeck(selectedTypes, archetype_name) {
         const creature_type_counts = defaultdict(() => 0);
         deck.Creatures.forEach(c => (c.types || []).forEach(type => creature_type_counts[type]++));
         const min_blank_power = Math.max(Math.floor(targetPower / 2), 3);
-        // Include power needs from attacks
-        for (const type in power_needs) {
-            powerDistribution[type] += power_needs[type];
-        }
+        
+        Object.assign(powerDistribution, power_needs); // Start with attack needs
+
         for (const type in creature_type_counts) {
             powerDistribution[type] = Math.max(powerDistribution[type], Math.max(1, Math.min(creature_type_counts[type], 2)));
         }
@@ -814,7 +761,7 @@ function buildStrategicDeck(selectedTypes, archetype_name) {
         const themeTypes = selectedTypes.split('/');
         themeTypes.forEach(themeType => {
             if (!(themeType in powerDistribution)) powerDistribution[themeType] = 0;
-            const min_for_theme = Math.max(2, Math.floor(targetPower / (themeTypes.length * 3) || 1));
+            const min_for_theme = Math.max(2, Math.floor(targetPower / (themeTypes.length * 2.5) || 1));
             powerDistribution[themeType] = Math.max(powerDistribution[themeType], min_for_theme);
         });
     }
@@ -830,7 +777,7 @@ function buildStrategicDeck(selectedTypes, archetype_name) {
             most_needed_type = is_blank_deck ? 'Blank' : selectedTypes.split('/')[0];
         } else {
             const population = needed_types.flatMap(([type, weight]) => Array(Math.ceil(weight)).fill(type));
-            most_needed_type = population[Math.floor(Math.random() * population.length)];
+            most_needed_type = population.length > 0 ? population[Math.floor(Math.random() * population.length)] : 'Blank';
         }
 
         const current_need = powerDistribution[most_needed_type] || 0;
@@ -868,7 +815,7 @@ function buildStrategicDeck(selectedTypes, archetype_name) {
         }
     }
     
-    // --- 4. SECRET CARD SELECTION (Now uses updated scoring) ---
+    // --- STEP 4: SECRET CARD SELECTION ---
     const available_secrets = all_cards.filter(c => c.supertype === 'Secret');
     let scored_secrets = [];
     for (const secret of available_secrets) {
@@ -881,7 +828,7 @@ function buildStrategicDeck(selectedTypes, archetype_name) {
 
     const companionSecrets = scored_secrets.filter(([card, score]) => score >= 1000);
     const terrainSecrets = scored_secrets.filter(([card, score]) => (card.subtypes || [null])[0] === 'Terrain' && score < 1000);
-    const generalSecrets = scored_secrets.filter(([card, score]) => (card.subtypes || [null])[0] !== 'Terrain' && score < 1000);
+    const generalSecrets = scored_secrets.filter(([card, score]) => !BANNED_TYPE_CHANGING_CARDS.includes(card.name) && (card.subtypes || [null])[0] !== 'Terrain' && score < 1000);
 
     const secret_counts = defaultdict(() => 0);
     const terrain_counts = defaultdict(() => 0);
@@ -919,7 +866,7 @@ function buildStrategicDeck(selectedTypes, archetype_name) {
         }
     }
         
-    // --- 5. FINAL ADJUSTMENT ---
+    // --- STEP 5: FINAL ADJUSTMENT ---
     while (deck.Creatures.length + deck.Power.length + deck.Secrets.length > 60) {
         if (deck.Power.length > targetPower) deck.Power.pop();
         else if (deck.Secrets.length > targetSecrets) deck.Secrets.pop();
@@ -987,9 +934,8 @@ function displayDeck(deck, deckTheme, archetype) {
     const total = deck.Creatures.length + deck.Power.length + deck.Secrets.length;
     deckStatsP.textContent = `Total Cards: ${total} | Creatures: ${deck.Creatures.length}, Power: ${deck.Power.length}, Secrets: ${deck.Secrets.length}`;
     
-    // --- **FIXED** Create and add sorting controls for creatures ---
     let oldSortControls = document.getElementById('creature-sort-controls');
-    if (oldSortControls) oldSortControls.remove(); // Remove old controls to prevent bugs
+    if (oldSortControls) oldSortControls.remove();
 
     const sortControlsDiv = document.createElement('div');
     sortControlsDiv.id = 'creature-sort-controls';
@@ -1009,7 +955,7 @@ function displayDeck(deck, deckTheme, archetype) {
     sortControlsDiv.appendChild(sortDescBtn);
     creaturesTitleH3.appendChild(sortControlsDiv);
     
-    renderCreatureList('asc'); // Default sort
+    renderCreatureList('asc');
     populateList(powerListUl, deck.Power, p => `${p.powerType} Power ${(p.powerValue || 1) === 2 ? '(x2)' : ''} (${p.rarity})`);
     populateList(secretsListUl, deck.Secrets, s => `${s.name} (${(s.subtypes || ['?'])[0]}, ${s.rarity})`);
 }
@@ -1063,7 +1009,6 @@ async function initialize() {
         archetypeOptionsDiv.appendChild(label);
     });
 
-    // --- Create and append JSON generator section with new structure ---
     const mainContainer = document.querySelector('.main-container');
     const jsonSection = document.createElement('div');
     jsonSection.id = 'json-generator-section';
@@ -1106,7 +1051,6 @@ async function initialize() {
     jsonSection.appendChild(codeBlock);
     mainContainer.appendChild(jsonSection);
 
-    // --- Add event listeners ---
     jsonButton.addEventListener('click', () => {
         if (!currentDeck) {
             alert('Please generate a deck first before creating JSON.');
