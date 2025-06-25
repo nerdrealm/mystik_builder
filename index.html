@@ -838,7 +838,6 @@ function buildStrategicDeck(selectedTypes, archetype_name) {
     const pool1_3 = all_cards.filter(c => c.supertype === 'Creature' && c.level >= 1 && c.level <= 3 && (is_blank_deck || (c.types || []).some(t => themeTypes.includes(t)))).map(c => [c, scoreCreatureSynergy(c, selectedTypes)]).sort((a, b) => b[1] - a[1]);
 
     // 3. Fill the rest of the creature slots using the new Wildcard logic
-    // MODIFICATION: Increased spice chance for more variety
     const SPICE_CHANCE = 0.40; // 40% chance to pick a truly random card
     while(deck.Creatures.length < totalTargetCreatures) {
         const rand = Math.random();
@@ -853,11 +852,9 @@ function buildStrategicDeck(selectedTypes, archetype_name) {
         let card_to_add;
         // Wildcard "Spice" Selection
         if (Math.random() < SPICE_CHANCE) {
-            // Pick a completely random card from the chosen level bucket
             const randomIndex = Math.floor(Math.random() * pool_to_use.length);
             card_to_add = pool_to_use[randomIndex][0];
         } else {
-            // Normal tiered pick
             const selection = selectFromTieredPool(pool_to_use);
             if (selection) card_to_add = selection[0];
         }
@@ -1201,6 +1198,9 @@ async function initialize() {
         if (enteredPasskey === PASSKEY) {
             modalOverlay.style.display = 'none';
             processJsonGeneration();
+            // --- MODIFICATION: Disable button on success ---
+            jsonButton.disabled = true;
+            jsonButton.textContent = 'JSON Generated ✓';
         } else {
             passkeyAttempts++;
             const attemptsLeft = MAX_PASSKEY_ATTEMPTS - passkeyAttempts;
@@ -1238,6 +1238,12 @@ async function initialize() {
     }
 
     generateBtn.addEventListener('click', () => {
+        // --- MODIFICATION: Re-enable JSON button on new deck generation ---
+        if (jsonButton) {
+            jsonButton.disabled = false;
+            jsonButton.textContent = 'Generate Deck JSON';
+        }
+
         const rawThemeInput = themeInput.value.trim();
         if (!rawThemeInput) { alert("Please enter a Deck Type Theme."); return; }
         
