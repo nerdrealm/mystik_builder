@@ -971,13 +971,13 @@
   },
   {
     "id": 22,
-    "name": "Grimtlin",
+    "name": "Grimlin",
     "supertype": "Creature",
     "types": ["Dark"],
     "level": 3,
     "hp": 2500,
     "rarity": "Common",
-    "images": {"small": "images/grimtlin_sm.png", "large": "images/grimtlin_lg.png"},
+    "images": {"small": "images/grimlin_sm.png", "large": "images/grimlin_lg.png"},
     "setCode": "MC01",
     "abilities": [
       {
