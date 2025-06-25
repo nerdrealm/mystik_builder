@@ -91,6 +91,49 @@
             .controls {
                 grid-template-columns: 1fr;
             }
+
+            /* --- MOBILE OPTIMIZATIONS START --- */
+            body {
+                padding: 10px;
+            }
+
+            .main-container {
+                padding: 15px;
+            }
+            
+            header {
+                flex-direction: column;
+                text-align: center;
+                padding-bottom: 15px;
+            }
+
+            header img {
+                max-width: 150px;
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+
+            header h1 {
+                font-size: 2em;
+            }
+
+            .action-button {
+                padding: 12px;
+                font-size: 1.1em;
+            }
+
+            /* Adjust card list title and sort buttons for mobile */
+            .card-list h3 {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .sort-controls {
+                margin-left: 0;
+            }
+            /* --- MOBILE OPTIMIZATIONS END --- */
         }
 
         .control-group {
@@ -333,8 +376,9 @@
             padding: 4px 10px;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 0.9em;
+            font-size: 1.2em; /* Increased size for icon */
             transition: all 0.2s;
+            line-height: 1; /* Helps vertical alignment */
         }
         #copy-json-btn:hover {
             background-color: #555;
@@ -370,6 +414,66 @@
         #json-warning strong {
             color: var(--color-yellow-status);
         }
+
+        /* --- PASSKEY MODAL STYLES START --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: var(--container-bg);
+            padding: 30px;
+            border-radius: 10px;
+            border: 2px solid var(--border-color);
+            text-align: center;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.4);
+        }
+
+        .modal-content h2 {
+            margin-top: 0;
+            color: var(--color-yellow-status);
+        }
+
+        .passkey-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 25px 0;
+        }
+
+        .passkey-input {
+            width: 50px;
+            height: 60px;
+            text-align: center;
+            font-size: 2em;
+            font-weight: bold;
+            color: var(--text-light);
+            background-color: var(--input-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            outline: none;
+        }
+
+        .passkey-input:focus {
+            box-shadow: 0 0 10px var(--btn-color);
+        }
+
+        #passkey-error {
+            color: var(--color-red-status);
+            font-weight: bold;
+            height: 20px; /* Reserve space to prevent layout shift */
+            visibility: hidden;
+        }
+        /* --- PASSKEY MODAL STYLES END --- */
 
     </style>
 </head>
@@ -431,6 +535,7 @@
         </div>
         <!-- JSON generator will be inserted here by JS -->
     </div>
+    <!-- Passkey Modal will be inserted here by JS -->
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
@@ -445,11 +550,28 @@ const DECK_RULES = {
 };
 
 const DECK_ARCHETYPES = {
-    "Balanced": { "creatures": 0.40, "secrets": 0.35, "power": 0.25, "description": "A well-rounded deck" },
-    "Aggro": { "creatures": 0.50, "secrets": 0.25, "power": 0.25, "description": "Creature-heavy and aggressive" },
-    "Control": { "creatures": 0.30, "secrets": 0.45, "power": 0.25, "description": "Secret-heavy and disruptive" },
-    "Energy": { "creatures": 0.35, "secrets": 0.30, "power": 0.35, "description": "Power-heavy for big plays" }
+    "Balanced": { 
+        "creatures": { "base": 0.40, "flex": 0.04 }, // ~22 to 26 creatures
+        "secrets":   { "base": 0.35, "flex": 0.04 }, // ~19 to 23 secrets
+        "description": "A well-rounded deck" 
+    },
+    "Aggro": { 
+        "creatures": { "base": 0.50, "flex": 0.05 }, // ~27 to 33 creatures
+        "secrets":   { "base": 0.25, "flex": 0.03 }, // ~13 to 17 secrets
+        "description": "Creature-heavy and aggressive" 
+    },
+    "Control": { 
+        "creatures": { "base": 0.30, "flex": 0.03 }, // ~16 to 20 creatures
+        "secrets":   { "base": 0.45, "flex": 0.05 }, // ~24 to 30 secrets
+        "description": "Secret-heavy and disruptive" 
+    },
+    "Energy": { 
+        "creatures": { "base": 0.35, "flex": 0.03 }, // ~19 to 23 creatures
+        "secrets":   { "base": 0.30, "flex": 0.04 }, // ~16 to 20 secrets
+        "description": "Power-heavy for big plays" 
+    }
 };
+
 
 const ARCHETYPE_COLORS = {
     "Balanced": "var(--color-green-status)",
@@ -469,38 +591,14 @@ const TERRAIN_TYPE_COMPATIBILITY = {
 };
 
 const BOSS_COMPANION_MAP = {
-    "Arcana Temptress": ["Arcana Apprentice"],
-    "Dracoleón": ["Nemean Lion"],
-    "Hydra": ["Nereus"],
-    "Infinity Mage": ["Infinity Apprentice"],
-    "Phoenix, the Rising": ["Phoenic"],
-    "Serpopard": ["Anuket"],
-    "Werelephant": ["Pebblephant", "Moonlight Awakening"],
-    "Zombified Dragon": ["Dragon Tamer"],
+    "Arcana Temptress": ["Arcana Apprentice"], "Dracoleón": ["Nemean Lion"], "Hydra": ["Nereus"],
+    "Infinity Mage": ["Infinity Apprentice"], "Phoenix, the Rising": ["Phoenic"], "Serpopard": ["Anuket"],
+    "Werelephant": ["Pebblephant"], "Zombified Dragon": ["Dragon Tamer"],
     "Divine Beast Panterus": ["Winged Beast U'ru", "Winged Beast Wai'ku", "Winged Beast Ra'zu"],
-    "Astraea": [],
-    "Aurora, the Paladin": [],
-    "Avani": [],
-    "Bristleback": [],
-    "Cloudpiercer": [],
-    "Eamonn": [],
-    "Ephemeral Empress": [],
-    "Hikaru, Thunderflame": [],
-    "Ignimia": ["Flames of Bahtu"],
-    "Iškugriff": ["Storm of Reckoning"],
-    "Isxóhe": ["Spirit Guide"],
-    "Kaia": [],
-    "Kuroen": [],
-    "Laviathron": [],
-    "Lilith, Forest Pixie": ["Lilith's Garden"],
-    "Malum, the Damned": ["Ritual of the Damned"],
-    "Raitei": [],
-    "Rann, the Wretched": ["Abandoned Ship"],
-    "Strix Arenaeus": [],
-    "Tempestas": [],
-    "Tetsu Yami": [],
-    "Wilderfang": [],
-    "Wolfdrake": []
+    "Astraea": [], "Aurora, the Paladin": [], "Avani": [], "Bristleback": [], "Cloudpiercer": [], "Eamonn": [],
+    "Ephemeral Empress": [], "Hikaru, Thunderflame": [], "Ignimia": [], "Iškugriff": [], "Isxóhe": [], "Kaia": [],
+    "Kuroen": [], "Laviathron": [], "Lilith, Forest Pixie": [], "Malum, the Damned": [], "Raitei": [],
+    "Rann, the Wretched": [], "Strix Arenaeus": [], "Tempestas": [], "Tetsu Yami": [], "Wilderfang": [], "Wolfdrake": []
 };
 
 const BANNED_SECRET_CARDS = [
@@ -601,7 +699,7 @@ function analyzePowerRequirements(creatures) {
 }
 
 function scoreCreatureSynergy(card, deckTheme) {
-    let score = Math.random() * 20;
+    let score = Math.random() * 50; // Increased random factor
     const cardTypes = card.types || [];
     const themeTypes = deckTheme.split('/');
     if (!themeTypes.some(t => cardTypes.includes(t))) return -1;
@@ -623,7 +721,7 @@ function scoreSecretSynergy(card, deckTheme, creaturesInDeck) {
             return creaturesInDeck.some(c => c.name === bossName) ? 1000 : -1;
         }
     }
-    let score = Math.random() * 10;
+    let score = Math.random() * 45; // Increased random factor
     const themeTypes = deckTheme.split('/');
     if ((card.subtypes || [null])[0] === 'Terrain') {
         if (deckTheme === 'Blank') return -1;
@@ -642,152 +740,159 @@ function scoreSecretSynergy(card, deckTheme, creaturesInDeck) {
     return score;
 }
 
-/**
- * Decides how many Level 10 bosses to add using a weighted random distribution.
- * This makes the deck building feel more natural and less predictable.
- * @returns {number} The number of bosses to attempt to add (0-4).
- */
 function getWeightedRandomBossCount() {
-    const weights = {
-        0: 10,  // 10% chance for a 'no-boss' deck
-        1: 30,  // 30% chance for a single-boss focus
-        2: 40,  // 40% chance for a standard two-boss deck (most common)
-        3: 15,  // 15% chance for a powerful three-boss deck
-        4: 5    // 5% chance for a rare "max-boss" deck
-    };
+    const weights = { 0: 10, 1: 30, 2: 40, 3: 15, 4: 5 };
     const totalWeight = Object.values(weights).reduce((sum, weight) => sum + weight, 0);
     let random = Math.random() * totalWeight;
-
     for (const [count, weight] of Object.entries(weights)) {
         random -= weight;
-        if (random <= 0) {
-            return parseInt(count, 10);
-        }
+        if (random <= 0) return parseInt(count, 10);
     }
-    return 2; // Fallback, should not be reached
+    return 2; // Fallback
 }
+
+function selectFromTieredPool(pool) {
+    if (!pool || pool.length === 0) return null;
+
+    const tier1_end = Math.floor(pool.length * 0.15); // Top 15% (S-Tier)
+    const tier2_end = Math.floor(pool.length * 0.40); // Next 25% (A-Tier)
+    const tier3_end = Math.floor(pool.length * 0.75); // Next 35% (B-Tier)
+
+    const rand = Math.random();
+    let selectedTier;
+
+    if (rand < 0.50) selectedTier = pool.slice(0, tier1_end);
+    else if (rand < 0.80) selectedTier = pool.slice(tier1_end, tier2_end);
+    else if (rand < 0.95) selectedTier = pool.slice(tier2_end, tier3_end);
+    else selectedTier = pool.slice(tier3_end);
+    
+    if (selectedTier.length === 0) selectedTier = pool;
+
+    const randomIndex = Math.floor(Math.random() * selectedTier.length);
+    return selectedTier[randomIndex];
+}
+
 
 function buildStrategicDeck(selectedTypes, archetype_name) {
     const deck = { "Creatures": [], "Power": [], "Secrets": [] };
     const archetype = DECK_ARCHETYPES[archetype_name];
     const is_blank_deck = (selectedTypes === 'Blank');
 
-    let targetCreatures = Math.floor(DECK_RULES.deck_size * archetype.creatures);
-    let targetSecrets = Math.floor(DECK_RULES.deck_size * archetype.secrets);
-    let targetPower = DECK_RULES.deck_size - targetCreatures - targetSecrets;
+    const getRandomCount = (spec) => {
+        const random_flex = (Math.random() * 2 - 1) * spec.flex;
+        return Math.round(DECK_RULES.deck_size * (spec.base + random_flex));
+    };
     
-    const all_creatures = all_cards.filter(c => c.supertype === 'Creature');
+    let totalTargetCreatures = getRandomCount(archetype.creatures);
+    let targetSecrets = getRandomCount(archetype.secrets);
+    let targetPower = DECK_RULES.deck_size - totalTargetCreatures - targetSecrets;
+    
     const creatureCounts = defaultdict(() => 0);
-    let level_10_count = 0;
-
-    // --- STEP 1: SELECT "BOSS" CREATURES USING WEIGHTED RANDOMNESS ---
     const themeTypes = selectedTypes.split('/');
-    let potential_bosses = all_creatures.filter(c => 
-        c.level === 10 && 
-        c.rarity === 'UltraRare' &&
-        (is_blank_deck || (c.types || []).some(t => themeTypes.includes(t)))
-    );
-    
+
+    // 1. Fill the Lvl 10 (Boss) Bucket
     const num_bosses_to_add = getWeightedRandomBossCount();
     let bosses_added_this_run = [];
-    let attempts = 0;
+    let potential_bosses = all_cards.filter(c => 
+        c.supertype === 'Creature' && c.level === 10 && (c.rarity === 'UltraRare' || c.rarity === 'Rare') &&
+        (is_blank_deck || (c.types || []).some(t => themeTypes.includes(t)))
+    );
 
-    // This loop adds the desired number of bosses, respecting the "2 of each" rule.
-    while (level_10_count < num_bosses_to_add && potential_bosses.length > 0 && attempts < 50) {
-        const chosen_boss = potential_bosses[Math.floor(Math.random() * potential_bosses.length)];
-        
-        if (creatureCounts[chosen_boss.name] < DECK_RULES.creature_card_limits.UltraRare && level_10_count < DECK_RULES.level_10_limits.total) {
-            deck.Creatures.push(chosen_boss);
-            creatureCounts[chosen_boss.name]++;
-            level_10_count++;
-            // Keep track of the unique bosses added to fetch companions later
-            if (!bosses_added_this_run.find(b => b.name === chosen_boss.name)) {
-                bosses_added_this_run.push(chosen_boss);
+    if (potential_bosses.length > 0) {
+        let unique_boss_pool = shuffle(Array.from(new Map(potential_bosses.map(c => [c.name, c])).values()));
+        while (deck.Creatures.filter(c => c.level === 10).length < num_bosses_to_add && unique_boss_pool.length > 0) {
+            const chosen_boss = unique_boss_pool.pop();
+            if (!chosen_boss) continue;
+            if (creatureCounts[chosen_boss.name] < DECK_RULES.creature_card_limits.UltraRare) {
+                 deck.Creatures.push(chosen_boss);
+                 creatureCounts[chosen_boss.name]++;
+                 if (!bosses_added_this_run.find(b => b.name === chosen_boss.name)) {
+                     bosses_added_this_run.push(chosen_boss);
+                 }
+            }
+            if (deck.Creatures.filter(c => c.level === 10).length < num_bosses_to_add && 
+                creatureCounts[chosen_boss.name] < DECK_RULES.creature_card_limits.UltraRare && Math.random() < 0.6) {
+                deck.Creatures.push(chosen_boss);
+                creatureCounts[chosen_boss.name]++;
             }
         }
-        attempts++; // Failsafe to prevent infinite loops
     }
-    
-    // --- STEP 2: ADD COMPANIONS FOR THE CHOSEN BOSSES ---
+
+    // 2. Add Companions for the chosen bosses
     for (const boss of bosses_added_this_run) {
-         if (boss.name in BOSS_COMPANION_MAP) {
+        if (boss.name in BOSS_COMPANION_MAP) {
             for (const comp_name of BOSS_COMPANION_MAP[boss.name]) {
-                if (deck.Creatures.length >= targetCreatures) break;
-                const comp_card = all_creatures.find(c => c.name === comp_name);
-                if (comp_card) {
-                    const { rarity: cc_rarity } = comp_card;
-                    if (creatureCounts[comp_name] < (DECK_RULES.creature_card_limits[cc_rarity] || 1)) {
-                        deck.Creatures.push(comp_card);
-                        creatureCounts[comp_name]++;
-                    }
+                if (deck.Creatures.length >= totalTargetCreatures) break;
+                const comp_card = all_cards.find(c => c.name === comp_name);
+                if (comp_card && creatureCounts[comp_name] < (DECK_RULES.creature_card_limits[comp_card.rarity] || 1)) {
+                    deck.Creatures.push(comp_card);
+                    creatureCounts[comp_name]++;
                 }
             }
         }
     }
-
-    // --- STEP 3: FILL REMAINING SLOTS WITH OTHER SYNERGISTIC CREATURES ---
-    const added_creature_uuids = new Set(deck.Creatures.map(c => c.script_uuid));
     
-    let remaining_creatures = all_creatures.filter(c => 
-        !added_creature_uuids.has(c.script_uuid) && // Exclude already added cards
-        (is_blank_deck || (c.types || []).some(t => themeTypes.includes(t)))
-    );
+    // Create sorted pools for remaining creatures
+    const pool7_9 = all_cards.filter(c => c.supertype === 'Creature' && c.level >= 7 && c.level <= 9 && (is_blank_deck || (c.types || []).some(t => themeTypes.includes(t)))).map(c => [c, scoreCreatureSynergy(c, selectedTypes)]).sort((a, b) => b[1] - a[1]);
+    const pool4_6 = all_cards.filter(c => c.supertype === 'Creature' && c.level >= 4 && c.level <= 6 && (is_blank_deck || (c.types || []).some(t => themeTypes.includes(t)))).map(c => [c, scoreCreatureSynergy(c, selectedTypes)]).sort((a, b) => b[1] - a[1]);
+    const pool1_3 = all_cards.filter(c => c.supertype === 'Creature' && c.level >= 1 && c.level <= 3 && (is_blank_deck || (c.types || []).some(t => themeTypes.includes(t)))).map(c => [c, scoreCreatureSynergy(c, selectedTypes)]).sort((a, b) => b[1] - a[1]);
 
-    let creature_pool = remaining_creatures.map(c => [c, scoreCreatureSynergy(c, selectedTypes)])
-        .filter(([c, s]) => s >= 0)
-        .sort((a,b) => b[1] - a[1]);
+    // 3. Fill the rest of the creature slots using the new Wildcard logic
+    // MODIFICATION: Increased spice chance for more variety
+    const SPICE_CHANCE = 0.40; // 40% chance to pick a truly random card
+    while(deck.Creatures.length < totalTargetCreatures) {
+        const rand = Math.random();
+        let pool_to_use;
+        if (rand < 0.5 && pool1_3.length > 0) pool_to_use = pool1_3;
+        else if (rand < 0.85 && pool4_6.length > 0) pool_to_use = pool4_6;
+        else if(pool7_9.length > 0) pool_to_use = pool7_9;
+        else pool_to_use = pool1_3.length > 0 ? pool1_3 : pool4_6;
 
-    while (deck.Creatures.length < targetCreatures && creature_pool.length > 0) {
-        const candidatePoolSize = Math.min(10, creature_pool.length);
-        if (candidatePoolSize === 0) break;
-        const randomIndex = Math.floor(Math.random() * candidatePoolSize);
-        const [card_to_add, _] = creature_pool.splice(randomIndex, 1)[0]; 
-
-        const { name: card_name, rarity: card_rarity, level: card_level = 0 } = card_to_add;
-
-        if ((card_level === 10 && level_10_count >= DECK_RULES.level_10_limits.total) || (creatureCounts[card_name] >= (DECK_RULES.creature_card_limits[card_rarity] || 1))) {
-            continue; 
+        if (!pool_to_use || pool_to_use.length === 0) break;
+        
+        let card_to_add;
+        // Wildcard "Spice" Selection
+        if (Math.random() < SPICE_CHANCE) {
+            // Pick a completely random card from the chosen level bucket
+            const randomIndex = Math.floor(Math.random() * pool_to_use.length);
+            card_to_add = pool_to_use[randomIndex][0];
+        } else {
+            // Normal tiered pick
+            const selection = selectFromTieredPool(pool_to_use);
+            if (selection) card_to_add = selection[0];
         }
 
-        deck.Creatures.push(card_to_add);
-        creatureCounts[card_name]++;
-        if (card_level === 10) level_10_count++;
+        if (card_to_add && creatureCounts[card_to_add.name] < (DECK_RULES.creature_card_limits[card_to_add.rarity] || 1)) {
+            deck.Creatures.push(card_to_add);
+            creatureCounts[card_to_add.name]++;
+        }
     }
     
-    // --- STEP 4: POWER CARD SELECTION ---
+    // --- POWER CARD SELECTION ---
     const power_needs = analyzePowerRequirements(deck.Creatures);
     let power_tasks = [];
     for (const type in power_needs) {
-        for (let i = 0; i < power_needs[type]; i++) {
-            power_tasks.push(type);
-        }
+        for (let i = 0; i < power_needs[type]; i++) power_tasks.push(type);
     }
     const allCreatureTypesInDeck = [...new Set(deck.Creatures.flatMap(c => c.types || []))];
     allCreatureTypesInDeck.forEach(type => {
-        if (!power_needs[type]) { 
-            for(let i = 0; i < 2; i++) power_tasks.push(type);
-        }
+        if (!power_needs[type]) { for(let i = 0; i < 2; i++) power_tasks.push(type); }
     });
     shuffle(power_tasks);
-
     const powerCardsByType = defaultdict(() => []);
     all_cards.filter(c => c.supertype === 'Power').forEach(c => powerCardsByType[c.powerType].push(c));
-
     let double_power_count = 0;
     while (deck.Power.length < targetPower) {
         if (power_tasks.length === 0) {
-            let fill_type = is_blank_deck ? 'Blank' : selectedTypes.split('/')[0];
+            let fill_type = is_blank_deck ? 'Blank' : (allCreatureTypesInDeck[0] || 'Blank');
             const card = powerCardsByType[fill_type].find(c => (c.powerValue || 1) === 1) || powerCardsByType['Blank'].find(c => (c.powerValue || 1) === 1);
             if (card) deck.Power.push(card); else break;
             continue;
         }
-
         const next_power_type = power_tasks.shift();
-        
         const use_double = (double_power_count < DECK_RULES.power_card_limits.powerValue_2 && 
                             power_tasks.filter(t => t === next_power_type).length > 0 && 
                             powerCardsByType[next_power_type].some(c => (c.powerValue || 1) === 2));
-
         if (use_double) {
             const card_to_add = powerCardsByType[next_power_type].find(c => (c.powerValue || 1) === 2);
             deck.Power.push(card_to_add);
@@ -800,38 +905,51 @@ function buildStrategicDeck(selectedTypes, archetype_name) {
         }
     }
 
-    // --- STEP 5: SECRET CARD SELECTION ---
-    const available_secrets = all_cards.filter(c => c.supertype === 'Secret');
-    let scored_secrets = available_secrets
+    // --- SECRET CARD SELECTION ---
+    let secret_pool = all_cards
+        .filter(c => c.supertype === 'Secret')
         .map(secret => [secret, scoreSecretSynergy(secret, selectedTypes, deck.Creatures)])
         .filter(([_, score]) => score >= 0)
         .sort((a, b) => b[1] - a[1]);
 
     const secret_counts = defaultdict(() => 0);
-    while (deck.Secrets.length < targetSecrets && scored_secrets.length > 0) {
-        const [card_to_add, _] = scored_secrets.shift();
+    while (deck.Secrets.length < targetSecrets && secret_pool.length > 0) {
+        let card_to_add;
+        // Wildcard "Spice" Selection
+        if (Math.random() < SPICE_CHANCE) {
+            const randomIndex = Math.floor(Math.random() * secret_pool.length);
+            card_to_add = secret_pool[randomIndex][0];
+        } else {
+            const selection = selectFromTieredPool(secret_pool);
+            if (selection) card_to_add = selection[0];
+        }
+
+        if(!card_to_add) continue;
+        
         const { name: card_name, rarity: card_rarity, subtypes: card_subtypes = [] } = card_to_add;
+        if (secret_counts[card_name] >= (DECK_RULES.secret_card_limits[card_rarity] || 1)) continue;
+        
         const current_terrain_count = deck.Secrets.filter(c => (c.subtypes || []).includes('Terrain')).length;
         const terrain_names = new Set(deck.Secrets.filter(c => (c.subtypes || []).includes('Terrain')).map(c => c.name));
-
-        if (secret_counts[card_name] >= (DECK_RULES.secret_card_limits[card_rarity] || 1)) continue;
         if (card_subtypes.includes('Terrain') && (current_terrain_count >= 4 || (!terrain_names.has(card_name) && terrain_names.size >= 3))) continue;
         
         deck.Secrets.push(card_to_add);
         secret_counts[card_name]++;
     }
         
-    // --- STEP 6: FINAL DECK SIZE ADJUSTMENT ---
+    // --- FINAL DECK SIZE ADJUSTMENT ---
     while (deck.Creatures.length + deck.Power.length + deck.Secrets.length < DECK_RULES.deck_size) {
-         const card = powerCardsByType['Blank'].find(c => (c.powerValue || 1) === 1);
-         if(card) deck.Power.push(card); else break;
+        const card = powerCardsByType['Blank'].find(c => (c.powerValue || 1) === 1);
+        if(card) deck.Power.push(card); else break;
     }
      while (deck.Creatures.length + deck.Power.length + deck.Secrets.length > DECK_RULES.deck_size) {
         if(deck.Power.length > targetPower) deck.Power.pop();
         else if (deck.Secrets.length > targetSecrets) deck.Secrets.pop();
-        else if (deck.Creatures.length > targetCreatures) deck.Creatures.pop();
-        else { 
-            deck.Power.length > 0 ? deck.Power.pop() : deck.Secrets.pop();
+        else if (deck.Creatures.length > totalTargetCreatures) deck.Creatures.pop();
+        else {
+            if (deck.Power.length > deck.Secrets.length && deck.Power.length > deck.Creatures.length) deck.Power.pop();
+            else if (deck.Secrets.length > deck.Creatures.length) deck.Secrets.pop();
+            else deck.Creatures.length > 0 ? deck.Creatures.pop() : deck.Power.pop();
         }
     }
         
@@ -946,6 +1064,23 @@ function formatDeckAsJson(deck, deckTheme) {
     }
 }
 
+function processJsonGeneration() {
+    const jsonPre = document.getElementById('json-output');
+    const codeBlock = document.querySelector('.code-block-wrapper');
+    const copyBtn = document.getElementById('copy-json-btn');
+
+    if (!currentDeck) {
+        alert('Please generate a deck first before creating JSON.');
+        return;
+    }
+    const jsonString = formatDeckAsJson(currentDeck, currentDeckTheme);
+    if (jsonString) {
+        jsonPre.textContent = jsonString;
+        codeBlock.style.display = 'block';
+        copyBtn.textContent = '🗐';
+    }
+}
+
 async function initialize() {
     Object.entries(DECK_ARCHETYPES).forEach(([name, data], index) => {
         const input = document.createElement('input');
@@ -977,7 +1112,8 @@ async function initialize() {
     title.textContent = 'Deck JSON Output';
     const copyBtn = document.createElement('button');
     copyBtn.id = 'copy-json-btn';
-    copyBtn.textContent = 'Copy code';
+    copyBtn.title = 'Copy code';
+    copyBtn.textContent = '🗐';
     header.appendChild(title);
     header.appendChild(copyBtn);
     
@@ -999,23 +1135,91 @@ async function initialize() {
     jsonSection.appendChild(codeBlock);
     mainContainer.appendChild(jsonSection);
 
+    // --- Create and append Passkey Modal ---
+    const modalOverlay = document.createElement('div');
+    modalOverlay.className = 'modal-overlay';
+    const modalContent = document.createElement('div');
+    modalContent.className = 'modal-content';
+    modalContent.innerHTML = `
+        <h2>⚠️ ADMIN ACCESS REQUIRED ⚠️</h2>
+        <p>Please enter admin passkey to continue.</p>
+        <div class="passkey-container">
+            <input type="password" class="passkey-input" maxlength="1" autocomplete="off">
+            <input type="password" class="passkey-input" maxlength="1" autocomplete="off">
+            <input type="password" class="passkey-input" maxlength="1" autocomplete="off">
+            <input type="password" class="passkey-input" maxlength="1" autocomplete="off">
+        </div>
+        <p id="passkey-error"></p>
+    `;
+    modalOverlay.appendChild(modalContent);
+    document.body.appendChild(modalOverlay);
+
+    // --- Passkey Modal Logic ---
+    const PASSKEY = 'T419';
+    const MAX_PASSKEY_ATTEMPTS = 3;
+    let passkeyAttempts = 0;
+    const passkeyInputs = modalContent.querySelectorAll('.passkey-input');
+    const passkeyError = document.getElementById('passkey-error');
+
     jsonButton.addEventListener('click', () => {
         if (!currentDeck) {
-            alert('Please generate a deck first before creating JSON.');
+            alert('Please generate a deck first.');
             return;
         }
-        const jsonString = formatDeckAsJson(currentDeck, currentDeckTheme);
-        if (jsonString) {
-            jsonPre.textContent = jsonString;
-            codeBlock.style.display = 'block';
-            copyBtn.textContent = 'Copy code';
-        }
+        passkeyAttempts = 0;
+        passkeyError.style.visibility = 'hidden';
+        passkeyInputs.forEach(input => input.value = '');
+        modalOverlay.style.display = 'flex';
+        passkeyInputs[0].focus();
     });
 
+    modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) modalOverlay.style.display = 'none';
+    });
+
+    passkeyInputs.forEach((input, index) => {
+        input.addEventListener('input', (e) => {
+            input.value = e.target.value.toUpperCase();
+            if (input.value && index < passkeyInputs.length - 1) passkeyInputs[index + 1].focus();
+            if (Array.from(passkeyInputs).every(i => i.value)) verifyPasskey();
+        });
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Backspace' && !input.value && index > 0) passkeyInputs[index - 1].focus();
+        });
+        input.addEventListener('paste', (e) => {
+            e.preventDefault();
+            const pasteData = e.clipboardData.getData('text').toUpperCase();
+            for (let i = 0; i < pasteData.length && (index + i) < passkeyInputs.length; i++) {
+                passkeyInputs[index + i].value = pasteData[i];
+            }
+            if (Array.from(passkeyInputs).every(i => i.value)) verifyPasskey();
+        });
+    });
+
+    function verifyPasskey() {
+        const enteredPasskey = Array.from(passkeyInputs).map(i => i.value).join('');
+        if (enteredPasskey === PASSKEY) {
+            modalOverlay.style.display = 'none';
+            processJsonGeneration();
+        } else {
+            passkeyAttempts++;
+            const attemptsLeft = MAX_PASSKEY_ATTEMPTS - passkeyAttempts;
+            passkeyInputs.forEach(input => input.value = '');
+            passkeyError.style.visibility = 'visible';
+            if (attemptsLeft <= 0) {
+                passkeyError.textContent = 'Too many failed attempts. Reloading...';
+                setTimeout(() => { window.location.reload(); }, 1500);
+            } else {
+                passkeyError.textContent = `Incorrect Passkey. ${attemptsLeft} attempt(s) remaining.`;
+                passkeyInputs[0].focus();
+            }
+        }
+    }
+    
     copyBtn.addEventListener('click', () => {
         navigator.clipboard.writeText(jsonPre.textContent).then(() => {
-            copyBtn.textContent = 'Copied!';
-            setTimeout(() => { copyBtn.textContent = 'Copy code'; }, 2000);
+            copyBtn.textContent = '✓ Copied!';
+            setTimeout(() => { copyBtn.textContent = '🗐'; }, 2000);
         }, (err) => {
             console.error('Failed to copy text: ', err);
             alert('Failed to copy text.');
