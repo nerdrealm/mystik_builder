@@ -7,7 +7,7 @@
     "level": 4,
     "hp": 4000,
     "rarity": "Uncommon",
-    "images": {"small": "CardImages/Creatures/Dark/Anansi1"},
+    "images": {"small": "images/Dark/Anansi1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -50,7 +50,7 @@
     "level": 8,
     "hp": 6500,
     "rarity": "Rare",
-    "images": {"small": "CardImages/Creatures/Dark/ArcanaApprentice1", "large": "CardImages/Creatures/Dark/ArcanaApprentice1"},
+    "images": {"small": "images/Dark/ArcanaApprentice1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -97,14 +97,68 @@
     "illustrator": "Dall-E 3"
   },
   {
+    "id": 2000,
+    "name": "Arcana Apprentice",
+    "supertype": "Creature",
+    "types": ["Dark"],
+    "level": 8,
+    "hp": 6500,
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Dark/ArcanaApprentice2.png"},
+    "setCode": "MC01",
+    "abilities": [],
+    "attacks": [
+      {
+        "name": "Arcane Blast",
+        "cost": [{"PowerType": "Dark", "count": 2}],
+        "damage": 4000,
+        "effectText": null,
+        "structuredEffects": []
+      },
+      {
+        "name": "Magical Strike",
+        "cost": [{"PowerType": "Dark", "count": 3}],
+        "damage": 4500,
+        "effectText": "Flip the main coin. If the result is heads, increase Arcana Apprentice's health by +1000 HP.",
+        "structuredEffects": [
+          {
+            "type": "ConditionalEffect",
+            "category": "Utility",
+            "target": "Self",
+            "condition": {
+              "type": "CoinFlip",
+              "comparison": "EqualTo",
+              "stringValue": "Heads"
+            },
+            "trueEffects": [
+              {
+                "type": "ModifyHP",
+                "category": "Healing",
+                "target": "Self",
+                "amount": 1000
+              }
+            ],
+            "falseEffects": []
+          }
+        ]
+      }
+    ],
+    "weaknesses": [{"PowerType": "Light", "multiplier": 2}],
+    "resistances": [{"PowerType": "Fire", "reduction": 500}],
+    "retreatCost": [{"PowerType": "Dark", "count": 2}],
+    "convertedRetreatCost": 2,
+    "collectionNumber": "356/311",
+    "illustrator": "Dall-E 3"
+  },  
+  {
     "id": 3,
     "name": "Arcana Apprentice",
     "supertype": "Creature",
     "types": ["Dark"],
     "level": 8,
     "hp": 6500,
-    "rarity": "Rare",
-    "images": {"small": "CardImages/Creatures/Dark/ArcanaApprentice3", "large": "CardImages/Creatures/Dark/ArcanaApprentice1"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Creatures/Dark/ArcanaApprentice3.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -157,8 +211,8 @@
     "types": ["Dark"],
     "level": 10,
     "hp": 8500,
-    "rarity": "Rare",
-    "images": {"small": "images/arcana_temptress_sm.png", "large": "images/arcana_temptress_lg.png"},
+    "rarity": "UltraRare",
+    "images": {"small": "images/Dark/ArcanaEnchantress1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -212,8 +266,8 @@
     "types": ["Dark"],
     "level": 10,
     "hp": 8500,
-    "rarity": "Rare",
-    "images": {"small": "images/arcana_temptress_sm.png", "large": "images/arcana_temptress_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Dark/ArcanaEnchantress2.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -267,8 +321,8 @@
     "types": ["Dark"],
     "level": 10,
     "hp": 8500,
-    "rarity": "Rare",
-    "images": {"small": "images/arcana_temptress_sm.png", "large": "images/arcana_temptress_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Dark/ArcanaEnchantress3.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -323,7 +377,7 @@
     "level": 6,
     "hp": 5500,
     "rarity": "Uncommon",
-    "images": {"small": "images/banshee_sm.png", "large": "images/banshee_lg.png"},
+    "images": {"small": "images/Dark/Banshee1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -366,7 +420,7 @@
     "level": 5,
     "hp": 3500,
     "rarity": "Uncommon",
-    "images": {"small": "images/bloodfang_vampire_sm.png", "large": "images/bloodfang_vampire_lg.png"},
+    "images": {"small": "images/Dark/BloodfangVampire1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -412,7 +466,7 @@
     "level": 2,
     "hp": 2000,
     "rarity": "Common",
-    "images": {"small": "images/buckshot_bill_sm.png", "large": "images/buckshot_bill_lg.png"},
+    "images": {"small": "images/Dark/Skriek,BountyHunter1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -447,7 +501,7 @@
     "level": 9,
     "hp": 7000,
     "rarity": "Rare",
-    "images": {"small": "images/daemorous_sm.png", "large": "images/daemorous_lg.png"},
+    "images": {"small": "images/Dark/Daemorus1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -488,8 +542,8 @@
     "types": ["Dark"],
     "level": 9,
     "hp": 7000,
-    "rarity": "Rare",
-    "images": {"small": "images/daemorous_sm.png", "large": "images/daemorous_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Dark/Daemorus2.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -530,8 +584,8 @@
     "types": ["Dark"],
     "level": 9,
     "hp": 7000,
-    "rarity": "Rare",
-    "images": {"small": "images/daemorous_sm.png", "large": "images/daemorous_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Dark/Daemorus3.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -573,7 +627,7 @@
     "level": 7,
     "hp": 6000,
     "rarity": "Rare",
-    "images": {"small": "images/dark_siren_of_rehm_sm.png", "large": "images/dark_siren_of_rehm_lg.png"},
+    "images": {"small": "images/Dark/DarkSirenofRehm1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -623,8 +677,8 @@
     "types": ["Dark"],
     "level": 7,
     "hp": 6000,
-    "rarity": "Rare",
-    "images": {"small": "images/dark_siren_of_rehm_sm.png", "large": "images/dark_siren_of_rehm_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Dark/DarkSirenofRehm2.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -674,8 +728,8 @@
     "types": ["Dark"],
     "level": 7,
     "hp": 6000,
-    "rarity": "Rare",
-    "images": {"small": "images/dark_siren_of_rehm_sm.png", "large": "images/dark_siren_of_rehm_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Dark/DarkSirenofRehm3.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -726,7 +780,7 @@
     "level": 8,
     "hp": 6500,
     "rarity": "Rare",
-    "images": {"small": "images/delphora_sm.png", "large": "images/delphora_lg.png"},
+    "images": {"small": "images/Dark/Delphora1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -759,8 +813,8 @@
     "types": ["Dark"],
     "level": 10,
     "hp": 9000,
-    "rarity": "Rare",
-    "images": {"small": "images/ephemeral_empress_sm.png", "large": "images/ephemeral_empress_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Dark/EphemeralEmpress2.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -812,8 +866,8 @@
     "types": ["Dark"],
     "level": 10,
     "hp": 9000,
-    "rarity": "Rare",
-    "images": {"small": "images/ephemeral_empress_sm.png", "large": "images/ephemeral_empress_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Dark/EphemeralEmpress3.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -866,7 +920,7 @@
     "level": 3,
     "hp": 2500,
     "rarity": "Common",
-    "images": {"small": "images/evela_sm.png", "large": "images/evela_lg.png"},
+    "images": {"small": "images/Dark/Evila1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -893,7 +947,7 @@
     "level": 3,
     "hp": 2000,
     "rarity": "Common",
-    "images": {"small": "images/fallen_angel_sm.png", "large": "images/fallen_angel_lg.png"},
+    "images": {"small": "images/Dark/FallenAngel1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -935,7 +989,7 @@
     "level": 2,
     "hp": 1500,
     "rarity": "Common",
-    "images": {"small": "images/gorgonite_sm.png", "large": "images/gorgonite_lg.png"},
+    "images": {"small": "images/Dark/Gorgon1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -977,7 +1031,7 @@
     "level": 3,
     "hp": 2500,
     "rarity": "Common",
-    "images": {"small": "images/grimlin_sm.png", "large": "images/grimlin_lg.png"},
+    "images": {"small": "images/Dark/Grimlin1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -1023,7 +1077,7 @@
     "level": 1,
     "hp": 1000,
     "rarity": "Common",
-    "images": {"small": "images/growler_sm.png", "large": "images/growler_lg.png"},
+    "images": {"small": "images/Dark/Growler1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -1050,7 +1104,7 @@
     "level": 1,
     "hp": 1000,
     "rarity": "Common",
-    "images": {"small": "images/havok_sm.png", "large": "images/havok_lg.png"},
+    "images": {"small": "images/Dark/Havok1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -1084,7 +1138,7 @@
     "level": 7,
     "hp": 6000,
     "rarity": "Rare",
-    "images": {"small": "images/hellspawn_sm.png", "large": "images/hellspawn_lg.png"},
+    "images": {"small": "images/Dark/Hellspawn1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -1118,7 +1172,7 @@
     "level": 6,
     "hp": 6000,
     "rarity": "Uncommon",
-    "images": {"small": "images/jespa_the_broken_sm.png", "large": "images/jespa_the_broken_lg.png"},
+    "images": {"small": "images/Dark/JespatheBroken1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -1169,7 +1223,7 @@
     "level": 7,
     "hp": 6500,
     "rarity": "Rare",
-    "images": {"small": "images/psoglav_sm.png", "large": "images/psoglav_lg.png"},
+    "images": {"small": "images/Dark/Psoglav1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -1211,8 +1265,8 @@
     "types": ["Dark"],
     "level": 7,
     "hp": 6500,
-    "rarity": "Rare",
-    "images": {"small": "images/psoglav_sm.png", "large": "images/psoglav_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Dark/Psoglav2.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -1254,8 +1308,8 @@
     "types": ["Dark"],
     "level": 7,
     "hp": 6500,
-    "rarity": "Rare",
-    "images": {"small": "images/psoglav_sm.png", "large": "images/psoglav_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Dark/Psoglav3.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -1298,7 +1352,7 @@
     "level": 5,
     "hp": 4500,
     "rarity": "Uncommon",
-    "images": {"small": "images/rakshasa_sm.png", "large": "images/rakshasa_lg.png"},
+    "images": {"small": "images/Dark/Pandarkness1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -1333,7 +1387,7 @@
     "level": 4,
     "hp": 3500,
     "rarity": "Uncommon",
-    "images": {"small": "images/sinister_imp_sm.png", "large": "images/sinister_imp_lg.png"},
+    "images": {"small": "images/Dark/SisteroftheImp1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -1378,7 +1432,7 @@
     "level": 9,
     "hp": 7500,
     "rarity": "Rare",
-    "images": {"small": "images/smaugom_sm.png", "large": "images/smaugom_lg.png"},
+    "images": {"small": "images/Dark/DragonofDeath1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -1418,8 +1472,8 @@
     "types": ["Dark"],
     "level": 10,
     "hp": 8500,
-    "rarity": "Rare",
-    "images": {"small": "images/tetsu_yami_sm.png", "large": "images/tetsu_yami_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Dark/TetsuYami2.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -1465,8 +1519,8 @@
     "types": ["Dark"],
     "level": 10,
     "hp": 8500,
-    "rarity": "Rare",
-    "images": {"small": "images/tetsu_yami_sm.png", "large": "images/tetsu_yami_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Dark/TetsuYami3.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -1512,8 +1566,8 @@
     "types": ["Dark"],
     "level": 10,
     "hp": 9500,
-    "rarity": "Rare",
-    "images": {"small": "images/werelephant_sm.png", "large": "images/werelephant_lg.png"},
+    "rarity": "UltraRare",
+    "images": {"small": "images/Dark/Werelephant1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -1565,8 +1619,8 @@
     "types": ["Dark"],
     "level": 10,
     "hp": 9500,
-    "rarity": "Rare",
-    "images": {"small": "images/werelephant_sm.png", "large": "images/werelephant_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Dark/Werelephant2.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -1611,7 +1665,59 @@
     "collectionNumber": "359/311",
     "illustrator": "Dall-E 3"
   },
-  
+  {
+    "id": 2001,
+    "name": "Werelephant",
+    "supertype": "Creature",
+    "types": ["Dark"],
+    "level": 10,
+    "hp": 9500,
+    "rarity": "Borderless",
+    "images": {"small": "images/Dark/Werelephant3.png"},
+    "setCode": "MC01",
+    "abilities": [
+      {
+        "name": "Tusks of Terror",
+        "trigger": "Passive",
+        "effectText": "To summon, you must play Moonlight Awakening and have Pebblephant in the field of play. Once summoned, your opponent cannot activate any Spell cards.",
+        "usableFromBench": false,
+         "prerequisites": [
+            {"type": "PlaySpecificCard", "cardName": "Moonlight Awakening"},
+            {"type": "SpecificCreatureInPlay", "creatureName": "Pebblephant"}
+        ],
+        "structuredEffects": [
+          {
+            "type": "PreventSpellActivation",
+            "category": "Control",
+            "target": "PlayerOpponent"
+          }
+        ]
+      }
+    ],
+    "attacks": [
+      {
+        "name": "Dark Stampede",
+        "cost": [{"PowerType": "Dark", "count": 4}],
+        "damage": 6000,
+        "effectText": "If your opponent's Creature is not destroyed by this attack. Remove two Power cards from your opponent's Creature.",
+        "structuredEffects": [
+          {
+            "type": "ConditionalEffect",
+            "category": "Disruption",
+            "condition": {"type": "TargetNotDestroyedByAttack"},
+            "trueEffects": [{"type": "RemovePowerCard", "target": "OpponentCreatureActive", "amount": 2, "criteria": "Any"}],
+            "falseEffects": []
+          }
+        ]
+      }
+    ],
+    "weaknesses": [{"PowerType": "Forest", "multiplier": 3}],
+    "resistances": [],
+    "retreatCost": [],
+    "convertedRetreatCost": 0,
+    "collectionNumber": "359/311",
+    "illustrator": "Dall-E 3"
+  },  
   {
     "id": 38,
     "name": "Anuket",
@@ -1619,8 +1725,8 @@
     "types": ["Earth"],
     "level": 8,
     "hp": 7000,
-    "rarity": "Rare",
-    "images": {"small": "images/anuket_sm.png", "large": "images/anuket_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Earth/Anuket1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -1653,8 +1759,8 @@
     "types": ["Earth"],
     "level": 8,
     "hp": 7000,
-    "rarity": "Rare",
-    "images": {"small": "images/anuket_borderless_sm.png", "large": "images/anuket_borderless_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Earth/Anuket2.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -1687,8 +1793,8 @@
     "types": ["Earth"],
     "level": 8,
     "hp": 7000,
-    "rarity": "Rare",
-    "images": {"small": "images/anuket_alt_sm.png", "large": "images/anuket_alt_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Earth/Anuket3.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -17110,7 +17216,7 @@
     "powerType": "Dark",
     "powerValue": 1,
     "rarity": "Common",
-    "images": {"small": "images/dark_power_sm.png"},
+    "images": {"small": "images/Power/Power-D.png"},
     "setCode": "MC01",
     "collectionNumber": "P001/018"
   },
@@ -17121,7 +17227,7 @@
     "powerType": "Dark",
     "powerValue": 2,
     "rarity": "Uncommon",
-    "images": {"small": "images/dark_power_x2_sm.png"},
+    "images": {"small": "images/Power/Power-D2.png"},
     "setCode": "MC01",
     "collectionNumber": "P002/018"
   },
@@ -17132,7 +17238,7 @@
     "powerType": "Earth",
     "powerValue": 1,
     "rarity": "Common",
-    "images": {"small": "images/earth_power_sm.png"},
+    "images": {"small": "images/Power/Power-E.png"},
     "setCode": "MC01",
     "collectionNumber": "P003/018"
   },
@@ -17143,7 +17249,7 @@
     "powerType": "Earth",
     "powerValue": 2,
     "rarity": "Uncommon",
-    "images": {"small": "images/earth_power_x2_sm.png"},
+    "images": {"small": "images/Power/Power-E2.png"},
     "setCode": "MC01",
     "collectionNumber": "P004/018"
   },
@@ -17154,7 +17260,7 @@
     "powerType": "Fire",
     "powerValue": 1,
     "rarity": "Common",
-    "images": {"small": "images/fire_power_sm.png"},
+    "images": {"small": "images/Power/Power-Fi.png"},
     "setCode": "MC01",
     "collectionNumber": "P005/018"
   },
@@ -17165,7 +17271,7 @@
     "powerType": "Fire",
     "powerValue": 2,
     "rarity": "Uncommon",
-    "images": {"small": "images/fire_power_x2_sm.png"},
+    "images": {"small": "images/Power/Power-Fi2.png"},
     "setCode": "MC01",
     "collectionNumber": "P006/018"
   },
@@ -17176,7 +17282,7 @@
     "powerType": "Forest",
     "powerValue": 1,
     "rarity": "Common",
-    "images": {"small": "images/forest_power_sm.png"},
+    "images": {"small": "images/Power/Power-F.png"},
     "setCode": "MC01",
     "collectionNumber": "P007/018"
   },
@@ -17187,7 +17293,7 @@
     "powerType": "Forest",
     "powerValue": 2,
     "rarity": "Uncommon",
-    "images": {"small": "images/forest_power_x2_sm.png"},
+    "images": {"small": "images/Power/Power-F2.png"},
     "setCode": "MC01",
     "collectionNumber": "P008/018"
   },
@@ -17198,7 +17304,7 @@
     "powerType": "Light",
     "powerValue": 1,
     "rarity": "Common",
-    "images": {"small": "images/light_power_sm.png"},
+    "images": {"small": "images/Power/Power-L.png"},
     "setCode": "MC01",
     "collectionNumber": "P009/018"
   },
@@ -17209,7 +17315,7 @@
     "powerType": "Light",
     "powerValue": 2,
     "rarity": "Uncommon",
-    "images": {"small": "images/light_power_x2_sm.png"},
+    "images": {"small": "images/Power/Power-L2.png"},
     "setCode": "MC01",
     "collectionNumber": "P010/018"
   },
@@ -17220,7 +17326,7 @@
     "powerType": "Thunder",
     "powerValue": 1,
     "rarity": "Common",
-    "images": {"small": "images/thunder_power_sm.png"},
+    "images": {"small": "images/Power/Power-T.png"},
     "setCode": "MC01",
     "collectionNumber": "P011/018"
   },
@@ -17231,7 +17337,7 @@
     "powerType": "Thunder",
     "powerValue": 2,
     "rarity": "Uncommon",
-    "images": {"small": "images/thunder_power_x2_sm.png"},
+    "images": {"small": "images/Power/Power-T2.png"},
     "setCode": "MC01",
     "collectionNumber": "P012/018"
   },
@@ -17242,7 +17348,7 @@
     "powerType": "Water",
     "powerValue": 1,
     "rarity": "Common",
-    "images": {"small": "images/water_power_sm.png"},
+    "images": {"small": "images/Power/Power-W.png"},
     "setCode": "MC01",
     "collectionNumber": "P013/018"
   },
@@ -17253,7 +17359,7 @@
     "powerType": "Water",
     "powerValue": 2,
     "rarity": "Uncommon",
-    "images": {"small": "images/water_power_x2_sm.png"},
+    "images": {"small": "images/Power/Power-W2.png"},
     "setCode": "MC01",
     "collectionNumber": "P014/018"
   },
@@ -17264,7 +17370,7 @@
     "powerType": "Wind",
     "powerValue": 1,
     "rarity": "Common",
-    "images": {"small": "images/wind_power_sm.png"},
+    "images": {"small": "images/Power/Power-Wi.png"},
     "setCode": "MC01",
     "collectionNumber": "P015/018"
   },
@@ -17275,7 +17381,7 @@
     "powerType": "Wind",
     "powerValue": 2,
     "rarity": "Uncommon",
-    "images": {"small": "images/wind_power_x2_sm.png"},
+    "images": {"small": "images/Power/Power-Wi2.png"},
     "setCode": "MC01",
     "collectionNumber": "P016/018"
   },
@@ -17286,7 +17392,7 @@
     "powerType": "Blank",
     "powerValue": 1,
     "rarity": "Common",
-    "images": {"small": "images/blank_power_sm.png"},
+    "images": {"small": "images/Power/Power-B.png"},
     "setCode": "MC01",
     "collectionNumber": "P017/018"
   },
@@ -17297,7 +17403,7 @@
     "powerType": "Blank",
     "powerValue": 2,
     "rarity": "Uncommon",
-    "images": {"small": "images/blank_power_x2_sm.png"},
+    "images": {"small": "images/Power/Power-B2.png"},
     "setCode": "MC01",
     "collectionNumber": "P018/018"
   }
