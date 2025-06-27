@@ -1827,8 +1827,8 @@
     "types": ["Earth"],
     "level": 10,
     "hp": 7000,
-    "rarity": "Rare",
-    "images": {"small": "images/bristleback_sm.png", "large": "images/bristleback_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Earth/Bristleback2.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -1880,8 +1880,8 @@
     "types": ["Earth"],
     "level": 10,
     "hp": 7000,
-    "rarity": "Rare",
-    "images": {"small": "images/bristleback_borderless_sm.png", "large": "images/bristleback_borderless_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Earth/Bristleback3.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -1934,7 +1934,7 @@
     "level": 1,
     "hp": 1000,
     "rarity": "Common",
-    "images": {"small": "images/dolphite_sm.png", "large": "images/dolphite_lg.png"},
+    "images": {"small": "images/Earth/Dolphite1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -1961,7 +1961,7 @@
     "level": 2,
     "hp": 1000,
     "rarity": "Common",
-    "images": {"small": "images/geogolem_sm.png", "large": "images/geogolem_lg.png"},
+    "images": {"small": "images/Earth/Geogolem1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -1988,7 +1988,7 @@
     "level": 6,
     "hp": 5500,
     "rarity": "Uncommon",
-    "images": {"small": "images/hex_gargoyle_sm.png", "large": "images/hex_gargoyle_lg.png"},
+    "images": {"small": "images/Earth/GargoyleofSersura1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -2038,7 +2038,7 @@
     "level": 2,
     "hp": 1500,
     "rarity": "Common",
-    "images": {"small": "images/indus_worm_sm.png", "large": "images/indus_worm_lg.png"},
+    "images": {"small": "images/Earth/IndusWorm1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -2078,8 +2078,8 @@
     "types": ["Earth"],
     "level": 10,
     "hp": 9500,
-    "rarity": "Rare",
-    "images": {"small": "images/isxohe_sm.png", "large": "images/isxohe_lg.png"},
+    "rarity": "UltraRare",
+    "images": {"small": "images/Earth/Isxóhe1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -2134,7 +2134,7 @@
     "level": 10,
     "hp": 9500,
     "rarity": "Rare",
-    "images": {"small": "images/isxohe_borderless_sm.png", "large": "images/isxohe_borderless_lg.png"},
+    "images": {"small": "images/Earth/Isxóhe2.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -2188,8 +2188,8 @@
     "types": ["Earth"],
     "level": 10,
     "hp": 9500,
-    "rarity": "UltraRare",
-    "images": {"small": "images/isxohe_alt_sm.png", "large": "images/isxohe_alt_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Earth/Isxóhe2.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -2237,6 +2237,61 @@
     "illustrator": "Dall-E 3"
   },
   {
+    "id": 2002,
+    "name": "Isxöhe",
+    "supertype": "Creature",
+    "types": ["Earth"],
+    "level": 10,
+    "hp": 9500,
+    "rarity": "Borderless",
+    "images": {"small": "images/Earth/Isxóhe3.png"},
+    "setCode": "MC01",
+    "abilities": [
+      {
+        "name": "Earthly Fury",
+        "trigger": "Passive",
+        "effectText": "To summon, you must play Spirit Guide. Isxöhe gains an additional +500 attack for every Forest Creature in your Discard Pile.",
+        "usableFromBench": false,
+        "prerequisites": [{"type": "PlaySpecificCard", "cardName": "Spirit Guide"}],
+        "structuredEffects": [
+          {
+            "type": "ModifyStats",
+            "category": "StatBoost",
+            "target": "Self",
+            "modification": {
+              "stat": "Attack",
+              "amountPerCondition": 500,
+              "condition": {"type": "CountCreaturesInDiscard", "powerType": "Forest"}
+            }
+          }
+        ]
+      }
+    ],
+    "attacks": [
+      {
+        "name": "Terra Claw",
+        "cost": [{"PowerType": "Earth", "count": 3}, {"PowerType": "Forest", "count": 1}],
+        "damage": 5000,
+        "effectText": "Roll the main dice. If the result is even, remove one level 6 or lower Creature on your opponent's Bench and place it in their Discard Pile.",
+        "structuredEffects": [
+          {
+            "type": "ConditionalEffect",
+            "category": "Disruption",
+            "condition": {"type": "DiceRoll", "comparison": "IsEven"},
+            "trueEffects": [{"type": "RemoveCreatureFromBenchToDiscard", "target": "OpponentBench", "amount": 1, "criteria": {"maxLevel": 6}, "selection": "PlayerChoiceOpponentBench"}],
+            "falseEffects": []
+          }
+        ]
+      }
+    ],
+    "weaknesses": [{"PowerType": "Fire", "multiplier": 3}],
+    "resistances": [],
+    "retreatCost": [],
+    "convertedRetreatCost": 0,
+    "collectionNumber": "162/311",
+    "illustrator": "Dall-E 3"
+  },  
+  {
     "id": 50,
     "name": "King Gaom",
     "supertype": "Creature",
@@ -2244,7 +2299,7 @@
     "level": 3,
     "hp": 3000,
     "rarity": "Common",
-    "images": {"small": "images/king_gaom_sm.png", "large": "images/king_gaom_lg.png"},
+    "images": {"small": "images/Earth/KingGaom1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -2285,8 +2340,8 @@
     "types": ["Earth"],
     "level": 10,
     "hp": 8500,
-    "rarity": "Rare",
-    "images": {"small": "images/laviathron_sm.png", "large": "images/laviathron_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Earth/Laviathron2.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -2327,8 +2382,8 @@
     "types": ["Earth"],
     "level": 10,
     "hp": 8500,
-    "rarity": "Rare",
-    "images": {"small": "images/laviathron_borderless_sm.png", "large": "images/laviathron_borderless_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Earth/Laviathron3.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -2370,7 +2425,7 @@
     "level": 4,
     "hp": 2500,
     "rarity": "Uncommon",
-    "images": {"small": "images/lizardfolk_whelp_sm.png", "large": "images/lizardfolk_whelp_lg.png"},
+    "images": {"small": "images/Earth/Catctus1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -2404,7 +2459,7 @@
     "level": 5,
     "hp": 3500,
     "rarity": "Uncommon",
-    "images": {"small": "images/mafistu_sm.png", "large": "images/mafistu_lg.png"},
+    "images": {"small": "images/Earth/Mafistu1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -2438,7 +2493,7 @@
     "level": 8,
     "hp": 6500,
     "rarity": "Rare",
-    "images": {"small": "images/ophiotaurus_sm.png", "large": "images/ophiotaurus_lg.png"},
+    "images": {"small": "images/Earth/Ophiotarus1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -2486,7 +2541,7 @@
     "level": 7,
     "hp": 6000,
     "rarity": "Rare",
-    "images": {"small": "images/orgranutan_sm.png", "large": "images/orgranutan_lg.png"},
+    "images": {"small": "images/Earth/Or'granutan1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -2520,7 +2575,7 @@
     "level": 9,
     "hp": 7000,
     "rarity": "Rare",
-    "images": {"small": "images/orkarena_sm.png", "large": "images/orkarena_lg.png"},
+    "images": {"small": "images/Earth/Orkarena1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -2562,7 +2617,7 @@
     "level": 8,
     "hp": 6500,
     "rarity": "Rare",
-    "images": {"small": "images/pebblephant_sm.png", "large": "images/pebblephant_lg.png"},
+    "images": {"small": "images/Earth/Pebblephant1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -2614,8 +2669,8 @@
     "types": ["Earth"],
     "level": 8,
     "hp": 6500,
-    "rarity": "Rare",
-    "images": {"small": "images/pebblephant_borderless_sm.png", "large": "images/pebblephant_borderless_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Earth/Pebblephant2.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -2667,8 +2722,8 @@
     "types": ["Earth"],
     "level": 8,
     "hp": 6500,
-    "rarity": "Rare",
-    "images": {"small": "images/pebblephant_alt_sm.png", "large": "images/pebblephant_alt_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Earth/Pebblephant3.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -2721,7 +2776,7 @@
     "level": 1,
     "hp": 1000,
     "rarity": "Common",
-    "images": {"small": "images/sand_bear_sm.png", "large": "images/sand_bear_lg.png"},
+    "images": {"small": "images/Earth/SandBear1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -2748,7 +2803,7 @@
     "level": 3,
     "hp": 2000,
     "rarity": "Common",
-    "images": {"small": "images/selkie_sm.png", "large": "images/selkie_lg.png"},
+    "images": {"small": "images/Earth/Selkie1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -2774,8 +2829,8 @@
     "types": ["Earth"],
     "level": 10,
     "hp": 8000,
-    "rarity": "Rare",
-    "images": {"small": "images/serpopard_sm.png", "large": "images/serpopard_lg.png"},
+    "rarity": "UltraRare",
+    "images": {"small": "images/Earth/Serpopard1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -2824,8 +2879,8 @@
     "types": ["Earth"],
     "level": 10,
     "hp": 8000,
-    "rarity": "Rare",
-    "images": {"small": "images/serpopard_borderless_sm.png", "large": "images/serpopard_borderless_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Earth/Serpopard2.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -2874,8 +2929,8 @@
     "types": ["Earth"],
     "level": 10,
     "hp": 8000,
-    "rarity": "UltraRare",
-    "images": {"small": "images/serpopard_alt_sm.png", "large": "images/serpopard_alt_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Earth/Serpopard3.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -2925,7 +2980,7 @@
     "level": 7,
     "hp": 6500,
     "rarity": "Rare",
-    "images": {"small": "images/sphinx_the_noble_sm.png", "large": "images/sphinx_the_noble_lg.png"},
+    "images": {"small": "images/Earth/SphinxtheNoble1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -2966,7 +3021,7 @@
     "level": 9,
     "hp": 7500,
     "rarity": "Rare",
-    "images": {"small": "images/the_behemoth_sm.png", "large": "images/the_behemoth_lg.png"},
+    "images": {"small": "images/Earth/TheBehemoth1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -2999,8 +3054,8 @@
     "types": ["Earth"],
     "level": 9,
     "hp": 7500,
-    "rarity": "Rare",
-    "images": {"small": "images/the_behemoth_borderless_sm.png", "large": "images/the_behemoth_borderless_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Earth/TheBehemoth2.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -3033,8 +3088,8 @@
     "types": ["Earth"],
     "level": 9,
     "hp": 7500,
-    "rarity": "Rare",
-    "images": {"small": "images/the_behemoth_alt_sm.png", "large": "images/the_behemoth_alt_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Earth/TheBehemoth3.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -3068,7 +3123,7 @@
     "level": 4,
     "hp": 3000,
     "rarity": "Uncommon",
-    "images": {"small": "images/toaxic_sm.png", "large": "images/toaxic_lg.png"},
+    "images": {"small": "images/Earth/Toaxic1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -3126,7 +3181,7 @@
     "level": 5,
     "hp": 3000,
     "rarity": "Uncommon",
-    "images": {"small": "images/ushi_oni_sm.png", "large": "images/ushi_oni_lg.png"},
+    "images": {"small": "images/Earth/Ushi-oni1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -3169,7 +3224,7 @@
     "level": 6,
     "hp": 5500,
     "rarity": "Rare",
-    "images": {"small": "images/wandering_traveler_sm.png", "large": "images/wandering_traveler_lg.png"},
+    "images": {"small": "images/Earth/ElVagabundo1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -3195,8 +3250,8 @@
     "types": ["Earth"],
     "level": 6,
     "hp": 5500,
-    "rarity": "Rare",
-    "images": {"small": "images/wandering_traveler_borderless_sm.png", "large": "images/wandering_traveler_borderless_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Earth/ElVagabundo2.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -3229,8 +3284,8 @@
     "types": ["Earth"],
     "level": 6,
     "hp": 5500,
-    "rarity": "Uncommon",
-    "images": {"small": "images/wandering_traveler_alt_sm.png", "large": "images/wandering_traveler_alt_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Earth/ElVagabundo3.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -3264,7 +3319,7 @@
     "level": 3,
     "hp": 2000,
     "rarity": "Common",
-    "images": {"small": "images/zunreus_sm.png", "large": "images/zunreus_lg.png"},
+    "images": {"small": "images/Earth/Minotaur1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -3292,7 +3347,7 @@
     "level": 5,
     "hp": 4000,
     "rarity": "Uncommon",
-    "images": {"small": "images/ashenklaw_sm.png", "large": "images/ashenklaw_lg.png"},
+    "images": {"small": "images/Fire/Ashenklaw1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -3334,7 +3389,7 @@
     "level": 9,
     "hp": 7000,
     "rarity": "Rare",
-    "images": {"small": "images/billhelm_sm.png", "large": "images/billhelm_lg.png"},
+    "images": {"small": "images/Fire/Billhelm1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -3376,8 +3431,8 @@
     "types": ["Fire"],
     "level": 9,
     "hp": 7000,
-    "rarity": "Rare",
-    "images": {"small": "images/billhelm_borderless_sm.png", "large": "images/billhelm_borderless_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Fire/Billhelm2.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -3419,8 +3474,8 @@
     "types": ["Fire"],
     "level": 9,
     "hp": 7000,
-    "rarity": "Rare",
-    "images": {"small": "images/billhelm_alt_sm.png", "large": "images/billhelm_alt_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Fire/Billhelm3.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -3463,7 +3518,7 @@
     "level": 9,
     "hp": 7500,
     "rarity": "Rare",
-    "images": {"small": "images/cacus_sm.png", "large": "images/cacus_lg.png"},
+    "images": {"small": "images/Fire/Cacus1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -3504,8 +3559,8 @@
     "types": ["Fire"],
     "level": 9,
     "hp": 7500,
-    "rarity": "Rare",
-    "images": {"small": "images/cacus_borderless_sm.png", "large": "images/cacus_borderless_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Fire/Cacus2.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -3546,8 +3601,8 @@
     "types": ["Fire"],
     "level": 9,
     "hp": 7500,
-    "rarity": "Rare",
-    "images": {"small": "images/cacus_alt_sm.png", "large": "images/cacus_alt_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Fire/Cacus3.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -3589,7 +3644,7 @@
     "level": 8,
     "hp": 6500,
     "rarity": "Rare",
-    "images": {"small": "images/cerberus_sm.png", "large": "images/cerberus_lg.png"},
+    "images": {"small": "images/Fire/Cerberus1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -3640,8 +3695,8 @@
     "types": ["Fire"],
     "level": 8,
     "hp": 6500,
-    "rarity": "Rare",
-    "images": {"small": "images/cerberus_borderless_sm.png", "large": "images/cerberus_borderless_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Fire/Cerberus2.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -3692,8 +3747,8 @@
     "types": ["Fire"],
     "level": 8,
     "hp": 6500,
-    "rarity": "Rare",
-    "images": {"small": "images/cerberus_alt_sm.png", "large": "images/cerberus_alt_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Fire/Cerberus3.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -3745,7 +3800,7 @@
     "level": 5,
     "hp": 3500,
     "rarity": "Rare",
-    "images": {"small": "images/cyra_the_emblazoned_sm.png", "large": "images/cyra_the_emblazoned_lg.png"},
+    "images": {"small": "images/Fire/InfernalApprentice1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -3797,8 +3852,8 @@
     "types": ["Fire"],
     "level": 5,
     "hp": 3500,
-    "rarity": "Rare",
-    "images": {"small": "images/cyra_the_emblazoned_borderless_sm.png", "large": "images/cyra_the_emblazoned_borderless_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Fire/InfernalApprentice2.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -3850,8 +3905,8 @@
     "types": ["Fire"],
     "level": 5,
     "hp": 3500,
-    "rarity": "Uncommon",
-    "images": {"small": "images/cyra_the_emblazoned_alt_sm.png", "large": "images/cyra_the_emblazoned_alt_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Fire/InfernalApprentice3.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -3898,13 +3953,13 @@
   },
   {
     "id": 89,
-    "name": "Embertling",
+    "name": "Emberling",
     "supertype": "Creature",
     "types": ["Fire"],
     "level": 2,
     "hp": 1500,
     "rarity": "Common",
-    "images": {"small": "images/emberting_sm.png", "large": "images/emberting_lg.png"},
+    "images": {"small": "images/Fire/Emberling1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -3947,7 +4002,7 @@
     "level": 1,
     "hp": 500,
     "rarity": "Common",
-    "images": {"small": "images/firefly_sm.png", "large": "images/firefly_lg.png"},
+    "images": {"small": "images/Fire/FireFly1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -3988,7 +4043,7 @@
     "level": 2,
     "hp": 1500,
     "rarity": "Common",
-    "images": {"small": "images/flarepup_sm.png", "large": "images/flarepup_lg.png"},
+    "images": {"small": "images/Fire/Flarepup1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -4037,7 +4092,7 @@
     "level": 4,
     "hp": 3000,
     "rarity": "Uncommon",
-    "images": {"small": "images/grimburn_sm.png", "large": "images/grimburn_lg.png"},
+    "images": {"small": "images/Fire/Grimburn1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -4086,8 +4141,8 @@
     "types": ["Fire"],
     "level": 10,
     "hp": 9000,
-    "rarity": "Rare",
-    "images": {"small": "images/hikaru_thunderflame_sm.png", "large": "images/hikaru_thunderflame_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Fire/HikaruThunderflame2.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -4139,8 +4194,8 @@
     "types": ["Fire"],
     "level": 10,
     "hp": 9000,
-    "rarity": "Rare",
-    "images": {"small": "images/hikaru_thunderflame_borderless_sm.png", "large": "images/hikaru_thunderflame_borderless_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Fire/HikaruThunderflame3.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -4192,8 +4247,8 @@
     "types": ["Fire"],
     "level": 10,
     "hp": 8500,
-    "rarity": "Rare",
-    "images": {"small": "images/ignimia_sm.png", "large": "images/ignimia_lg.png"},
+    "rarity": "UltraRare",
+    "images": {"small": "images/Fire/Ignimia1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -4237,8 +4292,8 @@
     "types": ["Fire"],
     "level": 10,
     "hp": 8500,
-    "rarity": "Rare",
-    "images": {"small": "images/ignimia_borderless_sm.png", "large": "images/ignimia_borderless_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Fire/Ignimia2.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -4282,8 +4337,8 @@
     "types": ["Fire"],
     "level": 10,
     "hp": 8500,
-    "rarity": "UltraRare",
-    "images": {"small": "images/ignimia_alt_sm.png", "large": "images/ignimia_alt_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Fire/Ignimia3.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -4328,7 +4383,7 @@
     "level": 7,
     "hp": 6000,
     "rarity": "Rare",
-    "images": {"small": "images/infernasaur_sm.png", "large": "images/infernasaur_lg.png"},
+    "images": {"small": "images/Fire/Infernasaur1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -4378,7 +4433,7 @@
     "level": 5,
     "hp": 3500,
     "rarity": "Uncommon",
-    "images": {"small": "images/infernocerus_sm.png", "large": "images/infernocerus_lg.png"},
+    "images": {"small": "images/Fire/Pyrocerus1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -4404,8 +4459,8 @@
     "types": ["Fire"],
     "level": 10,
     "hp": 8500,
-    "rarity": "Rare",
-    "images": {"small": "images/kuroen_sm.png", "large": "images/kuroen_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Fire/Kuroen2.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -4446,8 +4501,8 @@
     "types": ["Fire"],
     "level": 10,
     "hp": 8500,
-    "rarity": "Rare",
-    "images": {"small": "images/kuroen_borderless_sm.png", "large": "images/kuroen_borderless_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Fire/Kuroen3.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -4489,7 +4544,7 @@
     "level": 8,
     "hp": 6500,
     "rarity": "Rare",
-    "images": {"small": "images/kutralpun_sm.png", "large": "images/kutralpun_lg.png"},
+    "images": {"small": "images/Fire/Kütralpun1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -4530,7 +4585,7 @@
     "level": 7,
     "hp": 7000,
     "rarity": "Rare",
-    "images": {"small": "images/longma_sm.png", "large": "images/longma_lg.png"},
+    "images": {"small": "images/Fire/Longma1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -4572,8 +4627,8 @@
     "types": ["Fire"],
     "level": 7,
     "hp": 7000,
-    "rarity": "Rare",
-    "images": {"small": "images/longma_borderless_sm.png", "large": "images/longma_borderless_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Fire/Longma2.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -4615,8 +4670,8 @@
     "types": ["Fire"],
     "level": 7,
     "hp": 7000,
-    "rarity": "Rare",
-    "images": {"small": "images/longma_alt_sm.png", "large": "images/longma_alt_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Fire/Longma3.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -4659,7 +4714,7 @@
     "level": 6,
     "hp": 5000,
     "rarity": "Rare",
-    "images": {"small": "images/moltem_sm.png", "large": "images/moltem_lg.png"},
+    "images": {"small": "images/Fire/Moltem1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -4692,8 +4747,8 @@
     "types": ["Fire"],
     "level": 10,
     "hp": 10000,
-    "rarity": "Rare",
-    "images": {"small": "images/phoenix_the_rising_sm.png", "large": "images/phoenix_the_rising_lg.png"},
+    "rarity": "UltraRare",
+    "images": {"small": "images/Fire/Phoenixthe-Rising1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -4746,8 +4801,8 @@
     "types": ["Fire"],
     "level": 10,
     "hp": 10000,
-    "rarity": "Rare",
-    "images": {"small": "images/phoenix_the_rising_borderless_sm.png", "large": "images/phoenix_the_rising_borderless_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Fire/Phoenixthe-Rising2.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -4800,8 +4855,8 @@
     "types": ["Fire"],
     "level": 10,
     "hp": 10000,
-    "rarity": "UltraRare",
-    "images": {"small": "images/phoenix_the_rising_alt_sm.png", "large": "images/phoenix_the_rising_alt_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Fire/Phoenixthe-Rising3.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -4848,6 +4903,60 @@
     "illustrator": "Dall-E 3"
   },
   {
+    "id": 2003,
+    "name": "Phoenix, the Rising",
+    "supertype": "Creature",
+    "types": ["Fire"],
+    "level": 10,
+    "hp": 10000,
+    "rarity": "MythikRare",
+    "images": {"small": "images/Fire/Phoenixthe-Rising4.png"},
+    "setCode": "MC01",
+    "abilities": [
+      {
+        "name": "Resurrection",
+        "trigger": "OnSummon",
+        "effectText": "To summon, Phoenix, the Rising must be in your Discard Pile and sacrifice Phoenic. Upon summoning, shuffle all Fire Power cards from your Discard Pile into your Hand.",
+        "usableFromBench": false,
+        "prerequisites": [
+          {"type": "SelfInDiscardPile"},
+          {"type": "SacrificeSpecificCreature", "creatureName": "Phoenic"}
+        ],
+        "structuredEffects": [
+          {
+            "type": "ShuffleFromDiscardToHand",
+            "cardType": "Power",
+            "powerType": "Fire",
+            "amount": "All"
+          }
+        ]
+      }
+    ],
+    "attacks": [
+      {
+        "name": "Flaming Talons",
+        "cost": [{"PowerType": "Fire", "count": 4}],
+        "damage": 6500,
+        "effectText": "Your opponent's Creature is automatically Burned. Flip the main coin. If the result is tails, you cannot attack next turn.",
+        "structuredEffects": [
+          {"type": "ApplyStatus", "target": "OpponentCreatureActive", "status": "Burned"},
+          {
+            "type": "ConditionalEffect",
+            "condition": {"type": "CoinFlip", "comparison": "EqualTo", "stringValue": "Tails"},
+            "trueEffects": [{"type": "ApplyAttackRestriction", "target": "Self", "restriction": "CannotAttackNextTurn"}],
+            "falseEffects": []
+          }
+        ]
+      }
+    ],
+    "weaknesses": [{"PowerType": "Earth", "multiplier": 3}],
+    "resistances": [],
+    "retreatCost": [],
+    "convertedRetreatCost": 0,
+    "collectionNumber": "171/311",
+    "illustrator": "Dall-E 3"
+  },  
+  {
     "id": 110,
     "name": "Pyrocanthodes",
     "supertype": "Creature",
@@ -4855,7 +4964,7 @@
     "level": 3,
     "hp": 1500,
     "rarity": "Common",
-    "images": {"small": "images/pyrocanthodes_sm.png", "large": "images/pyrocanthodes_lg.png"},
+    "images": {"small": "images/Fire/Pyrocanthodes1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -4882,7 +4991,7 @@
     "level": 1,
     "hp": 1000,
     "rarity": "Common",
-    "images": {"small": "images/pyronix_sm.png", "large": "images/pyronix_lg.png"},
+    "images": {"small": "images/Fire/Pyronix1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -4927,7 +5036,7 @@
     "level": 3,
     "hp": 2000,
     "rarity": "Common",
-    "images": {"small": "images/smol_the_titan_sm.png", "large": "images/smol_the_titan_lg.png"},
+    "images": {"small": "images/Fire/Smol,theTitan1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -4961,7 +5070,7 @@
     "level": 4,
     "hp": 3000,
     "rarity": "Uncommon",
-    "images": {"small": "images/the_pyroclasm_crew_sm.png", "large": "images/the_pyroclasm_crew_lg.png"},
+    "images": {"small": "images/Fire/FlamingTerrors1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -5015,7 +5124,7 @@
     "level": 6,
     "hp": 5500,
     "rarity": "Uncommon",
-    "images": {"small": "images/vaska_sm.png", "large": "images/vaska_lg.png"},
+    "images": {"small": "images/Fire/Vaska1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -5050,7 +5159,7 @@
     "level": 3,
     "hp": 2000,
     "rarity": "Uncommon",
-    "images": {"small": "images/chamilla_sm.png", "large": "images/chamilla_lg.png"},
+    "images": {"small": "images/Forest/Chamira.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -5094,8 +5203,8 @@
     "types": ["Forest"],
     "level": 10,
     "hp": 9500,
-    "rarity": "Rare",
-    "images": {"small": "images/dracoleon_sm.png", "large": "images/dracoleon_lg.png"},
+    "rarity": "UltraRare",
+    "images": {"small": "images/Forest/Dracoleon1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -5139,8 +5248,8 @@
     "types": ["Forest"],
     "level": 10,
     "hp": 9500,
-    "rarity": "Rare",
-    "images": {"small": "images/dracoleon_borderless_sm.png", "large": "images/dracoleon_borderless_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Forest/Dracoleon2.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -5184,8 +5293,8 @@
     "types": ["Forest"],
     "level": 10,
     "hp": 9500,
-    "rarity": "UltraRare",
-    "images": {"small": "images/dracoleon_alt_sm.png", "large": "images/dracoleon_alt_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Forest/Dracoleon3.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -5229,8 +5338,8 @@
     "types": ["Forest"],
     "level": 10,
     "hp": 8000,
-    "rarity": "Rare",
-    "images": {"small": "images/eamonn_sm.png", "large": "images/eamonn_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Forest/Eamonn2.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -5271,8 +5380,8 @@
     "types": ["Forest"],
     "level": 10,
     "hp": 8000,
-    "rarity": "Rare",
-    "images": {"small": "images/eamonn_borderless_sm.png", "large": "images/eamonn_borderless_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Forest/Eamonn3.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -5314,7 +5423,7 @@
     "level": 6,
     "hp": 6500,
     "rarity": "Rare",
-    "images": {"small": "images/forest_elf_sm.png", "large": "images/forest_elf_lg.png"},
+    "images": {"small": "images/Forest/ForestElf1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -5363,8 +5472,8 @@
     "types": ["Forest"],
     "level": 6,
     "hp": 6500,
-    "rarity": "Rare",
-    "images": {"small": "images/forest_elf_borderless_sm.png", "large": "images/forest_elf_borderless_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Forest/ForestElf2.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -5413,8 +5522,8 @@
     "types": ["Forest"],
     "level": 6,
     "hp": 6500,
-    "rarity": "Uncommon",
-    "images": {"small": "images/forest_elf_alt_sm.png", "large": "images/forest_elf_alt_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Forest/ForestElf3.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -5464,7 +5573,7 @@
     "level": 8,
     "hp": 7000,
     "rarity": "Rare",
-    "images": {"small": "images/howlwing_sm.png", "large": "images/howlwing_lg.png"},
+    "images": {"small": "images/Forest/Howlwing1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -5497,8 +5606,8 @@
     "types": ["Forest"],
     "level": 10,
     "hp": 9500,
-    "rarity": "Rare",
-    "images": {"small": "images/kaia_sm.png", "large": "images/kaia_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Forest/Kaia2.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -5544,8 +5653,8 @@
     "types": ["Forest"],
     "level": 10,
     "hp": 9500,
-    "rarity": "Rare",
-    "images": {"small": "images/kaia_borderless_sm.png", "large": "images/kaia_borderless_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Forest/Kaia3.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -5591,8 +5700,8 @@
     "types": ["Forest"],
     "level": 10,
     "hp": 8500,
-    "rarity": "Rare",
-    "images": {"small": "images/lilith_forest_pixie_sm.png", "large": "images/lilith_forest_pixie_lg.png"},
+    "rarity": "UltraRare",
+    "images": {"small": "images/Forest/LilithForestGuardian1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -5647,8 +5756,8 @@
     "types": ["Forest"],
     "level": 10,
     "hp": 8500,
-    "rarity": "Rare",
-    "images": {"small": "images/lilith_forest_pixie_borderless_sm.png", "large": "images/lilith_forest_pixie_borderless_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Forest/LilithForestGuardian2.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -5703,8 +5812,8 @@
     "types": ["Forest"],
     "level": 10,
     "hp": 8500,
-    "rarity": "UltraRare",
-    "images": {"small": "images/lilith_forest_pixie_alt_sm.png", "large": "images/lilith_forest_pixie_alt_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Forest/LilithForestGuardian3.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -5760,7 +5869,7 @@
     "level": 6,
     "hp": 5500,
     "rarity": "Uncommon",
-    "images": {"small": "images/manticore_sm.png", "large": "images/manticore_lg.png"},
+    "images": {"small": "images/Forest/Manticore1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -5787,7 +5896,7 @@
     "level": 1,
     "hp": 500,
     "rarity": "Common",
-    "images": {"small": "images/mira_sm.png", "large": "images/mira_lg.png"},
+    "images": {"small": "images/Forest/Pixie1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -5837,7 +5946,7 @@
     "level": 3,
     "hp": 2500,
     "rarity": "Common",
-    "images": {"small": "images/moss_golem_sm.png", "large": "images/moss_golem_lg.png"},
+    "images": {"small": "images/Forest/Moss-Golem1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -5864,7 +5973,7 @@
     "level": 7,
     "hp": 6000,
     "rarity": "Rare",
-    "images": {"small": "images/nemean_lion_sm.png", "large": "images/nemean_lion_lg.png"},
+    "images": {"small": "images/Forest/NemeanLion1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -5904,8 +6013,8 @@
     "types": ["Forest"],
     "level": 7,
     "hp": 6000,
-    "rarity": "Rare",
-    "images": {"small": "images/nemean_lion_borderless_sm.png", "large": "images/nemean_lion_borderless_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Forest/NemeanLion2.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -5939,6 +6048,47 @@
     "illustrator": "Dall-E 3"
   },
   {
+    "id": 2004,
+    "name": "Nemean Lion",
+    "supertype": "Creature",
+    "types": ["Forest"],
+    "level": 7,
+    "hp": 6000,
+    "rarity": "Borderless",
+    "images": {"small": "images/Forest/NemeanLion3.png"},
+    "setCode": "MC01",
+    "abilities": [
+      {
+        "name": "Unbreakable Hide",
+        "trigger": "OnAttacked",
+        "effectText": "When this Creature is attacked, Nemean Lion takes -1000 less damage.",
+        "usableFromBench": false,
+        "prerequisites": [],
+        "structuredEffects": [
+          {
+            "type": "ReduceDamageTaken",
+            "amount": 1000
+          }
+        ]
+      }
+    ],
+    "attacks": [
+      {
+        "name": "Fury of the Pride",
+        "cost": [{"PowerType": "Forest", "count": 2}],
+        "damage": 3500,
+        "effectText": null,
+        "structuredEffects": []
+      }
+    ],
+    "weaknesses": [{"PowerType": "Dark", "multiplier": 2}],
+    "resistances": [{"PowerType": "Wind", "reduction": 500}],
+    "retreatCost": [{"PowerType": "Forest", "count": 2}],
+    "convertedRetreatCost": 2,
+    "collectionNumber": "347/311",
+    "illustrator": "Dall-E 3"
+  },  
+  {
     "id": 135,
     "name": "Nixor",
     "supertype": "Creature",
@@ -5946,7 +6096,7 @@
     "level": 5,
     "hp": 4000,
     "rarity": "Uncommon",
-    "images": {"small": "images/nixor_sm.png", "large": "images/nixor_lg.png"},
+    "images": {"small": "images/Forest/Nixor1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -5973,7 +6123,7 @@
     "level": 7,
     "hp": 6000,
     "rarity": "Rare",
-    "images": {"small": "images/owlbear_sm.png", "large": "images/owlbear_lg.png"},
+    "images": {"small": "images/Forest/Redcap1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -6023,7 +6173,7 @@
     "level": 3,
     "hp": 2000,
     "rarity": "Common",
-    "images": {"small": "images/owlbear_cub_sm.png", "large": "images/owlbear_cub_lg.png"},
+    "images": {"small": "images/Forest/BabyRedcap1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -6073,7 +6223,7 @@
     "level": 4,
     "hp": 2000,
     "rarity": "Uncommon",
-    "images": {"small": "images/plantling_sm.png", "large": "images/plantling_lg.png"},
+    "images": {"small": "images/Forest/Plantling1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -6125,7 +6275,7 @@
     "level": 1,
     "hp": 500,
     "rarity": "Common",
-    "images": {"small": "images/sapling_sm.png", "large": "images/sapling_lg.png"},
+    "images": {"small": "images/Forest/Sapling1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -6177,7 +6327,7 @@
     "level": 9,
     "hp": 7500,
     "rarity": "Rare",
-    "images": {"small": "images/tenebris_sm.png", "large": "images/tenebris_lg.png"},
+    "images": {"small": "images/Forest/Tenebris1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -6210,8 +6360,8 @@
     "types": ["Forest"],
     "level": 9,
     "hp": 7500,
-    "rarity": "Rare",
-    "images": {"small": "images/tenebris_borderless_sm.png", "large": "images/tenebris_borderless_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Forest/Tenebris2.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -6244,8 +6394,8 @@
     "types": ["Forest"],
     "level": 9,
     "hp": 7500,
-    "rarity": "Rare",
-    "images": {"small": "images/tenebris_alt_sm.png", "large": "images/tenebris_alt_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Forest/Tenebris3.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -6279,7 +6429,7 @@
     "level": 4,
     "hp": 3000,
     "rarity": "Uncommon",
-    "images": {"small": "images/thwomp_sm.png", "large": "images/thwomp_lg.png"},
+    "images": {"small": "images/Forest/Thwomp1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -6306,7 +6456,7 @@
     "level": 9,
     "hp": 7500,
     "rarity": "Rare",
-    "images": {"small": "images/titan_of_nura_sm.png", "large": "images/titan_of_nura_lg.png"},
+    "images": {"small": "images/Forest/TitanofLostForest1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -6348,8 +6498,8 @@
     "types": ["Forest"],
     "level": 9,
     "hp": 7500,
-    "rarity": "Rare",
-    "images": {"small": "images/titan_of_nura_borderless_sm.png", "large": "images/titan_of_nura_borderless_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Forest/TitanofLostForest2.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -6391,8 +6541,8 @@
     "types": ["Forest"],
     "level": 9,
     "hp": 7500,
-    "rarity": "Rare",
-    "images": {"small": "images/titan_of_nura_alt_sm.png", "large": "images/titan_of_nura_alt_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Forest/TitanofLostForest3.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -6435,7 +6585,7 @@
     "level": 2,
     "hp": 1500,
     "rarity": "Common",
-    "images": {"small": "images/tsiatko_sm.png", "large": "images/tsiatko_lg.png"},
+    "images": {"small": "images/Forest/Tsiatko1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -6477,7 +6627,7 @@
     "level": 8,
     "hp": 6000,
     "rarity": "Rare",
-    "images": {"small": "images/tyrax_sm.png", "large": "images/tyrax_lg.png"},
+    "images": {"small": "images/Forest/Tyrax1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -6510,8 +6660,8 @@
     "types": ["Forest"],
     "level": 5,
     "hp": 4500,
-    "rarity": "Rare",
-    "images": {"small": "images/viarose_sm.png", "large": "images/viarose_lg.png"},
+    "rarity": "Uncommon",
+    "images": {"small": "images/Forest/Viarose1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -6552,8 +6702,8 @@
     "types": ["Forest"],
     "level": 5,
     "hp": 4500,
-    "rarity": "Rare",
-    "images": {"small": "images/viarose_borderless_sm.png", "large": "images/viarose_borderless_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Forest/Viarose2.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -6594,8 +6744,8 @@
     "types": ["Forest"],
     "level": 5,
     "hp": 4500,
-    "rarity": "Uncommon",
-    "images": {"small": "images/viarose_alt_sm.png", "large": "images/viarose_alt_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Forest/Viarose3.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -6637,7 +6787,7 @@
     "level": 2,
     "hp": 1500,
     "rarity": "Common",
-    "images": {"small": "images/zyra_sm.png", "large": "images/zyra_lg.png"},
+    "images": {"small": "images/Forest/Zyra1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -6672,7 +6822,7 @@
     "level": 9,
     "hp": 7000,
     "rarity": "Rare",
-    "images": {"small": "images/amaterasu_sm.png", "large": "images/amaterasu_lg.png"},
+    "images": {"small": "images/Light/Amaterasu1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -6712,8 +6862,8 @@
     "types": ["Light"],
     "level": 9,
     "hp": 7000,
-    "rarity": "Rare",
-    "images": {"small": "images/amaterasu_borderless_sm.png", "large": "images/amaterasu_borderless_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Light/Amaterasu2.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -6753,8 +6903,8 @@
     "types": ["Light"],
     "level": 9,
     "hp": 7000,
-    "rarity": "Rare",
-    "images": {"small": "images/amaterasu_alt_sm.png", "large": "images/amaterasu_alt_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Light/Amaterasu3.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -6795,7 +6945,7 @@
     "level": 4,
     "hp": 3500,
     "rarity": "Uncommon",
-    "images": {"small": "images/asti_ni_sm.png", "large": "images/asti_ni_lg.png"},
+    "images": {"small": "images/Light/Asti-ni1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -6821,8 +6971,8 @@
     "types": ["Light"],
     "level": 10,
     "hp": 8500,
-    "rarity": "Rare",
-    "images": {"small": "images/astraea_sm.png", "large": "images/astraea_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Light/Astraea2.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -6875,8 +7025,8 @@
     "types": ["Light"],
     "level": 10,
     "hp": 8500,
-    "rarity": "Rare",
-    "images": {"small": "images/astraea_borderless_sm.png", "large": "images/astraea_borderless_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Light/Astraea3.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -6929,8 +7079,8 @@
     "types": ["Light"],
     "level": 10,
     "hp": 7500,
-    "rarity": "Rare",
-    "images": {"small": "images/aurora_the_paladin_sm.png", "large": "images/aurora_the_paladin_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Light/AurorathePaladin2.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -6976,8 +7126,8 @@
     "types": ["Light"],
     "level": 10,
     "hp": 7500,
-    "rarity": "Rare",
-    "images": {"small": "images/aurora_the_paladin_borderless_sm.png", "large": "images/aurora_the_paladin_borderless_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Light/AurorathePaladin3.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -7024,7 +7174,7 @@
     "level": 3,
     "hp": 2000,
     "rarity": "Common",
-    "images": {"small": "images/bonewraith_sm.png", "large": "images/bonewraith_lg.png"},
+    "images": {"small": "images/Light/Shellaser1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -7051,7 +7201,7 @@
     "level": 6,
     "hp": 5000,
     "rarity": "Uncommon",
-    "images": {"small": "images/corbin_the_wise_sm.png", "large": "images/corbin_the_wise_lg.png"},
+    "images": {"small": "images/Light/SoltheEnlightened1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -7094,7 +7244,7 @@
     "level": 9,
     "hp": 7500,
     "rarity": "Rare",
-    "images": {"small": "images/divinatria_sm.png", "large": "images/divinatria_lg.png"},
+    "images": {"small": "images/Light/Divinatria1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -7134,8 +7284,8 @@
     "types": ["Light"],
     "level": 9,
     "hp": 7500,
-    "rarity": "Rare",
-    "images": {"small": "images/divinatria_borderless_sm.png", "large": "images/divinatria_borderless_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Light/Divinatria2.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -7175,8 +7325,8 @@
     "types": ["Light"],
     "level": 9,
     "hp": 7500,
-    "rarity": "Rare",
-    "images": {"small": "images/divinatria_alt_sm.png", "large": "images/divinatria_alt_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Light/Divinatria3.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -7217,7 +7367,7 @@
     "level": 7,
     "hp": 6000,
     "rarity": "Rare",
-    "images": {"small": "images/djinn_sm.png", "large": "images/djinn_lg.png"},
+    "images": {"small": "images/Light/Djinn1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -7259,7 +7409,7 @@
     "level": 8,
     "hp": 7000,
     "rarity": "Rare",
-    "images": {"small": "images/eclipse_sm.png", "large": "images/eclipse_lg.png"},
+    "images": {"small": "images/Light/Eclipse1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -7310,8 +7460,8 @@
     "types": ["Light"],
     "level": 8,
     "hp": 7000,
-    "rarity": "Rare",
-    "images": {"small": "images/eclipse_borderless_sm.png", "large": "images/eclipse_borderless_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Light/Eclipse2.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -7362,8 +7512,8 @@
     "types": ["Light"],
     "level": 8,
     "hp": 7000,
-    "rarity": "Rare",
-    "images": {"small": "images/eclipse_alt_sm.png", "large": "images/eclipse_alt_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Light/Eclipse3.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -7415,7 +7565,7 @@
     "level": 2,
     "hp": 2000,
     "rarity": "Common",
-    "images": {"small": "images/foton_sm.png", "large": "images/foton_lg.png"},
+    "images": {"small": "images/Light/Foton1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -7442,7 +7592,7 @@
     "level": 2,
     "hp": 1500,
     "rarity": "Common",
-    "images": {"small": "images/glitter_pixie_sm.png", "large": "images/glitter_pixie_lg.png"},
+    "images": {"small": "images/Light/GlitterPixie1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -7477,7 +7627,7 @@
     "level": 8,
     "hp": 6500,
     "rarity": "Rare",
-    "images": {"small": "images/infinity_apprentice_sm.png", "large": "images/infinity_apprentice_lg.png"},
+    "images": {"small": "images/Light/InfinityApprentice1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -7525,8 +7675,8 @@
     "types": ["Light"],
     "level": 8,
     "hp": 6500,
-    "rarity": "Rare",
-    "images": {"small": "images/infinity_apprentice_borderless_sm.png", "large": "images/infinity_apprentice_borderless_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Light/InfinityApprentice2.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -7574,8 +7724,8 @@
     "types": ["Light"],
     "level": 8,
     "hp": 6500,
-    "rarity": "Rare",
-    "images": {"small": "images/infinity_apprentice_alt_sm.png", "large": "images/infinity_apprentice_alt_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Light/InfinityApprentice3.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -7623,8 +7773,8 @@
     "types": ["Light"],
     "level": 10,
     "hp": 8500,
-    "rarity": "Rare",
-    "images": {"small": "images/infinity_mage_sm.png", "large": "images/infinity_mage_lg.png"},
+    "rarity": "UltraRare",
+    "images": {"small": "images/Light/InfinityMage1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -7678,8 +7828,8 @@
     "types": ["Light"],
     "level": 10,
     "hp": 8500,
-    "rarity": "Rare",
-    "images": {"small": "images/infinity_mage_borderless_sm.png", "large": "images/infinity_mage_borderless_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Light/InfinityMage2.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -7733,8 +7883,8 @@
     "types": ["Light"],
     "level": 10,
     "hp": 8500,
-    "rarity": "UltraRare",
-    "images": {"small": "images/infinity_mage_alt_sm.png", "large": "images/infinity_mage_alt_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Light/InfinityMage3.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -7789,7 +7939,7 @@
     "level": 3,
     "hp": 1500,
     "rarity": "Common",
-    "images": {"small": "images/luminite_sm.png", "large": "images/luminite_lg.png"},
+    "images": {"small": "images/Light/Luminite1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -7834,7 +7984,7 @@
     "level": 1,
     "hp": 1000,
     "rarity": "Common",
-    "images": {"small": "images/luminous_wisp_sm.png", "large": "images/luminous_wisp_lg.png"},
+    "images": {"small": "images/Light/LuminousWisp1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -7868,7 +8018,7 @@
     "level": 5,
     "hp": 4500,
     "rarity": "Uncommon",
-    "images": {"small": "images/majestic_unicorn_sm.png", "large": "images/majestic_unicorn_lg.png"},
+    "images": {"small": "images/Light/MajesticUnicorn1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -7901,8 +8051,8 @@
     "types": ["Light"],
     "level": 10,
     "hp": null,
-    "rarity": "Rare",
-    "images": {"small": "images/malum_the_damned_sm.png", "large": "images/malum_the_damned_lg.png"},
+    "rarity": "UltraRare",
+    "images": {"small": "images/Light/MalumtheDamned1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -7962,8 +8112,8 @@
     "types": ["Light"],
     "level": 10,
     "hp": null,
-    "rarity": "Rare",
-    "images": {"small": "images/malum_the_damned_borderless_sm.png", "large": "images/malum_the_damned_borderless_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Light/MalumtheDamned2.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -8023,8 +8173,8 @@
     "types": ["Light"],
     "level": 10,
     "hp": null,
-    "rarity": "UltraRare",
-    "images": {"small": "images/malum_the_damned_alt_sm.png", "large": "images/malum_the_damned_alt_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Light/MalumtheDamned3.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -8078,6 +8228,67 @@
     "illustrator": "Dall-E 3"
   },
   {
+    "id": 183,
+    "name": "Malum, the Damned",
+    "supertype": "Creature",
+    "types": ["Light"],
+    "level": 10,
+    "hp": null,
+    "rarity": "MythikRare",
+    "images": {"small": "images/Light/MalumtheDamned4.png"},
+    "setCode": "MC01",
+    "abilities": [
+      {
+        "name": "End of Days",
+        "trigger": "Passive",
+        "effectText": "This Creature can only be summoned by playing Ritual of the Damned. Malum, the Damned gains +1000 HP and +1000 attack for every Power card in your Discard Pile. x2 cards count as one. ( this Creature can use any Power cards)",
+        "usableFromBench": false,
+        "prerequisites": [{"type": "PlaySpecificCard", "cardName": "Ritual of the Damned"}],
+        "structuredEffects": [
+          {
+            "type": "ModifyStatsBasedOnDiscard",
+            "target": "Self",
+            "stat": "HP",
+            "amountPerCondition": 1000,
+            "condition": {"type": "CountCardsInDiscard", "cardType": "Power", "anyType": true},
+            "countAs": 0.5
+          },
+          {
+            "type": "ModifyStatsBasedOnDiscard",
+            "target": "Self",
+            "stat": "Attack",
+            "amountPerCondition": 1000,
+            "condition": {"type": "CountCardsInDiscard", "cardType": "Power", "anyType": true},
+            "countAs": 0.5
+          }
+        ],
+        "canUseAnyPower": true
+      }
+    ],
+    "attacks": [
+      {
+        "name": "Obliterate",
+        "cost": [{"PowerType": "ANY", "count": 4}],
+        "damage": null,
+        "effectText": "If this attack destroys your opponent's Creature, draw one additional Prize Card.",
+        "structuredEffects": [
+          {
+            "type": "ConditionalEffect",
+            "condition": {"type": "TargetDestroyedByAttack"},
+            "trueEffects": [{"type": "DrawPrizeCards", "target": "PlayerSelf", "amount": 1}],
+            "falseEffects": []
+          }
+        ]
+      }
+    ],
+    "weaknesses": [],
+    "resistances": [],
+    "retreatCost": [],
+    "convertedRetreatCost": 0,
+    "collectionNumber": "172/311",
+    "illustrator": "Dall-E 3"
+  },  
+  {
     "id": 184,
     "name": "Penguilite",
     "supertype": "Creature",
@@ -8085,7 +8296,7 @@
     "level": 1,
     "hp": 1000,
     "rarity": "Common",
-    "images": {"small": "images/penguilite_sm.png", "large": "images/penguilite_lg.png"},
+    "images": {"small": "images/Light/Penguilite1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -8119,7 +8330,7 @@
     "level": 6,
     "hp": 5000,
     "rarity": "Uncommon",
-    "images": {"small": "images/redeemer_sm.png", "large": "images/redeemer_lg.png"},
+    "images": {"small": "images/Light/Redeemer1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -8168,7 +8379,7 @@
     "level": 4,
     "hp": 3000,
     "rarity": "Uncommon",
-    "images": {"small": "images/soldier_of_jimbora_sm.png", "large": "images/soldier_of_jimbora_lg.png"},
+    "images": {"small": "images/Light/SoldierofJimbora1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -8202,7 +8413,7 @@
     "level": 3,
     "hp": 1500,
     "rarity": "Common",
-    "images": {"small": "images/sunstrike_sm.png", "large": "images/sunstrike_lg.png"},
+    "images": {"small": "images/Light/Sunstrike1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -8245,7 +8456,7 @@
     "level": 5,
     "hp": 5000,
     "rarity": "Uncommon",
-    "images": {"small": "images/time_weaver_sm.png", "large": "images/time_weaver_lg.png"},
+    "images": {"small": "images/Light/TimeWeaver1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -8308,7 +8519,7 @@
     "level": 7,
     "hp": 6000,
     "rarity": "Rare",
-    "images": {"small": "images/yami_no_hikari_sm.png", "large": "images/yami_no_hikari_lg.png"},
+    "images": {"small": "images/Light/Lightseeker1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -8353,13 +8564,13 @@
   },
   {
     "id": 190,
-    "name": "Zhánou",
+    "name": "Zhànhóu",
     "supertype": "Creature",
     "types": ["Light"],
     "level": 7,
     "hp": 6000,
     "rarity": "Rare",
-    "images": {"small": "images/zhanou_sm.png", "large": "images/zhanou_lg.png"},
+    "images": {"small": "images/Light/Zhànhóu1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -8401,7 +8612,7 @@
     "level": 2,
     "hp": 2500,
     "rarity": "Common",
-    "images": {"small": "images/chimera_cub_sm.png", "large": "images/chimera_cub_lg.png"},
+    "images": {"small": "images/Thunder/ChimeraCub1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -8446,7 +8657,7 @@
     "level": 7,
     "hp": 6000,
     "rarity": "Rare",
-    "images": {"small": "images/harpy_storm_bringer_sm.png", "large": "images/harpy_storm_bringer_lg.png"},
+    "images": {"small": "images/Thunder/HarpyStormBringer1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -8488,8 +8699,8 @@
     "types": ["Thunder"],
     "level": 7,
     "hp": 6000,
-    "rarity": "Rare",
-    "images": {"small": "images/harpy_storm_bringer_borderless_sm.png", "large": "images/harpy_storm_bringer_borderless_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Thunder/HarpyStormBringer2.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -8531,8 +8742,8 @@
     "types": ["Thunder"],
     "level": 7,
     "hp": 6000,
-    "rarity": "Rare",
-    "images": {"small": "images/harpy_storm_bringer_alt_sm.png", "large": "images/harpy_storm_bringer_alt_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Thunder/HarpyStormBringer3.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -8574,8 +8785,8 @@
     "types": ["Thunder"],
     "level": 10,
     "hp": 9500,
-    "rarity": "Rare",
-    "images": {"small": "images/iskugriff_sm.png", "large": "images/iskugriff_lg.png"},
+    "rarity": "UltraRare",
+    "images": {"small": "images/Thunder/Iškugriff1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -8618,8 +8829,8 @@
     "types": ["Thunder"],
     "level": 10,
     "hp": 9500,
-    "rarity": "Rare",
-    "images": {"small": "images/iskugriff_borderless_sm.png", "large": "images/iskugriff_borderless_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Thunder/Iškugriff2.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -8662,8 +8873,8 @@
     "types": ["Thunder"],
     "level": 10,
     "hp": 9500,
-    "rarity": "UltraRare",
-    "images": {"small": "images/iskugriff_alt_sm.png", "large": "images/iskugriff_alt_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Thunder/Iškugriff3.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -8707,7 +8918,7 @@
     "level": 5,
     "hp": 4000,
     "rarity": "Uncommon",
-    "images": {"small": "images/lighzard_sm.png", "large": "images/lighzard_lg.png"},
+    "images": {"small": "images/Thunder/Lighzard1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -8741,7 +8952,7 @@
     "level": 9,
     "hp": 7500,
     "rarity": "Rare",
-    "images": {"small": "images/ligora_the_chimera_sm.png", "large": "images/ligora_the_chimera_lg.png"},
+    "images": {"small": "images/Thunder/TriHeadChimera1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -8789,8 +9000,8 @@
     "types": ["Thunder"],
     "level": 9,
     "hp": 7500,
-    "rarity": "Rare",
-    "images": {"small": "images/ligora_the_chimera_borderless_sm.png", "large": "images/ligora_the_chimera_borderless_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Thunder/TriHeadChimera2.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -8838,8 +9049,8 @@
     "types": ["Thunder"],
     "level": 9,
     "hp": 7500,
-    "rarity": "Rare",
-    "images": {"small": "images/ligora_the_chimera_alt_sm.png", "large": "images/ligora_the_chimera_alt_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Thunder/TriHeadChimera3.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -8888,7 +9099,7 @@
     "level": 6,
     "hp": 5000,
     "rarity": "Uncommon",
-    "images": {"small": "images/plazmuh_sm.png", "large": "images/plazmuh_lg.png"},
+    "images": {"small": "images/Thunder/Plazmuh1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -8915,7 +9126,7 @@
     "level": 9,
     "hp": 7000,
     "rarity": "Rare",
-    "images": {"small": "images/qilin_sm.png", "large": "images/qilin_lg.png"},
+    "images": {"small": "images/Thunder/Qilin1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -8958,8 +9169,8 @@
     "types": ["Thunder"],
     "level": 9,
     "hp": 7000,
-    "rarity": "Rare",
-    "images": {"small": "images/qilin_borderless_sm.png", "large": "images/qilin_borderless_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Thunder/Qilin2.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -9002,8 +9213,8 @@
     "types": ["Thunder"],
     "level": 9,
     "hp": 7000,
-    "rarity": "Rare",
-    "images": {"small": "images/qilin_alt_sm.png", "large": "images/qilin_alt_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Thunder/Qilin3.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -9047,7 +9258,7 @@
     "level": 5,
     "hp": 4500,
     "rarity": "Uncommon",
-    "images": {"small": "images/raiden_sm.png", "large": "images/raiden_lg.png"},
+    "images": {"small": "images/Thunder/Raiden1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -9089,7 +9300,7 @@
     "level": 4,
     "hp": 2500,
     "rarity": "Uncommon",
-    "images": {"small": "images/raiju_sm.png", "large": "images/raiju_lg.png"},
+    "images": {"small": "images/Thunder/Raiju1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -9124,7 +9335,7 @@
     "level": 6,
     "hp": 5000,
     "rarity": "Uncommon",
-    "images": {"small": "images/resaix_sm.png", "large": "images/resaix_lg.png"},
+    "images": {"small": "images/Thunder/Resaix1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -9151,7 +9362,7 @@
     "level": 3,
     "hp": 2000,
     "rarity": "Common",
-    "images": {"small": "images/shock_bug_sm.png", "large": "images/shock_bug_lg.png"},
+    "images": {"small": "images/Thunder/ShockBug1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -9193,8 +9404,8 @@
     "types": ["Thunder"],
     "level": 1,
     "hp": 1000,
-    "rarity": "Rare",
-    "images": {"small": "images/shokimono_sm.png", "large": "images/shokimono_lg.png"},
+    "rarity": "Common",
+    "images": {"small": "images/Thunder/Shokimono1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -9227,8 +9438,8 @@
     "types": ["Thunder"],
     "level": 1,
     "hp": 1000,
-    "rarity": "Common",
-    "images": {"small": "images/shokimono_alt_sm.png", "large": "images/shokimono_alt_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Thunder/Shokimono2.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -9255,6 +9466,40 @@
     "illustrator": "Dall-E 3"
   },
   {
+    "id": 211,
+    "name": "Shokimono",
+    "supertype": "Creature",
+    "types": ["Thunder"],
+    "level": 1,
+    "hp": 1000,
+    "rarity": "Borderless",
+    "images": {"small": "images/Thunder/Shokimono3.png"},
+    "setCode": "MC01",
+    "abilities": [],
+    "attacks": [
+      {
+        "name": "Biolilluminescence",
+        "cost": [{"PowerType": "Thunder", "count": 1}],
+        "damage": 500,
+        "effectText": "Draw one card from the top of your Deck.",
+        "structuredEffects": [
+          {
+            "type": "DrawCards",
+            "category": "CardManipulation",
+            "target": "PlayerSelf",
+            "amount": 1
+          }
+        ]
+      }
+    ],
+    "weaknesses": [{"PowerType": "Light", "multiplier": 1}],
+    "resistances": [{"PowerType": "Fire", "reduction": 500}],
+    "retreatCost": [{"PowerType": "Thunder", "count": 1}],
+    "convertedRetreatCost": 1,
+    "collectionNumber": "076/311",
+    "illustrator": "Dall-E 3"
+  },  
+  {
     "id": 212,
     "name": "Sparxle",
     "supertype": "Creature",
@@ -9262,7 +9507,7 @@
     "level": 1,
     "hp": 1000,
     "rarity": "Common",
-    "images": {"small": "images/sparxle_sm.png", "large": "images/sparxle_lg.png"},
+    "images": {"small": "images/Thunder/Sparxle1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -9305,7 +9550,7 @@
     "level": 4,
     "hp": 3000,
     "rarity": "Uncommon",
-    "images": {"small": "images/stormchaser_sm.png", "large": "images/stormchaser_lg.png"},
+    "images": {"small": "images/Thunder/Thunderbirdon1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -9345,8 +9590,8 @@
     "types": ["Thunder"],
     "level": 4,
     "hp": 2500,
-    "rarity": "Rare",
-    "images": {"small": "images/stormie_sm.png", "large": "images/stormie_lg.png"},
+    "rarity": "Uncommon",
+    "images": {"small": "images/Thunder/Stormy1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -9380,8 +9625,8 @@
     "types": ["Thunder"],
     "level": 4,
     "hp": 2500,
-    "rarity": "Rare",
-    "images": {"small": "images/stormie_borderless_sm.png", "large": "images/stormie_borderless_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Thunder/Stormy2.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -9415,8 +9660,8 @@
     "types": ["Thunder"],
     "level": 4,
     "hp": 2500,
-    "rarity": "Uncommon",
-    "images": {"small": "images/stormie_alt_sm.png", "large": "images/stormie_alt_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Thunder/Stormy3.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -9451,7 +9696,7 @@
     "level": 2,
     "hp": 1500,
     "rarity": "Common",
-    "images": {"small": "images/stormtail_sm.png", "large": "images/stormtail_lg.png"},
+    "images": {"small": "images/Thunder/Stormtail1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -9491,8 +9736,8 @@
     "types": ["Thunder"],
     "level": 10,
     "hp": 8500,
-    "rarity": "Rare",
-    "images": {"small": "images/tempestas_sm.png", "large": "images/tempestas_lg.png"},
+    "rarity": "UltraRare",
+    "images": {"small": "images/Thunder/Tempestas1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -9538,8 +9783,8 @@
     "types": ["Thunder"],
     "level": 10,
     "hp": 8500,
-    "rarity": "Rare",
-    "images": {"small": "images/tempestas_borderless_sm.png", "large": "images/tempestas_borderless_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Thunder/Tempestas2.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -9585,8 +9830,8 @@
     "types": ["Thunder"],
     "level": 10,
     "hp": 8500,
-    "rarity": "UltraRare",
-    "images": {"small": "images/tempestas_alt_sm.png", "large": "images/tempestas_alt_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Thunder/Tempestas3.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -9633,7 +9878,7 @@
     "level": 3,
     "hp": 3000,
     "rarity": "Common",
-    "images": {"small": "images/thunder_tusk_sm.png", "large": "images/thunder_tusk_lg.png"},
+    "images": {"small": "images/Thunder/ThunderTusk1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -9667,7 +9912,7 @@
     "level": 7,
     "hp": 5500,
     "rarity": "Uncommon",
-    "images": {"small": "images/tigris_sm.png", "large": "images/tigris_lg.png"},
+    "images": {"small": "images/Thunder/Tigris1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -9709,7 +9954,7 @@
     "level": 8,
     "hp": 6000,
     "rarity": "Rare",
-    "images": {"small": "images/voltara_sm.png", "large": "images/voltara_lg.png"},
+    "images": {"small": "images/Thunder/Voltara1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -9742,8 +9987,8 @@
     "types": ["Thunder"],
     "level": 10,
     "hp": 8500,
-    "rarity": "Rare",
-    "images": {"small": "images/wilderfang_sm.png", "large": "images/wilderfang_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Thunder/WilderFang2.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -9785,8 +10030,8 @@
     "types": ["Thunder"],
     "level": 10,
     "hp": 8500,
-    "rarity": "Rare",
-    "images": {"small": "images/wilderfang_borderless_sm.png", "large": "images/wilderfang_borderless_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Thunder/WilderFang3.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -9828,8 +10073,8 @@
     "types": ["Thunder"],
     "level": 10,
     "hp": 8000,
-    "rarity": "Rare",
-    "images": {"small": "images/wolfdrake_sm.png", "large": "images/wolfdrake_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Thunder/Wolfdrake2.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -9871,8 +10116,8 @@
     "types": ["Thunder"],
     "level": 10,
     "hp": 8000,
-    "rarity": "Rare",
-    "images": {"small": "images/wolfdrake_borderless_sm.png", "large": "images/wolfdrake_borderless_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Thunder/Wolfdrake3.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -9915,7 +10160,7 @@
     "level": 8,
     "hp": 6000,
     "rarity": "Rare",
-    "images": {"small": "images/zamus_sm.png", "large": "images/zamus_lg.png"},
+    "images": {"small": "images/Thunder/Zamus1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -9957,7 +10202,7 @@
     "level": 3,
     "hp": 2000,
     "rarity": "Common",
-    "images": {"small": "images/aqua_imp_sm.png", "large": "images/aqua_imp_lg.png"},
+    "images": {"small": "images/Water/AquaImp1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -9984,7 +10229,7 @@
     "level": 8,
     "hp": 6500,
     "rarity": "Rare",
-    "images": {"small": "images/aspidochelone_sm.png", "large": "images/aspidochelone_lg.png"},
+    "images": {"small": "images/Water/Aspidochelone1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -10028,8 +10273,8 @@
     "types": ["Water"],
     "level": 8,
     "hp": 6500,
-    "rarity": "Rare",
-    "images": {"small": "images/aspidochelone_borderless_sm.png", "large": "images/aspidochelone_borderless_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Water/Aspidochelone2.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -10073,8 +10318,8 @@
     "types": ["Water"],
     "level": 8,
     "hp": 6500,
-    "rarity": "Rare",
-    "images": {"small": "images/aspidochelone_alt_sm.png", "large": "images/aspidochelone_alt_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Water/Aspidochelone3.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -10118,8 +10363,8 @@
     "types": ["Water"],
     "level": 10,
     "hp": 9000,
-    "rarity": "Rare",
-    "images": {"small": "images/avani_sm.png", "large": "images/avani_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Water/Avani2.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -10159,8 +10404,8 @@
     "types": ["Water"],
     "level": 10,
     "hp": 9000,
-    "rarity": "Rare",
-    "images": {"small": "images/avani_borderless_sm.png", "large": "images/avani_borderless_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Water/Avani3.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -10201,7 +10446,7 @@
     "level": 6,
     "hp": 5500,
     "rarity": "Uncommon",
-    "images": {"small": "images/baby_yeti_sm.png", "large": "images/baby_yeti_lg.png"},
+    "images": {"small": "images/Water/Yeti1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -10242,7 +10487,7 @@
     "level": 8,
     "hp": 6500,
     "rarity": "Rare",
-    "images": {"small": "images/charybdis_sm.png", "large": "images/charybdis_lg.png"},
+    "images": {"small": "images/Water/Charybdis1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -10277,8 +10522,8 @@
     "types": ["Water"],
     "level": 8,
     "hp": 6500,
-    "rarity": "Rare",
-    "images": {"small": "images/charybdis_borderless_sm.png", "large": "images/charybdis_borderless_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Water/Charybdis2.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -10313,8 +10558,8 @@
     "types": ["Water"],
     "level": 8,
     "hp": 6500,
-    "rarity": "Rare",
-    "images": {"small": "images/charybdis_alt_sm.png", "large": "images/charybdis_alt_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Water/Charybdis3.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -10350,7 +10595,7 @@
     "level": 3,
     "hp": 2500,
     "rarity": "Common",
-    "images": {"small": "images/chillburr_sm.png", "large": "images/chillburr_lg.png"},
+    "images": {"small": "images/Water/Chillburr1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -10384,7 +10629,7 @@
     "level": 4,
     "hp": 4000,
     "rarity": "Uncommon",
-    "images": {"small": "images/cryofrost_sm.png", "large": "images/cryofrost_lg.png"},
+    "images": {"small": "images/Water/Cryofrost1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -10418,7 +10663,7 @@
     "level": 5,
     "hp": 40000,
     "rarity": "Uncommon",
-    "images": {"small": "images/hippocampus_sm.png", "large": "images/hippocampus_lg.png"},
+    "images": {"small": "images/Water/Hippocampus1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -10444,8 +10689,8 @@
     "types": ["Water"],
     "level": 10,
     "hp": 8000,
-    "rarity": "Rare",
-    "images": {"small": "images/hydra_sm.png", "large": "images/hydra_lg.png"},
+    "rarity": "UltraRare",
+    "images": {"small": "images/Water/Hydra1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -10501,8 +10746,8 @@
     "types": ["Water"],
     "level": 10,
     "hp": 8000,
-    "rarity": "Rare",
-    "images": {"small": "images/hydra_borderless_sm.png", "large": "images/hydra_borderless_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Water/Hydra2.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -10558,8 +10803,8 @@
     "types": ["Water"],
     "level": 10,
     "hp": 8000,
-    "rarity": "UltraRare",
-    "images": {"small": "images/hydra_alt_sm.png", "large": "images/hydra_alt_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Water/Hydra3.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -10616,7 +10861,7 @@
     "level": 6,
     "hp": 4500,
     "rarity": "Uncommon",
-    "images": {"small": "images/marimira_sm.png", "large": "images/marimira_lg.png"},
+    "images": {"small": "images/Water/Marimira1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -10646,7 +10891,7 @@
     "level": 7,
     "hp": 6500,
     "rarity": "Rare",
-    "images": {"small": "images/mernatee_sm.png", "large": "images/mernatee_lg.png"},
+    "images": {"small": "images/Water/Mernatee1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -10686,8 +10931,8 @@
     "types": ["Water"],
     "level": 7,
     "hp": 6500,
-    "rarity": "Rare",
-    "images": {"small": "images/mernatee_borderless_sm.png", "large": "images/mernatee_borderless_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Water/Mernatee2.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -10727,8 +10972,8 @@
     "types": ["Water"],
     "level": 7,
     "hp": 6500,
-    "rarity": "Rare",
-    "images": {"small": "images/mernatee_alt_sm.png", "large": "images/mernatee_alt_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Water/Mernatee3.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -10769,7 +11014,7 @@
     "level": 2,
     "hp": 1000,
     "rarity": "Common",
-    "images": {"small": "images/neptide_sm.png", "large": "images/neptide_lg.png"},
+    "images": {"small": "images/Water/Neptide1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -10811,7 +11056,7 @@
     "level": 7,
     "hp": 6000,
     "rarity": "Rare",
-    "images": {"small": "images/neptunova_sm.png", "large": "images/neptunova_lg.png"},
+    "images": {"small": "images/Water/Neptunova1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -10852,7 +11097,7 @@
     "level": 5,
     "hp": 4000,
     "rarity": "Uncommon",
-    "images": {"small": "images/nereia_sm.png", "large": "images/nereia_lg.png"},
+    "images": {"small": "images/Water/SeaDragonTwo1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -10893,7 +11138,7 @@
     "level": 7,
     "hp": 6500,
     "rarity": "Rare",
-    "images": {"small": "images/nereus_sm.png", "large": "images/nereus_lg.png"},
+    "images": {"small": "images/Water/SeaDragonThree1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -10938,7 +11183,7 @@
     "level": 1,
     "hp": 1000,
     "rarity": "Common",
-    "images": {"small": "images/nerion_sm.png", "large": "images/nerion_lg.png"},
+    "images": {"small": "images/Water/SeaDragonOne1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -10978,8 +11223,8 @@
     "types": ["Water"],
     "level": 10,
     "hp": 7000,
-    "rarity": "Rare",
-    "images": {"small": "images/raitei_sm.png", "large": "images/raitei_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Water/Raitei2.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -11035,8 +11280,8 @@
     "types": ["Water"],
     "level": 10,
     "hp": 7000,
-    "rarity": "Rare",
-    "images": {"small": "images/raitei_borderless_sm.png", "large": "images/raitei_borderless_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Water/Raitei3.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -11092,8 +11337,8 @@
     "types": ["Water"],
     "level": 10,
     "hp": 9000,
-    "rarity": "Rare",
-    "images": {"small": "images/rann_the_wretched_sm.png", "large": "images/rann_the_wretched_lg.png"},
+    "rarity": "UltraRare",
+    "images": {"small": "images/Water/RanntheWretched1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -11143,8 +11388,8 @@
     "types": ["Water"],
     "level": 10,
     "hp": 9000,
-    "rarity": "Rare",
-    "images": {"small": "images/rann_the_wretched_borderless_sm.png", "large": "images/rann_the_wretched_borderless_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Water/RanntheWretched2.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -11194,8 +11439,8 @@
     "types": ["Water"],
     "level": 10,
     "hp": 9000,
-    "rarity": "UltraRare",
-    "images": {"small": "images/rann_the_wretched_alt_sm.png", "large": "images/rann_the_wretched_alt_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Water/RanntheWretched3.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -11246,7 +11491,7 @@
     "level": 9,
     "hp": 7000,
     "rarity": "Rare",
-    "images": {"small": "images/scylla_sm.png", "large": "images/scylla_lg.png"},
+    "images": {"small": "images/Water/Scylla1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -11288,8 +11533,8 @@
     "types": ["Water"],
     "level": 9,
     "hp": 7000,
-    "rarity": "Rare",
-    "images": {"small": "images/scylla_borderless_sm.png", "large": "images/scylla_borderless_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Water/Scylla2.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -11331,8 +11576,8 @@
     "types": ["Water"],
     "level": 9,
     "hp": 7000,
-    "rarity": "Rare",
-    "images": {"small": "images/scylla_alt_sm.png", "large": "images/scylla_alt_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Water/Scylla3.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -11375,7 +11620,7 @@
     "level": 2,
     "hp": 1500,
     "rarity": "Common",
-    "images": {"small": "images/seaphira_sm.png", "large": "images/seaphira_lg.png"},
+    "images": {"small": "images/Water/Seaphira1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -11426,7 +11671,7 @@
     "level": 4,
     "hp": 4500,
     "rarity": "Uncommon",
-    "images": {"small": "images/skwid_sm.png", "large": "images/skwid_lg.png"},
+    "images": {"small": "images/Water/Skwid1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -11467,7 +11712,7 @@
     "level": 1,
     "hp": 1000,
     "rarity": "Common",
-    "images": {"small": "images/water_leaper_sm.png", "large": "images/water_leaper_lg.png"},
+    "images": {"small": "images/Water/WaterLeaper1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -11510,7 +11755,7 @@
     "level": 9,
     "hp": 7000,
     "rarity": "Rare",
-    "images": {"small": "images/yacuruna_sm.png", "large": "images/yacuruna_lg.png"},
+    "images": {"small": "images/Water/Yacurana1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -11557,8 +11802,8 @@
     "types": ["Water"],
     "level": 9,
     "hp": 7000,
-    "rarity": "Rare",
-    "images": {"small": "images/yacuruna_borderless_sm.png", "large": "images/yacuruna_borderless_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Water/Yacurana2.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -11605,8 +11850,8 @@
     "types": ["Water"],
     "level": 9,
     "hp": 7000,
-    "rarity": "Rare",
-    "images": {"small": "images/yacuruna_alt_sm.png", "large": "images/yacuruna_alt_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Water/Yacurana3.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -11655,7 +11900,7 @@
     "level": 6,
     "hp": 5000,
     "rarity": "Uncommon",
-    "images": {"small": "images/baby_wyvern_sm.png", "large": "images/baby_wyvern_lg.png"},
+    "images": {"small": "images/Wind/Wyvern1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -11688,8 +11933,8 @@
     "types": ["Wind"],
     "level": 10,
     "hp": 9000,
-    "rarity": "Rare",
-    "images": {"small": "images/cloudpiercer_sm.png", "large": "images/cloudpiercer_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Wind/Cloudpiercer2.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -11733,8 +11978,8 @@
     "types": ["Wind"],
     "level": 10,
     "hp": 9000,
-    "rarity": "Rare",
-    "images": {"small": "images/cloudpiercer_borderless_sm.png", "large": "images/cloudpiercer_borderless_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Wind/Cloudpiercer3.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -11779,7 +12024,7 @@
     "level": 8,
     "hp": 6500,
     "rarity": "Rare",
-    "images": {"small": "images/cyclone_drake_sm.png", "large": "images/cyclone_drake_lg.png"},
+    "images": {"small": "images/Wind/CycloneDrake1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -11820,8 +12065,8 @@
     "types": ["Wind"],
     "level": 10,
     "hp": 9500,
-    "rarity": "Rare",
-    "images": {"small": "images/divine_beast_panterus_sm.png", "large": "images/divine_beast_panterus_lg.png"},
+    "rarity": "UltraRare",
+    "images": {"small": "images/Wind/Panterus1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -11867,8 +12112,8 @@
     "types": ["Wind"],
     "level": 10,
     "hp": 9500,
-    "rarity": "Rare",
-    "images": {"small": "images/divine_beast_panterus_borderless_sm.png", "large": "images/divine_beast_panterus_borderless_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Wind/Panterus2.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -11914,8 +12159,8 @@
     "types": ["Wind"],
     "level": 10,
     "hp": 9500,
-    "rarity": "UltraRare",
-    "images": {"small": "images/divine_beast_panterus_alt_sm.png", "large": "images/divine_beast_panterus_alt_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Wind/Panterus3.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -11962,7 +12207,7 @@
     "level": 9,
     "hp": 7000,
     "rarity": "Rare",
-    "images": {"small": "images/dragon_tamer_sm.png", "large": "images/dragon_tamer_lg.png"},
+    "images": {"small": "images/Wind/DragonTamer1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -11996,7 +12241,7 @@
     "level": 9,
     "hp": 7500,
     "rarity": "Rare",
-    "images": {"small": "images/dragotort_sm.png", "large": "images/dragotort_lg.png"},
+    "images": {"small": "images/Wind/Dragotort1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -12029,8 +12274,8 @@
     "types": ["Wind"],
     "level": 9,
     "hp": 7500,
-    "rarity": "Rare",
-    "images": {"small": "images/dragotort_borderless_sm.png", "large": "images/dragotort_borderless_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Wind/Dragotort2.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -12063,8 +12308,8 @@
     "types": ["Wind"],
     "level": 9,
     "hp": 7500,
-    "rarity": "Rare",
-    "images": {"small": "images/dragotort_alt_sm.png", "large": "images/dragotort_alt_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Wind/Dragotort3.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -12098,7 +12343,7 @@
     "level": 6,
     "hp": 4500,
     "rarity": "Uncommon",
-    "images": {"small": "images/ekek_sm.png", "large": "images/ekek_lg.png"},
+    "images": {"small": "images/Wind/Ekek1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -12141,7 +12386,7 @@
     "level": 9,
     "hp": 700,
     "rarity": "Rare",
-    "images": {"small": "images/griffin_the_majestic_sm.png", "large": "images/griffin_the_majestic_lg.png"},
+    "images": {"small": "images/Wind/GriffintheWise1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -12183,8 +12428,8 @@
     "types": ["Wind"],
     "level": 9,
     "hp": 700,
-    "rarity": "Rare",
-    "images": {"small": "images/griffin_the_majestic_borderless_sm.png", "large": "images/griffin_the_majestic_borderless_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Wind/GriffintheWise2.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -12226,8 +12471,8 @@
     "types": ["Wind"],
     "level": 9,
     "hp": 700,
-    "rarity": "Rare",
-    "images": {"small": "images/griffin_the_majestic_alt_sm.png", "large": "images/griffin_the_majestic_alt_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Wind/GriffintheWise3.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -12270,7 +12515,7 @@
     "level": 1,
     "hp": 1000,
     "rarity": "Common",
-    "images": {"small": "images/hatchling_sm.png", "large": "images/hatchling_lg.png"},
+    "images": {"small": "images/Wind/Hatchling1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -12312,7 +12557,7 @@
     "level": 4,
     "hp": 3500,
     "rarity": "Uncommon",
-    "images": {"small": "images/humbird_sm.png", "large": "images/humbird_lg.png"},
+    "images": {"small": "images/Wind/Humbird1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -12339,7 +12584,7 @@
     "level": 7,
     "hp": 6000,
     "rarity": "Rare",
-    "images": {"small": "images/mountain_harpy_sm.png", "large": "images/mountain_harpy_lg.png"},
+    "images": {"small": "images/Wind/MountainHarpy1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -12381,8 +12626,8 @@
     "types": ["Wind"],
     "level": 7,
     "hp": 6000,
-    "rarity": "Rare",
-    "images": {"small": "images/mountain_harpy_borderless_sm.png", "large": "images/mountain_harpy_borderless_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Wind/MountainHarpy2.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -12424,8 +12669,8 @@
     "types": ["Wind"],
     "level": 7,
     "hp": 6000,
-    "rarity": "Rare",
-    "images": {"small": "images/mountain_harpy_alt_sm.png", "large": "images/mountain_harpy_alt_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Wind/MountainHarpy3.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -12468,7 +12713,7 @@
     "level": 3,
     "hp": 3000,
     "rarity": "Common",
-    "images": {"small": "images/pegasus_sm.png", "large": "images/pegasus_lg.png"},
+    "images": {"small": "images/Wind/Pegasus1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -12505,7 +12750,7 @@
     "level": 2,
     "hp": 1500,
     "rarity": "Common",
-    "images": {"small": "images/penelope_sm.png", "large": "images/penelope_lg.png"},
+    "images": {"small": "images/Wind/Penelope1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -12539,7 +12784,7 @@
     "level": 2,
     "hp": 1500,
     "rarity": "Common",
-    "images": {"small": "images/peryton_sm.png", "large": "images/peryton_lg.png"},
+    "images": {"small": "images/Wind/Peryton1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -12601,7 +12846,7 @@
     "level": 8,
     "hp": 6500,
     "rarity": "Rare",
-    "images": {"small": "images/phoenic_sm.png", "large": "images/phoenic_lg.png"},
+    "images": {"small": "images/Wind/Phoenic1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -12664,7 +12909,7 @@
     "level": 5,
     "hp": 4000,
     "rarity": "Uncommon",
-    "images": {"small": "images/skwall_sm.png", "large": "images/skwall_lg.png"},
+    "images": {"small": "images/Wind/Skwall1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -12696,8 +12941,8 @@
     "types": ["Wind"],
     "level": 10,
     "hp": 8500,
-    "rarity": "Rare",
-    "images": {"small": "images/strix_arenaeus_sm.png", "large": "images/strix_arenaeus_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Wind/StrixArenaeus2.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -12745,8 +12990,8 @@
     "types": ["Wind"],
     "level": 10,
     "hp": 8500,
-    "rarity": "Rare",
-    "images": {"small": "images/strix_arenaeus_borderless_sm.png", "large": "images/strix_arenaeus_borderless_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Wind/StrixArenaeus3.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -12795,7 +13040,7 @@
     "level": 1,
     "hp": 1000,
     "rarity": "Common",
-    "images": {"small": "images/sylph_sm.png", "large": "images/sylph_lg.png"},
+    "images": {"small": "images/Wind/Sylph1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -12834,7 +13079,7 @@
     "level": 4,
     "hp": 3000,
     "rarity": "Uncommon",
-    "images": {"small": "images/tanuki_sm.png", "large": "images/tanuki_lg.png"},
+    "images": {"small": "images/Wind/Tanuki1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -12894,7 +13139,7 @@
     "level": 3,
     "hp": 3000,
     "rarity": "Common",
-    "images": {"small": "images/windoku_sm.png", "large": "images/windoku_lg.png"},
+    "images": {"small": "images/Wind/Win'doku1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -12935,7 +13180,7 @@
     "level": 7,
     "hp": 6500,
     "rarity": "Rare",
-    "images": {"small": "images/winged_beast_razu_sm.png", "large": "images/winged_beast_razu_lg.png"},
+    "images": {"small": "images/Wind/WingedBeastRa'zu1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -12976,7 +13221,7 @@
     "level": 3,
     "hp": 2000,
     "rarity": "Common",
-    "images": {"small": "images/winged_beast_uru_sm.png", "large": "images/winged_beast_uru_lg.png"},
+    "images": {"small": "images/Wind/WingedBeastU'ru1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -13009,8 +13254,8 @@
     "types": ["Wind"],
     "level": 5,
     "hp": 4500,
-    "rarity": "Rare",
-    "images": {"small": "images/winged_beast_waiku_sm.png", "large": "images/winged_beast_waiku_lg.png"},
+    "rarity": "Uncommon",
+    "images": {"small": "images/Wind/WingedBeastWai'ku1.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -13043,8 +13288,8 @@
     "types": ["Wind"],
     "level": 5,
     "hp": 4500,
-    "rarity": "Rare",
-    "images": {"small": "images/winged_beast_waiku_borderless_sm.png", "large": "images/winged_beast_waiku_borderless_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Wind/WingedBeastWai'ku2.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -13077,8 +13322,8 @@
     "types": ["Wind"],
     "level": 5,
     "hp": 4500,
-    "rarity": "Uncommon",
-    "images": {"small": "images/winged_beast_waiku_alt_sm.png", "large": "images/winged_beast_waiku_alt_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Wind/WingedBeastWai'ku3.png"},
     "setCode": "MC01",
     "abilities": [],
     "attacks": [
@@ -13111,8 +13356,8 @@
     "types": ["Wind"],
     "level": 10,
     "hp": 8000,
-    "rarity": "Rare",
-    "images": {"small": "images/zombified_dragon_sm.png", "large": "images/zombified_dragon_lg.png"},
+    "rarity": "UltraRare",
+    "images": {"small": "images/Wind/ZombifiedDargon1.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -13160,8 +13405,8 @@
     "types": ["Wind"],
     "level": 10,
     "hp": 8000,
-    "rarity": "Rare",
-    "images": {"small": "images/zombified_dragon_borderless_sm.png", "large": "images/zombified_dragon_borderless_lg.png"},
+    "rarity": "HiddenRare",
+    "images": {"small": "images/Wind/ZombifiedDargon2.png"},
     "setCode": "MC01",
     "abilities": [
       {
@@ -13209,8 +13454,8 @@
     "types": ["Wind"],
     "level": 10,
     "hp": 8000,
-    "rarity": "UltraRare",
-    "images": {"small": "images/zombified_dragon_alt_sm.png", "large": "images/zombified_dragon_alt_lg.png"},
+    "rarity": "Borderless",
+    "images": {"small": "images/Wind/ZombifiedDargon3.png"},
     "setCode": "MC01",
     "abilities": [
       {
